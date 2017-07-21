@@ -1,0 +1,1 @@
+If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, did Sponge change the blocks?
