@@ -28,11 +28,26 @@ public class SubSpace3D {
     }
 
     /**
+     * Copy constructor
+     * @param subSpace3D SubSpace
+     */
+    public SubSpace3D(SubSpace3D subSpace3D){
+        this.cornerOne = subSpace3D.getCornerOne();
+        this.cornerTwo = subSpace3D.getCornerTwo();
+    }
+
+    /**
      * Ensure that the boundaries of the designated subspace has been set
      * @return boolean indicating complete initialization
      */
-    public boolean isInitialized(){
-        return this.cornerOne != null && this.cornerTwo != null;
+    public boolean isInitialized() {
+        if (this.getCornerOne() == null) {
+            return false;
+        }
+        if (this.getCornerTwo() == null) {
+            return false;
+        }
+        return true;
     }
 
     /**
