@@ -13,6 +13,7 @@ public class Animation {
     private String animationName;
     private ArrayList<Frame> frames;
     private SubSpace3D masterSubSpace;
+    private int frameIndex = 0;
 
     /**
      * Designated Animation constructor
@@ -26,13 +27,34 @@ public class Animation {
         this.frames = new ArrayList<>();
     }
 
+    public Frame getBlankFrame(UUID owner, String name){
+        if (!this.masterSubSpace.isInitialized()){
+            throw new IllegalArgumentException("Sub space has not yet been defined.");
+        }
+        return new Frame(owner, name, this.masterSubSpace);
+    }
+
+    public Frame getBlankFrame(UUID owner){
+        if (!this.masterSubSpace.isInitialized()){
+            throw new IllegalArgumentException("Sub space has not yet been defined.");
+        }
+        return new Frame(owner,"", this.masterSubSpace);
+    }
+
     /**
      * Add a frame to the animation
      * @param frame the new {@link Frame}
      */
     public void addFrame(Frame frame){
+        if (frame.getName().equals("")){
+            frame.setName(this.animationName + ":frame" + this.frameIndex++);
+        }
         if (frame.isInitialized()){
+
             this.frames.add(frame);
+        } else {
+            // Frame wasn't initialized correctly/completely
+            throw new IllegalArgumentException("Frame is not initialized correctly/completely.");
         }
     }
 
