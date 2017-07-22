@@ -7,11 +7,11 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 
 /**
- * File: DeleteFrame.java
+ * File: UpdateFrame.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DeleteFrame implements CommandExecutor {
+public class UpdateFrame implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         return null;
