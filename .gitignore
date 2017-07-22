@@ -2,6 +2,15 @@
 ### Gradle template
 .gradle
 /build/
+/gradle/
+build.gradle
+gradlew
+gradlew.bat
+settings.gradle
+
+# Intellij
+/.idea/
+
 
 # Ignore Gradle GUI config
 gradle-app.setting
