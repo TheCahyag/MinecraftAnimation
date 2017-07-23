@@ -1,5 +1,8 @@
 package com.servegame.bl4de.Animation.models;
 
+import com.servegame.bl4de.Animation.exceptions.UninitializedException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -8,7 +11,7 @@ import java.util.UUID;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class Animation {
+public class Animation implements Serializable {
     private UUID owner;
     private String animationName;
     private ArrayList<Frame> frames;
@@ -27,16 +30,29 @@ public class Animation {
         this.frames = new ArrayList<>();
     }
 
-    public Frame getBlankFrame(UUID owner, String name){
+    /**
+     * Get a blank frame with a name
+     * @param owner player {@link UUID}
+     * @param name frame name
+     * @return blank {@link Frame}
+     * @throws UninitializedException subspace is not initialized correctly/completely
+     */
+    public Frame getBlankFrame(UUID owner, String name) throws UninitializedException {
         if (!this.masterSubSpace.isInitialized()){
-            throw new IllegalArgumentException("Sub space has not yet been defined.");
+            throw new UninitializedException("Sub space has not yet been defined.");
         }
         return new Frame(owner, name, this.masterSubSpace);
     }
 
-    public Frame getBlankFrame(UUID owner){
+    /**
+     * Get a blank frame with the default "" name TODO this probably needs to change, can't have empty string names since I might be referencing these frames
+     * @param owner
+     * @return
+     * @throws UninitializedException subspace is not initialized correctly/completely
+     */
+    public Frame getBlankFrame(UUID owner) throws UninitializedException {
         if (!this.masterSubSpace.isInitialized()){
-            throw new IllegalArgumentException("Sub space has not yet been defined.");
+            throw new UninitializedException("Sub space has not yet been defined.");
         }
         return new Frame(owner,"", this.masterSubSpace);
     }
@@ -44,8 +60,9 @@ public class Animation {
     /**
      * Add a frame to the animation
      * @param frame the new {@link Frame}
+     * @throws UninitializedException frame is not initialized correctly/completely
      */
-    public void addFrame(Frame frame){
+    public void addFrame(Frame frame) throws UninitializedException {
         if (frame.getName().equals("")){
             frame.setName(this.animationName + ":frame" + this.frameIndex++);
         }
@@ -54,7 +71,7 @@ public class Animation {
             this.frames.add(frame);
         } else {
             // Frame wasn't initialized correctly/completely
-            throw new IllegalArgumentException("Frame is not initialized correctly/completely.");
+            throw new UninitializedException("Frame is not initialized correctly/completely.");
         }
     }
 
@@ -66,7 +83,6 @@ public class Animation {
         if (!this.masterSubSpace.isInitialized()){
             return false;
         }
-        // Not sure if this.frames.iterator will return null on a null Iterable
         if (this.frames.size() <= 0){
             return false;
         }
