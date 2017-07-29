@@ -10,9 +10,9 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Set warning for a animation that has a large subspace (since it might lag the server)
 * Set up permissions
 * Implement commands
-    * /animate help
-    * /animate create \<name>
-    * /animate delete \<name>
+    * ~~/animate help~~
+    * ~~/animate create \<name>~~
+    * ~~/animate delete \<name>~~
     * /animate start \<name> -f\<num> -d\<num> -c\<num>
     * /animate stop \<name>
     * /animate list
