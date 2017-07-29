@@ -22,7 +22,7 @@ public class HelpAnimation implements CommandExecutor {
             ----------------------------------------------------
             /animate
             /animate create <name>
-            /animate delete <name>
+            /animate delete <name> -f
             /animate start <name> -f<num> -d<num> -c<num>
             /animate stop <name>
             /animate list
@@ -49,12 +49,13 @@ public class HelpAnimation implements CommandExecutor {
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " delete",
-                        Util.NAME_COLOR, " <name>\n"))
+                        Util.NAME_COLOR, " <name>",
+                        Util.FLAG_COLOR, " -f\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " start",
                         Util.NAME_COLOR, " <name>",
-                        Util.PRIMARY_COLOR, " -f<num> -d<num> -c<num>\n"))
+                        Util.FLAG_COLOR, " -f<num> -d<num> -c<num>\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " stop",
@@ -71,14 +72,14 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, " frame",
                         Util.ACTION_COLOR, " create",
                         Util.NAME_COLOR, " <name>",
-                        Util.PRIMARY_COLOR, " -h\n"))
+                        Util.FLAG_COLOR, " -h\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
                         Util.PRIMARY_COLOR, " frame",
                         Util.ACTION_COLOR, " delete",
                         Util.NAME_COLOR, " <name|num>",
-                        Util.PRIMARY_COLOR, " -f\n"))
+                        Util.FLAG_COLOR, " -f\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
@@ -98,7 +99,7 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, " frame",
                         Util.ACTION_COLOR, " update",
                         Util.NAME_COLOR, " <name|num>",
-                        Util.PRIMARY_COLOR, " -o\n"))
+                        Util.FLAG_COLOR, " -o\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
