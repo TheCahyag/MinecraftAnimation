@@ -12,7 +12,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Implement commands
     * ~~/animate help~~
     * ~~/animate create \<name>~~
-    * ~~/animate delete \<name>~~
+    * ~~/animate delete \<name> -f~~
     * /animate start \<name> -f\<num> -d\<num> -c\<num>
     * /animate stop \<name>
     * /animate list
@@ -23,6 +23,9 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
     * /animate \<name> frame update <name|num> -o
     * /animate \<name> frame list
 * Add a way to start an animation without a command? Or just force people to use command blocks to run the command
+* Create a info message that can be displayed for each animation
+* Refactor core models to check all input that is given
+* Refactor ListAnimation command to display buttons that will act as commands
 
 
 ## Random Notes for me
