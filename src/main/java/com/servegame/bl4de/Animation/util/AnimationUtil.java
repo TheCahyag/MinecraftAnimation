@@ -32,7 +32,7 @@ public class AnimationUtil {
         Animation newAnimation;
         try {
             if (animations.containsKey(owner)){
-                File f = new File(ANIMATION_DATA_DIR + "/" + owner.toString() + name);
+                File f = new File(ANIMATION_DATA_DIR + "/" + owner.toString() + "." + name);
                 fis = new FileInputStream(f); // this needs to be closed TODO
                 ois = new ObjectInputStream(fis); // this needs to be closed TODO
                 newAnimation = (Animation) ois.readObject();
@@ -98,5 +98,42 @@ public class AnimationUtil {
             }
         }
         return animationsByOwner;
+    }
+
+    /**
+     * Create or overwrite an existing file that will contain the serialized data from the Animation plugin
+     * @param animation given {@link Animation}
+     * @return Success status: true=success, false=failed
+     */
+    public static boolean saveAnimation(Animation animation){
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+        try {
+            File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
+            fos = new FileOutputStream(animationFile);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(animation);
+            return true;
+        } catch (IOException e){
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                oos.close();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Deletes an animation file
+     * @param animation given {@link Animation}
+     * @return boolean of whether or not the file was deleted
+     */
+    public static boolean deleteAnimation(Animation animation){
+        File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
+        return animationFile.delete();
     }
 }
