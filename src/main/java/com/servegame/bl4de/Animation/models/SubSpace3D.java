@@ -1,16 +1,21 @@
 package com.servegame.bl4de.Animation.models;
 
+import com.servegame.bl4de.Animation.util.Util;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import java.io.Serializable;
 
 /**
  * File: SubSpace3D.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class SubSpace3D {
+public class SubSpace3D implements Serializable {
     private Location<World> cornerOne;
     private Location<World> cornerTwo;
+    private BlockSnapshot[][][] subSpace;
 
     /**
      * Does-nothing constructor does nothing
@@ -34,6 +39,13 @@ public class SubSpace3D {
     public SubSpace3D(SubSpace3D subSpace3D){
         this.cornerOne = subSpace3D.getCornerOne();
         this.cornerTwo = subSpace3D.getCornerTwo();
+    }
+
+    /**
+     * Fills a 3D primitive {@link BlockSnapshot} array
+     */
+    private void set3DArray(){
+        this.subSpace = Util.copyWorldToSubSpace(this.cornerOne, this.cornerTwo);
     }
 
     /**
@@ -64,6 +76,9 @@ public class SubSpace3D {
      */
     public void setCornerOne(Location<World> cornerOne) {
         this.cornerOne = cornerOne;
+        if (this.isInitialized()){
+            this.set3DArray();
+        }
     }
 
     /**
@@ -80,5 +95,8 @@ public class SubSpace3D {
      */
     public void setCornerTwo(Location<World> cornerTwo) {
         this.cornerTwo = cornerTwo;
+        if (this.isInitialized()){
+            this.set3DArray();
+        }
     }
 }
