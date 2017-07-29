@@ -10,6 +10,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Optional;
@@ -40,6 +41,19 @@ public class DeleteAnimation implements CommandExecutor {
             // Couldn't find the given animation
             player.sendMessage(Text.of(TextColors.DARK_RED, "Animation was not found."));
             return CommandResult.empty();
+        }
+        if (!args.hasAny("f")){
+            // Check for the -f
+            player.sendMessage(Text.of(Util.WARNING_COLOR, "If you sure you want to delete the '",
+                    Util.NAME_COLOR, animationName,
+                    Util.WARNING_COLOR, "' animation, run",
+                    Util.PRIMARY_COLOR, " /animation delete " + animationName,
+                    Util.FLAG_COLOR, " -f").toBuilder()
+                    .append(Text.of(Util.WARNING_COLOR, Util.COMMAND_STYLE, ", or click this message."))
+                    .onClick(TextActions.runCommand("/animate delete " + animationName + " -f"))
+                    .onHover(Util.COMMAND_HOVER)
+                    .build());
+            return CommandResult.success();
         }
         if (AnimationUtil.deleteAnimation(animationOptional.get())){
             // Animation was deleted successfully
