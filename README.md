@@ -26,6 +26,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Create a info message that can be displayed for each animation
 * Refactor core models to check all input that is given
 * Refactor ListAnimation command to display buttons that will act as commands
+* Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)
 
 
 ## Random Notes for me
@@ -34,3 +35,4 @@ did Sponge change the blocks?
 Make a frame library? For each person? (Don't really think this would work out that well)
 
 See Location#addScheduledUpdate()
+Checkout MagicaVoxel
