@@ -9,6 +9,7 @@ public class Permissions {
     public static final String ANIMATION_BASE       = "animate.base";
     public static final String ANIMATION_CREATE     = "animate.create.base";
     public static final String ANIMATION_DELETE     = "animate.delete.base";
+    public static final String ANIMATION_INFO       = "animate.info.base";
     public static final String ANIMATION_HELP       = "animate.help.base";
     public static final String ANIMATION_LIST       = "animate.list.base";
     public static final String ANIMATION_START      = "animate.start.base";
