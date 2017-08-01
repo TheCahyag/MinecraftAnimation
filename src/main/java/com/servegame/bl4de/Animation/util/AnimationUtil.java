@@ -4,10 +4,7 @@ import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.models.Animation;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * File: AnimationUtil.java
@@ -26,12 +23,12 @@ public class AnimationUtil {
      * @return Optional of the {@link Animation}
      */
     public static Optional<Animation> getAnimation(String name, UUID owner){
-        Map<UUID, String> animations = getAnimationsByOwner(owner);
+        ArrayList<String> animations = getAnimationsByOwner(owner);
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         Animation newAnimation;
         try {
-            if (animations.containsKey(owner)){
+            if (animations.contains(name)){
                 File f = new File(ANIMATION_DATA_DIR + "/" + owner.toString() + "." + name);
                 fis = new FileInputStream(f); // this needs to be closed TODO
                 ois = new ObjectInputStream(fis); // this needs to be closed TODO
@@ -63,17 +60,26 @@ public class AnimationUtil {
     /**
      * Iterates through the list of files in the animation directory and puts the data in a map
      * @return Map containing the UUID of the owner as the key and
-     * all the names of the Animations he owns as the value
+     * all the names of the Animations he owns
      */
-    private static Map<UUID, String> getAnimations(){
-        Map<UUID, String> animationOwnerNamePair = new HashMap<>();
+    private static Map<UUID, ArrayList<String>> getAnimations(){
+        Map<UUID, ArrayList<String>> animationOwnerNamePair = new HashMap<>();
         File[] fileList = new File(ANIMATION_DATA_DIR).listFiles();
         try {
             for (File f :
                     fileList) {
-                String[] tokens = f.getName().split(".");
+                String[] tokens = f.getName().split("\\.");
                 if (tokens.length == 2){
-                    animationOwnerNamePair.put(UUID.fromString(tokens[0]), tokens[1]);
+                    UUID owner = UUID.fromString(tokens[0]);
+                    if (animationOwnerNamePair.containsKey(owner)){
+                        ArrayList<String> tmp = animationOwnerNamePair.get(owner);
+                        tmp.add(tokens[1]);
+                        animationOwnerNamePair.put(owner, tmp);
+                    } else {
+                        ArrayList<String> tmp = new ArrayList<>();
+                        tmp.add(tokens[1]);
+                        animationOwnerNamePair.put(owner, tmp);
+                    }
                 }
             }
         } catch (NullPointerException npe){
@@ -86,18 +92,11 @@ public class AnimationUtil {
     /**
      * Get all available {@link Animation} that are owned by a given owner
      * @param owner the given owner
-     * @return Map containing the UUID (owner) and it their animations
+     * @return ArrayList of strings containing the animation names
      */
-    private static Map<UUID, String> getAnimationsByOwner(UUID owner) {
-        Map<UUID, String> animations = getAnimations();
-        Map<UUID, String> animationsByOwner = new HashMap<>();
-        for (Map.Entry entry :
-                animations.entrySet()) {
-            if (entry.getKey().equals(owner)) {
-                animationsByOwner.put((UUID) entry.getKey(), (String) entry.getValue());
-            }
-        }
-        return animationsByOwner;
+    public static ArrayList<String> getAnimationsByOwner(UUID owner) {
+        Map<UUID, ArrayList<String>> animations = getAnimations();
+        return animations.getOrDefault(owner, new ArrayList<>());
     }
 
     /**
