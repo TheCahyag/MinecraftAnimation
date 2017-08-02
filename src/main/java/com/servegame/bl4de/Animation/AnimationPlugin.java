@@ -30,9 +30,6 @@ public class AnimationPlugin {
     private final String CONFIG_DIR = "./config/animation";
     private final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";
 
-
-
-
     private boolean debug;
 
     @Listener
