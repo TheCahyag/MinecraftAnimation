@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.models;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -7,7 +8,7 @@ import java.util.UUID;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class Frame extends SubSpace3D {
+public class Frame extends SubSpace3D implements Serializable {
     private UUID creator;
     private String name;
 
@@ -28,10 +29,7 @@ public class Frame extends SubSpace3D {
      * @return boolean indicating complete initialization
      */
     public boolean isInitialized(){
-        if (this.getCornerOne() == null){
-            return false;
-        }
-        if (this.getCornerTwo() == null){
+        if (!super.isInitialized()){
             return false;
         }
         if (this.name.equals("")){

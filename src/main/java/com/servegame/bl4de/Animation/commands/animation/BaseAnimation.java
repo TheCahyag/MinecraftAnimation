@@ -88,7 +88,7 @@ public class BaseAnimation implements CommandExecutor {
         String[] tokens = remainingArguments.split(" ");
 
         if (tokens.length == 0 || "info".equals(tokens[0].toLowerCase())){
-            // /animate <name>
+            // /animate <name> or /animate <name> info
             // If the user doesn't specify a command after the name it defaults to info
             CommandResult result = CommandResult.empty();
             try {
