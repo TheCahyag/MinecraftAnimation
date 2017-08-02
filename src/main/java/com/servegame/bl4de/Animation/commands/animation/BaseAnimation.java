@@ -87,10 +87,9 @@ public class BaseAnimation implements CommandExecutor {
         // Parse remaining command arguments
         String[] tokens = remainingArguments.split(" ");
 
-        String subCommand = tokens[0]; // Should be either info or frame
-
-        if (tokens[0].toLowerCase().equals("info")){
-            // /animate <name> info
+        if (tokens.length == 0 || "info".equals(tokens[0].toLowerCase())){
+            // /animate <name>
+            // If the user doesn't specify a command after the name it defaults to info
             CommandResult result = CommandResult.empty();
             try {
                 result = new InfoAnimation(animation).execute(src, null);
@@ -100,7 +99,7 @@ public class BaseAnimation implements CommandExecutor {
                 e.printStackTrace();
             }
             return result;
-        } else if (!"frame".equals(subCommand.toLowerCase())){
+        } else if (!"frame".equals(tokens[0].toLowerCase())){
             // The command is not /animate <name> frame ... and therefore doesn't match any other commands
             player.sendMessage(TextResponses.GENERAL_ARGUMENTS_INCORRECT);
             return CommandResult.empty();
