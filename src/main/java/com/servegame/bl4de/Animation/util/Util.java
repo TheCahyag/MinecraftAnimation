@@ -3,10 +3,10 @@ package com.servegame.bl4de.Animation.util;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.commands.animation.*;
-import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
@@ -19,9 +19,8 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.io.*;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * File: Util.java
@@ -35,11 +34,10 @@ public class Util {
     public static final TextColor ACTION_COLOR      = TextColors.AQUA;
     public static final TextColor NAME_COLOR        = TextColors.DARK_AQUA;
     public static final TextColor FLAG_COLOR        = TextColors.RED;
+    public static final TextColor ERROR_COLOR       = TextColors.DARK_RED;
+    public static final TextColor WARNING_COLOR     = TextColors.YELLOW;
     public static final TextStyle COMMAND_STYLE     = TextStyles.ITALIC;
     public static final HoverAction.ShowText COMMAND_HOVER = TextActions.showText(Text.of("Click here to suggest this command."));
-
-    private final String CONFIG_DIR = "./config/animation";
-    private final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";
 
     /**
      * copyWorldToSubSpace will get a {@link BlockSnapshot} of each
@@ -101,7 +99,8 @@ public class Util {
         CommandSpec deleteAnimation = CommandSpec.builder()
                 .description(Text.of(Util.PRIMARY_COLOR, "Delete an animation"))
                 .permission(Permissions.ANIMATION_DELETE)
-                .arguments(GenericArguments.string(Text.of(Util.NAME_COLOR, "name")))
+                //.arguments(GenericArguments.string(Text.of(Util.NAME_COLOR, "name")))
+                .arguments(GenericArguments.flags().flag("f").buildWith(GenericArguments.string(Text.of(Util.NAME_COLOR, "name"))))
                 .executor(new DeleteAnimation())
                 .build();
 
@@ -111,6 +110,14 @@ public class Util {
                 .permission(Permissions.ANIMATION_HELP)
                 .executor(new HelpAnimation())
                 .build();
+
+// This will probably be deleted TODO
+//        // /animate <name> info
+//        CommandSpec infoAnimation = CommandSpec.builder()
+//                .description(Text.of(Util.PRIMARY_COLOR, "Get info on a given animation"))
+//                .permission(Permissions.ANIMATION_INFO)
+//                .executor(new InfoAnimation())
+//                .build();
 
         // /animate list
         CommandSpec listAnimation = CommandSpec.builder()
@@ -145,6 +152,16 @@ public class Util {
                 .build();
 
         // /animate
+
+
+        Map<String, CommandElement> commandMapping = new HashMap<>();
+        commandMapping.put("sub_command", GenericArguments.seq(
+                GenericArguments.string(Text.of("animation_name")),
+                GenericArguments.string(Text.of("sub_command"))
+        ));
+
+
+        // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(Util.PRIMARY_COLOR, "Base animation command"))
                 .child(createAnimation, "create")
@@ -153,80 +170,16 @@ public class Util {
                 .child(listAnimation, "list")
                 .child(startAnimation, "start")
                 .child(stopAnimation, "stop")
-                .arguments(GenericArguments.optional(GenericArguments.string(Text.of(Util.NAME_COLOR, "name"))))
+                .arguments(
+                        GenericArguments.optional(
+                                GenericArguments.string(Text.of("animation_name"))
+                        ),
+                        GenericArguments.remainingRawJoinedStrings(Text.of("remaining_arguments"))
+                )
                 .permission(Permissions.ANIMATION_BASE)
                 .executor(new BaseAnimation())
                 .build();
 
         commandManager.register(plugin, animate, "animate");
-    }
-
-    /**
-     * Searches through all files and will check if there is a valid {@link Animation} with a given owner
-     * @param name name of the animation
-     * @param owner UUID of the owner
-     * @return Optional of the {@link Animation}
-     */
-    public Optional<Animation> getAnimation(String name, UUID owner){
-        File[] fileList;
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        Animation newAnimation;
-        try {
-            fileList = new File(CONFIG_DIR).listFiles();
-            for (File f :
-                    fileList) {
-                String[] fileParts = f.getName().split(".");
-                if (fileParts.length == 0 || fileParts.length > 2){
-                    return Optional.empty();
-                }
-                if (fileParts[0].equals(owner.toString())){
-                    // The file name is equal to the UUID of the owner
-                    if (fileParts[1].equals(name)){
-                        // The file extension is equal to the name of the animation
-                        fis = new FileInputStream(f);
-                        ois = new ObjectInputStream(fis);
-                        newAnimation = (Animation) ois.readObject();
-                        fis.close();
-                        ois.close();
-                        return Optional.of(newAnimation);
-                    }
-                }
-            }
-            // There's a lot of exceptions here, possible point of refactor TODO
-        } catch (NullPointerException npe){
-            // If the fileList is of size zero
-            npe.printStackTrace();
-            AnimationPlugin.logger.info("NPE: Failed to get the files listed in dir: " + CONFIG_DIR);
-        } catch (FileNotFoundException fnfe){
-            fnfe.printStackTrace();
-            AnimationPlugin.logger.info("FNFE: Failed to find file.");
-        } catch (IOException ioe){
-            ioe.printStackTrace();
-            AnimationPlugin.logger.info("IOE: IOException with ObjectInputStream.");
-        } catch (ClassNotFoundException cnfe){
-            cnfe.printStackTrace();
-            AnimationPlugin.logger.info("CNFE: Class 'Animation.class' was not found. <- This is a pretty bad error to get...");
-        }
-        return Optional.empty();
-    }
-
-    public void serializeAnimation(Animation animation){
-
-    }
-
-    /**
-     * Gets the file extension of a {@link File}, if the file
-     * doesn't have an extension the empty string is returned
-     * @param file the {@link File}
-     * @return the file extension as a string
-     */
-    private String getFileExtension(File file){
-        String fileName = file.getName();
-        String[] fileNameParts = fileName.split(".");
-        if (fileNameParts.length == 0){
-            return "";
-        }
-        return fileNameParts[fileNameParts.length - 1];
     }
 }
