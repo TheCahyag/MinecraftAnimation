@@ -2,6 +2,7 @@ package com.servegame.bl4de.Animation.commands.animation;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
+import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -10,7 +11,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +26,7 @@ public class CreateAnimation implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         // Check if the CommandSource is a player
         if (!(src instanceof Player)){
-            src.sendMessage(Text.of(TextColors.DARK_RED, "This command must be ran by a player in-game."));
+            src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
         }
         // Get player UUID
@@ -36,8 +36,8 @@ public class CreateAnimation implements CommandExecutor {
         // Argument parsing
         Optional<String> animationNameOptional = args.getOne("name");
         if (!animationNameOptional.isPresent()){
-            player.sendMessage(Text.of(TextColors.DARK_RED, "Animation name was not parsed correctly/wasn't specified."));
-            return CommandResult.empty();
+            player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
+            return CommandResult.success();
         }
         String animationName = animationNameOptional.get();
 
@@ -45,7 +45,7 @@ public class CreateAnimation implements CommandExecutor {
         Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationName, owner);
         if (animationOptional.isPresent()){
             // The animation already exists
-            player.sendMessage(Text.of(TextColors.DARK_RED, "The specified animation already exists."));
+            player.sendMessage(TextResponses.ANIMATION_ALREADY_EXISTS_ERROR);
             return CommandResult.success();
         }
 
@@ -62,7 +62,7 @@ public class CreateAnimation implements CommandExecutor {
             return CommandResult.success();
         } else {
             // There was a problem creating the animation
-            player.sendMessage(Text.of(TextColors.DARK_RED, "There was a problem saving the animation."));
+            player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
             return CommandResult.empty();
         }
     }
