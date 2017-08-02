@@ -12,11 +12,32 @@ import java.util.UUID;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class Animation implements Serializable {
+    private final Status DEFAULT_STATUS = Status.STOPPED;
+    private Status status;
+
     private UUID owner;
     private String animationName;
     private ArrayList<Frame> frames;
     private SubSpace3D masterSubSpace;
     private int frameIndex = 0;
+
+    /**
+     * The possible states for the {@link Animation}
+     */
+    public static enum Status {
+        /**
+         * The paused state.
+         */
+        PAUSED,
+        /**
+         * The running state.
+         */
+        RUNNING,
+        /**
+         * The stopped state.
+         */
+        STOPPED
+    }
 
     /**
      * Designated Animation constructor
@@ -89,6 +110,8 @@ public class Animation implements Serializable {
         return true;
     }
 
+    /* START GETTERS AND SETTERS */
+
     /**
      * Getter for the owner
      * @return {@link UUID}
@@ -120,4 +143,30 @@ public class Animation implements Serializable {
     public void setAnimationName(String animationName) {
         this.animationName = animationName;
     }
+
+    /**
+     * Setter for the status of the {@link Animation}
+     * @param status {@link Status}
+     */
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    /**
+     * Getter for the status of the {@link Animation}
+     * @return the {@link Status}
+     */
+    public Status getStatus(){
+        return (status == null) ? DEFAULT_STATUS : this.status;
+    }
+
+    /**
+     * Get the number of frames contained in the {@link Animation#frames} list
+     * @return int - number of frames currently assigned to this {@link Animation}
+     */
+    public int getNumOfFrames(){
+        return this.frames.size();
+    }
+
+    /* END GETTERS AND SETTERS */
 }
