@@ -10,21 +10,19 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Set warning for a animation that has a large subspace (since it might lag the server)
 * Set up permissions
 * Implement commands
-    * ~~/animate help~~
+    * ~~/animate (Can't be called, but finished)~~
     * ~~/animate create \<name>~~
     * ~~/animate delete \<name> -f~~
     * /animate start \<name> -f\<num> -d\<num> -c\<num>
     * /animate stop \<name>
-    * ~~/animate list~~
-        * Still need to edit the message that is displayed for a given animation
-    * /animate \<name> info
-    * /animate \<name> frame create \<name> -h
-    * /animate \<name> frame duplicate <name|num> [num]
+    * /animate list
+    * /animate \<name> info/animate \<name> frame create <name> -h
     * /animate \<name> frame delete <name|num> -f
     * /animate \<name> frame display <name|num>
-    * /animate \<name> frame update <name|num> -o
-    * /animate \<name> frame list
+    * /animate \<name> frame duplicate <name|num> [num]
     * /animate \<name> frame <name|num> info
+    * /animate \<name> frame list
+    * /animate \<name> frame update <name|num> -o
 * Add a way to start an animation without a command? Or just force people to use command blocks to run the command
 * ~~Create~~ Format a info message that can be displayed for each animation
 * Refactor core models to check all input that is given
@@ -42,5 +40,5 @@ If Sponge changes the blocks at a chunk that isn't loaded and there's no one to 
 did Sponge change the blocks?  
 Make a frame library? For each person? (Don't really think this would work out that well)
 
-See Location#addScheduledUpdate()
+See Location#addScheduledUpdate()  
 Checkout MagicaVoxel
