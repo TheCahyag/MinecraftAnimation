@@ -13,6 +13,8 @@ import java.io.Serializable;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class SubSpace3D implements Serializable {
+    private long serialVersionUID = -34561563741840235L;
+
     private Location<World> cornerOne;
     private Location<World> cornerTwo;
     private BlockSnapshot[][][] subSpace;

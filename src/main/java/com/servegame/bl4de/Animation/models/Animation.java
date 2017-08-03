@@ -12,6 +12,8 @@ import java.util.UUID;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class Animation implements Serializable {
+    private long serialVersionUID = -334896027741840235L;
+
     private final Status DEFAULT_STATUS = Status.STOPPED;
     private Status status;
 

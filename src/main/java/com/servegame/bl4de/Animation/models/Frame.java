@@ -9,6 +9,8 @@ import java.util.UUID;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class Frame extends SubSpace3D implements Serializable {
+    private long serialVersionUID = 126598236331840235L;
+
     private UUID creator;
     private String name;
 
