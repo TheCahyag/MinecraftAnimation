@@ -19,6 +19,8 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import static org.spongepowered.api.command.args.GenericArguments.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,7 +93,7 @@ public class Util {
         CommandSpec createAnimation = CommandSpec.builder()
                 .description(Text.of(Util.PRIMARY_COLOR, "Create a new animation"))
                 .permission(Permissions.ANIMATION_CREATE)
-                .arguments(GenericArguments.string(Text.of(Util.NAME_COLOR, "name")))
+                .arguments(string(Text.of(Util.NAME_COLOR, "name")))
                 .executor(new CreateAnimation())
                 .build();
 
@@ -99,8 +101,8 @@ public class Util {
         CommandSpec deleteAnimation = CommandSpec.builder()
                 .description(Text.of(Util.PRIMARY_COLOR, "Delete an animation"))
                 .permission(Permissions.ANIMATION_DELETE)
-                //.arguments(GenericArguments.string(Text.of(Util.NAME_COLOR, "name")))
-                .arguments(GenericArguments.flags().flag("f").buildWith(GenericArguments.string(Text.of(Util.NAME_COLOR, "name"))))
+                //.arguments(string(Text.of(Util.NAME_COLOR, "name")))
+                .arguments(flags().flag("f").buildWith(string(Text.of(Util.NAME_COLOR, "name"))))
                 .executor(new DeleteAnimation())
                 .build();
 
@@ -110,14 +112,6 @@ public class Util {
                 .permission(Permissions.ANIMATION_HELP)
                 .executor(new HelpAnimation())
                 .build();
-
-// This will probably be deleted TODO
-//        // /animate <name> info
-//        CommandSpec infoAnimation = CommandSpec.builder()
-//                .description(Text.of(Util.PRIMARY_COLOR, "Get info on a given animation"))
-//                .permission(Permissions.ANIMATION_INFO)
-//                .executor(new InfoAnimation())
-//                .build();
 
         // /animate list
         CommandSpec listAnimation = CommandSpec.builder()
@@ -130,16 +124,16 @@ public class Util {
         CommandSpec startAnimation = CommandSpec.builder()
                 .description(Text.of(Util.PRIMARY_COLOR, "Start a given animation"))
                 .permission(Permissions.ANIMATION_START)
-                .arguments(GenericArguments.string(Text.of(Util.NAME_COLOR, "name"))) // <name>
-                .arguments(GenericArguments.flags()
-                        .valueFlag(GenericArguments.integer(Text.of(Util.FLAG_COLOR, "frame")), "f") // -f<num>
-                        .buildWith(GenericArguments.none()))
-                .arguments(GenericArguments.flags()
-                        .valueFlag(GenericArguments.integer(Text.of(Util.FLAG_COLOR, "delay")), "d") // -d<num>
-                        .buildWith(GenericArguments.none()))
-                .arguments(GenericArguments.flags()
-                        .valueFlag(GenericArguments.integer(Text.of(Util.FLAG_COLOR, "cycles")), "c") // -c<num>
-                        .buildWith(GenericArguments.none()))
+                .arguments(string(Text.of(Util.NAME_COLOR, "name"))) // <name>
+                .arguments(flags()
+                        .valueFlag(integer(Text.of(Util.FLAG_COLOR, "frame")), "f") // -f<num>
+                        .buildWith(none()))
+                .arguments(flags()
+                        .valueFlag(integer(Text.of(Util.FLAG_COLOR, "delay")), "d") // -d<num>
+                        .buildWith(none()))
+                .arguments(flags()
+                        .valueFlag(integer(Text.of(Util.FLAG_COLOR, "cycles")), "c") // -c<num>
+                        .buildWith(none()))
                 .executor(new BaseAnimation())
                 .build();
 
@@ -147,19 +141,9 @@ public class Util {
         CommandSpec stopAnimation = CommandSpec.builder()
                 .description(Text.of(Util.PRIMARY_COLOR, "Stop a given animation"))
                 .permission(Permissions.ANIMATION_STOP)
-                .arguments(GenericArguments.string(Text.of(Util.NAME_COLOR, "name")))
+                .arguments(string(Text.of(Util.NAME_COLOR, "name")))
                 .executor(new StopAnimation())
                 .build();
-
-        // /animate
-
-
-        Map<String, CommandElement> commandMapping = new HashMap<>();
-        commandMapping.put("sub_command", GenericArguments.seq(
-                GenericArguments.string(Text.of("animation_name")),
-                GenericArguments.string(Text.of("sub_command"))
-        ));
-
 
         // /animate
         CommandSpec animate = CommandSpec.builder()
@@ -171,10 +155,54 @@ public class Util {
                 .child(startAnimation, "start")
                 .child(stopAnimation, "stop")
                 .arguments(
-                        GenericArguments.optional(
-                                GenericArguments.string(Text.of("animation_name"))
+                        string(Text.of("animation_name")),
+                        firstParsing(
+                                // /animate <name> info
+                                literal(Text.of("info"), "info"),
+                                // /animate <name> frame...
+                                literal(Text.of("frame"), "frame")
                         ),
-                        GenericArguments.remainingRawJoinedStrings(Text.of("remaining_arguments"))
+                        firstParsing(
+                                // /animate <name> frame create <name> -h
+                                seq(
+                                        literal(Text.of("create"), "create"),
+                                        string(Text.of("frame_name")),
+                                        optional(flags().flag("h").buildWith(none()))
+                                ),
+                                // /animate <name> frame delete <name|num> -f
+                                seq(
+                                        literal(Text.of("delete"), "delete"),
+                                        string(Text.of("frame_name_num")),
+                                        optional(flags().flag("f").buildWith(none()))
+                                ),
+                                // /animate <name> frame display <name|num>
+                                seq(
+                                        literal(Text.of("display"), "display"),
+                                        string(Text.of("frame_name_num")),
+                                        optional(flags().flag("f").buildWith(none()))
+                                ),
+                                // /animate \<name> frame duplicate <name|num> [num]
+                                seq(
+                                        literal(Text.of("duplicate"), "duplicate"),
+                                        string(Text.of("frame_name_num")),
+                                        optional(integer(Text.of("num")))
+                                ),
+                                // /animate <name> frame update <name|num> -o
+                                seq(
+                                        literal(Text.of("update"), "update"),
+                                        string(Text.of("frame_name_num")),
+                                        optional(flags().flag("o").buildWith(none()))
+                                ),
+                                // /animate <name> frame list
+                                seq(
+                                        literal(Text.of("list"), "list")
+                                ),
+                                // /animate <name> frame <name|num> info, this NEEDS to be last
+                                seq(
+                                        string(Text.of("frame_name_num")),
+                                        literal(Text.of("info"), "info")
+                                )
+                        )
                 )
                 .permission(Permissions.ANIMATION_BASE)
                 .executor(new BaseAnimation())
