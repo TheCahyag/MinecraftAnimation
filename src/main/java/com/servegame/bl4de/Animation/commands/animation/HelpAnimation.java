@@ -26,12 +26,14 @@ public class HelpAnimation implements CommandExecutor {
             /animate start <name> -f<num> -d<num> -c<num>
             /animate stop <name>
             /animate list
+            /animate <name> info
             /animate <name> frame create <name> -h
-            /animate <name> frame duplicate <name|num> [num]
             /animate <name> frame delete <name|num> -f
             /animate <name> frame display <name|num>
-            /animate <name> frame update <name|num> -o
+            /animate <name> frame duplicate <name|num> [num]
+            /animate <name> frame <name|num> info
             /animate <name> frame list
+            /animate <name> frame update <name|num> -o
             ----------------------------------------------------
         */
         Text message = Text.builder()
@@ -69,6 +71,10 @@ public class HelpAnimation implements CommandExecutor {
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
+                        Util.ACTION_COLOR, " info"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.NAME_COLOR, " <name>",
                         Util.PRIMARY_COLOR, " frame",
                         Util.ACTION_COLOR, " create",
                         Util.NAME_COLOR, " <name>",
@@ -97,14 +103,20 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
                         Util.PRIMARY_COLOR, " frame",
-                        Util.ACTION_COLOR, " update",
                         Util.NAME_COLOR, " <name|num>",
-                        Util.FLAG_COLOR, " -o\n"))
+                        Util.ACTION_COLOR, " info\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
                         Util.PRIMARY_COLOR, " frame",
                         Util.ACTION_COLOR, " list\n"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.NAME_COLOR, " <name>",
+                        Util.PRIMARY_COLOR, " frame",
+                        Util.ACTION_COLOR, " update",
+                        Util.NAME_COLOR, " <name|num>",
+                        Util.FLAG_COLOR, " -o\n"))
                 .append(Text.of(Util.SECONDARY_COLOR, "----------------------------------------------------"))
                 .build();
         src.sendMessage(message);
