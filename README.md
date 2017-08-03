@@ -33,6 +33,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)
 * When running /animate list if there are zero animations send a "there are no animations" message
     * Maybe have a counter of how many animations there are and how many are being displayed
+* Look into making FrameElement and AnimationElement
 
 
 
