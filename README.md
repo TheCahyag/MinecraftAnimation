@@ -15,7 +15,8 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
     * ~~/animate delete \<name> -f~~
     * /animate start \<name> -f\<num> -d\<num> -c\<num>
     * /animate stop \<name>
-    * /animate list
+    * ~~/animate list~~
+        * Still need to edit the message that is displayed for a given animation
     * /animate \<name> info
     * /animate \<name> frame create \<name> -h
     * /animate \<name> frame duplicate <name|num> [num]
@@ -23,12 +24,16 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
     * /animate \<name> frame display <name|num>
     * /animate \<name> frame update <name|num> -o
     * /animate \<name> frame list
+    * /animate \<name> frame <name|num> info
 * Add a way to start an animation without a command? Or just force people to use command blocks to run the command
 * ~~Create~~ Format a info message that can be displayed for each animation
 * Refactor core models to check all input that is given
 * Refactor ListAnimation command to display buttons that will act as commands
 * Add .complete() lists on all arguments for tabbing arguments
 * Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)
+* When running /animate list if there are zero animations send a "there are no animations" message
+    * Maybe have a counter of how many animations there are and how many are being displayed
+
 
 
 ## Random Notes for me
