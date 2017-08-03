@@ -2,6 +2,7 @@ package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.commands.CommandGateKeeper;
 import com.servegame.bl4de.Animation.commands.animation.*;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -158,7 +159,7 @@ public class Util {
                         string(Text.of("animation_name")),
                         firstParsing(
                                 // /animate <name> info
-                                literal(Text.of("info"), "info"),
+                                literal(Text.of("animation_info"), "info"),
                                 // /animate <name> frame...
                                 literal(Text.of("frame"), "frame")
                         ),
@@ -200,12 +201,12 @@ public class Util {
                                 // /animate <name> frame <name|num> info, this NEEDS to be last
                                 seq(
                                         string(Text.of("frame_name_num")),
-                                        literal(Text.of("info"), "info")
+                                        literal(Text.of("frame_info"), "info")
                                 )
                         )
                 )
                 .permission(Permissions.ANIMATION_BASE)
-                .executor(new BaseAnimation())
+                .executor(new CommandGateKeeper())
                 .build();
 
         commandManager.register(plugin, animate, "animate");
