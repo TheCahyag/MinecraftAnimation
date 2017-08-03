@@ -21,14 +21,6 @@ public class DuplicateFrame implements CommandExecutor {
         this.animation = animation;
     }
 
-    /**
-     * Takes a string and will parse the arguments
-     * @param rawString
-     * @return
-     */
-    public static CommandContext parseArguments(String rawString){
-        return null;
-    }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
