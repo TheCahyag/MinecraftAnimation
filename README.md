@@ -11,8 +11,9 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 /animate delete \<name> -f  
 /animate help  
 /animate list  
-/animate start \<name> -f\<num> -d\<num> -c\<num>  
+/animate start \<name> [-f\<num>] [-d\<num>] [-c\<num>]  
 /animate stop \<name>  
+/animate pause \<name>  
 /animate \<name> info
 /animate \<name> set <pos1|pos2>  
 /animate \<name> set name <new_name>  
@@ -22,7 +23,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 /animate \<name> frame duplicate <name|num> [num]   
 /animate \<name> frame list  
 /animate \<name> frame update <name|num> -o  
-/animate \<name> frame <name|num> info 
+/animate \<name> frame <name|num> info  
 /animate \<name> frame <name|num> set <new_name>
 
 ## TODO
@@ -39,8 +40,11 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Look into making FrameElement and AnimationElement
 * Should the state of the subspace be saved before an animation is played?
 * Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)
-
-
+* Fix the buttons so that clicking on the spaces don't execute the command
+* Implement pause operation
+    * Should stopping an animation remove all visible contents of the animation
+    * Pausing should keep track of the current frame it is on
+* Make a config where the user can specify the default values of animation's states (frame, delay, cycles)
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
