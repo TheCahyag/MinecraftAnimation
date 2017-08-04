@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.animation;
+package com.servegame.bl4de.Animation.commands.animation.action;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
