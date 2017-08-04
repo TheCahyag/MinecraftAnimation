@@ -30,7 +30,7 @@ public class DeleteAnimation implements CommandExecutor {
         }
         Player player = (Player) src;
         UUID owner = player.getUniqueId();
-        Optional<String> animationNameOptional = args.getOne("name");
+        Optional<String> animationNameOptional = args.getOne("animation_name");
         if (!animationNameOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();

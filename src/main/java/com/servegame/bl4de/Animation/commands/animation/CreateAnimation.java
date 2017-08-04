@@ -34,7 +34,7 @@ public class CreateAnimation implements CommandExecutor {
         UUID owner = player.getUniqueId();
 
         // Argument parsing
-        Optional<String> animationNameOptional = args.getOne("name");
+        Optional<String> animationNameOptional = args.getOne("animation_name");
         if (!animationNameOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.success();
