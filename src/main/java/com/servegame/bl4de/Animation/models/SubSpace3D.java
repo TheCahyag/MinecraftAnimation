@@ -1,11 +1,14 @@
 package com.servegame.bl4de.Animation.models;
 
+import com.servegame.bl4de.Animation.exceptions.UninitializedException;
+import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * File: SubSpace3D.java
@@ -38,9 +41,15 @@ public class SubSpace3D implements Serializable {
      * Copy constructor
      * @param subSpace3D SubSpace
      */
-    public SubSpace3D(SubSpace3D subSpace3D){
-        this.cornerOne = subSpace3D.getCornerOne();
-        this.cornerTwo = subSpace3D.getCornerTwo();
+    public SubSpace3D(SubSpace3D subSpace3D) throws UninitializedException {
+        Optional<Location<World>> cornerOneOptional = subSpace3D.getCornerOne();
+        Optional<Location<World>> cornerTwoOptional = subSpace3D.getCornerTwo();
+        if (subSpace3D.isInitialized()){
+            throw new UninitializedException(TextResponses.SUBSPACE_NOT_INITIALIZED_ERROR);
+        } else {
+            this.cornerOne = cornerOneOptional.get();
+            this.cornerTwo = cornerTwoOptional.get();
+        }
     }
 
     /**
@@ -68,8 +77,12 @@ public class SubSpace3D implements Serializable {
      * Getter for corner one
      * @return {@link Location}
      */
-    public Location<World> getCornerOne() {
-        return cornerOne;
+    public Optional<Location<World>> getCornerOne() {
+        if (this.cornerOne == null){
+            return Optional.empty();
+        } else {
+            return Optional.of(this.cornerOne);
+        }
     }
 
     /**
@@ -87,8 +100,12 @@ public class SubSpace3D implements Serializable {
      * Getter for corner two
      * @return {@link Location}
      */
-    public Location<World> getCornerTwo() {
-        return cornerTwo;
+    public Optional<Location<World>> getCornerTwo() {
+        if (this.cornerTwo == null){
+            return Optional.empty();
+        } else {
+            return Optional.of(this.cornerTwo);
+        }
     }
 
     /**
