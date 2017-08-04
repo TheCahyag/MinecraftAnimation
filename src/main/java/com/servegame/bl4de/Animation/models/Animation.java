@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation.models;
 
 import com.servegame.bl4de.Animation.exceptions.UninitializedException;
+import com.servegame.bl4de.Animation.util.FrameUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,6 +25,18 @@ public class Animation implements Serializable {
     private int frameIndex = 0;
 
     /**
+     * Designated Animation constructor
+     * @param owner animation owner represented by a {@link UUID}
+     * @param name name of animation
+     */
+    public Animation(UUID owner, String name){
+        this.owner = owner;
+        this.animationName = name;
+        this.masterSubSpace = new SubSpace3D();
+        this.frames = new ArrayList<>();
+    }
+
+    /**
      * The possible states for the {@link Animation}
      */
     public static enum Status {
@@ -39,18 +52,6 @@ public class Animation implements Serializable {
          * The stopped state.
          */
         STOPPED
-    }
-
-    /**
-     * Designated Animation constructor
-     * @param owner animation owner represented by a {@link UUID}
-     * @param name name of animation
-     */
-    public Animation(UUID owner, String name){
-        this.owner = owner;
-        this.animationName = name;
-        this.masterSubSpace = new SubSpace3D();
-        this.frames = new ArrayList<>();
     }
 
     /**
@@ -77,7 +78,7 @@ public class Animation implements Serializable {
         if (!this.masterSubSpace.isInitialized()){
             throw new UninitializedException("Sub space has not yet been defined.");
         }
-        return new Frame(owner,"", this.masterSubSpace);
+        return new Frame(owner, FrameUtil.generateFrameName(this), this.masterSubSpace);
     }
 
     /**
@@ -86,11 +87,7 @@ public class Animation implements Serializable {
      * @throws UninitializedException frame is not initialized correctly/completely
      */
     public void addFrame(Frame frame) throws UninitializedException {
-        if (frame.getName().equals("")){
-            frame.setName(this.animationName + ":frame" + this.frameIndex++);
-        }
         if (frame.isInitialized()){
-
             this.frames.add(frame);
         } else {
             // Frame wasn't initialized correctly/completely
@@ -111,6 +108,22 @@ public class Animation implements Serializable {
         }
         return true;
     }
+
+    /* START ACTION METHODS */
+
+    public void start(){
+        setStatus(Status.RUNNING);
+    }
+
+    public void stop(){
+        setStatus(Status.STOPPED);
+    }
+
+    public void pause(){
+        setStatus(Status.PAUSED);
+    }
+
+    /* END ACTION METHODS */
 
     /* START GETTERS AND SETTERS */
 
@@ -150,7 +163,7 @@ public class Animation implements Serializable {
      * Setter for the status of the {@link Animation}
      * @param status {@link Status}
      */
-    public void setStatus(Status status){
+    private void setStatus(Status status){
         this.status = status;
     }
 
@@ -168,6 +181,22 @@ public class Animation implements Serializable {
      */
     public int getNumOfFrames(){
         return this.frames.size();
+    }
+
+    /**
+     * Getter for the {@link SubSpace3D}
+     * @return {@link SubSpace3D}
+     */
+    public SubSpace3D getSubSpace() {
+        return masterSubSpace;
+    }
+
+    /**
+     * Getter for the {@link Frame}s of the {@link Animation}
+     * @return All the {@link Frame}s in an ArrayList
+     */
+    public ArrayList<Frame> getFrames() {
+        return this.frames;
     }
 
     /* END GETTERS AND SETTERS */
