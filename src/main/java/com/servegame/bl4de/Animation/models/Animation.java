@@ -2,6 +2,7 @@ package com.servegame.bl4de.Animation.models;
 
 import com.servegame.bl4de.Animation.exceptions.UninitializedException;
 import com.servegame.bl4de.Animation.util.FrameUtil;
+import com.servegame.bl4de.Animation.util.TextResponses;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,20 +66,20 @@ public class Animation implements Serializable {
      */
     public Frame getBlankFrame(UUID owner, String name) throws UninitializedException {
         if (!this.masterSubSpace.isInitialized()){
-            throw new UninitializedException("Sub space has not yet been defined.");
+            throw new UninitializedException(TextResponses.SUBSPACE_NOT_INITIALIZED_ERROR);
         }
         return new Frame(owner, name, this.masterSubSpace);
     }
 
     /**
-     * Get a blank frame with the default "" name TODO this probably needs to change, can't have empty string names since I might be referencing these frames
-     * @param owner
-     * @return
+     * Get a blank frame with generated name
+     * @param owner player {@link UUID}
+     * @return blank {@link Frame}
      * @throws UninitializedException subspace is not initialized correctly/completely
      */
     public Frame getBlankFrame(UUID owner) throws UninitializedException {
         if (!this.masterSubSpace.isInitialized()){
-            throw new UninitializedException("Sub space has not yet been defined.");
+            throw new UninitializedException(TextResponses.SUBSPACE_NOT_INITIALIZED_ERROR);
         }
         return new Frame(owner, FrameUtil.generateFrameName(this), this.masterSubSpace);
     }
@@ -92,8 +93,8 @@ public class Animation implements Serializable {
         if (frame.isInitialized()){
             this.frames.add(frame);
         } else {
-            // Frame wasn't initialized correctly/completely
-            throw new UninitializedException("Frame is not initialized correctly/completely.");
+            // Frame wasn't initialized correctly/completely, don't think this can happen but why not
+            throw new UninitializedException(TextResponses.FRAME_NOT_INITIALIZED_ERROR);
         }
     }
 
