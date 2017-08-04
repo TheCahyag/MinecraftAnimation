@@ -23,6 +23,8 @@ public class Animation implements Serializable {
     private ArrayList<Frame> frames;
     private SubSpace3D masterSubSpace;
     private int frameIndex = 0;
+    private int tickDelay = 20;
+    private int cycles = 10;
 
     /**
      * Designated Animation constructor
@@ -197,6 +199,56 @@ public class Animation implements Serializable {
      */
     public ArrayList<Frame> getFrames() {
         return this.frames;
+    }
+
+    /**
+     * Getter for the frame index (-f flag in {@link com.servegame.bl4de.Animation.commands.animation.StartAnimation} command)
+     * @return int - the frame the animation will start on when it is ran
+     */
+    public int getFrameIndex() {
+        return frameIndex;
+    }
+
+    /**
+     * Setter for the frame index (-f flag in {@link com.servegame.bl4de.Animation.commands.animation.StartAnimation} command)
+     * @param frameIndex int - the new frame index
+     */
+    public void setFrameIndex(int frameIndex) {
+        this.frameIndex = frameIndex;
+    }
+
+    /**
+     * Getter for the tick delay between frames
+     * @return int - tick delay
+     */
+    public int getTickDelay() {
+        return tickDelay;
+    }
+
+    /**
+     * Setter for the tick delay between frames
+     * @param tickDelay int - tick delay
+     */
+    public void setTickDelay(int tickDelay) {
+        this.tickDelay = tickDelay;
+    }
+
+    /**
+     * Getter for the number of cycles the animation
+     * will complete before it auto stops
+     * @return int - cycles
+     */
+    public int getCycles() {
+        return cycles;
+    }
+
+    /**
+     * Setter for the number of cycles the animation
+     * will complete before it auto stops
+     * @param cycles int - cycles
+     */
+    public void setCycles(int cycles) {
+        this.cycles = cycles;
     }
 
     /* END GETTERS AND SETTERS */
