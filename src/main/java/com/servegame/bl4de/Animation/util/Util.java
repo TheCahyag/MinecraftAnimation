@@ -4,11 +4,10 @@ import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.commands.CommandGateKeeper;
 import com.servegame.bl4de.Animation.commands.animation.*;
+import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandManager;
-import org.spongepowered.api.command.args.CommandElement;
-import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.HoverAction;
@@ -21,9 +20,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import static org.spongepowered.api.command.args.GenericArguments.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * File: Util.java
@@ -81,6 +77,43 @@ public class Util {
             }
         }
         return subSpace;
+    }
+
+    public static Text getAnimationButtons(Animation animation){
+        Text message = Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "FRAMES",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame list"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "PLAY",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " start"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "PAUSE",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " pause"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "STOP",
+                                PRIMARY_COLOR, "]"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " stop"))
+                        .build())
+                .build();
+        return message;
+    }
+
+    public static Text getFrameButtons(){
+        Text message = Text.builder()
+                .append(Text.of())
+                .build();
+        return message;
     }
 
     /**
@@ -163,45 +196,46 @@ public class Util {
                                 // /animate <name> frame...
                                 literal(Text.of("frame"), "frame")
                         ),
-                        firstParsing(
-                                // /animate <name> frame create <name> -h
-                                seq(
-                                        literal(Text.of("create"), "create"),
-                                        string(Text.of("frame_name")),
-                                        optional(flags().flag("h").buildWith(none()))
-                                ),
-                                // /animate <name> frame delete <name|num> -f
-                                seq(
-                                        literal(Text.of("delete"), "delete"),
-                                        string(Text.of("frame_name_num")),
-                                        optional(flags().flag("f").buildWith(none()))
-                                ),
-                                // /animate <name> frame display <name|num>
-                                seq(
-                                        literal(Text.of("display"), "display"),
-                                        string(Text.of("frame_name_num")),
-                                        optional(flags().flag("f").buildWith(none()))
-                                ),
-                                // /animate \<name> frame duplicate <name|num> [num]
-                                seq(
-                                        literal(Text.of("duplicate"), "duplicate"),
-                                        string(Text.of("frame_name_num")),
-                                        optional(integer(Text.of("num")))
-                                ),
-                                // /animate <name> frame update <name|num> -o
-                                seq(
-                                        literal(Text.of("update"), "update"),
-                                        string(Text.of("frame_name_num")),
-                                        optional(flags().flag("o").buildWith(none()))
-                                ),
-                                // /animate <name> frame list
-                                seq(
-                                        literal(Text.of("list"), "list")
-                                ),
-                                // /animate <name> frame <name|num> info, this NEEDS to be last
-                                seq(
-                                        string(Text.of("frame_name_num")),
-                                        literal(Text.of("frame_info"), "info")
+                        optional(
+                                firstParsing(
+                                        // /animate <name> frame create <name>
+                                        seq(
+                                                literal(Text.of("create"), "create"),
+                                                optional(string(Text.of("frame_name")))
+                                        ),
+                                        // /animate <name> frame delete <name|num> -f
+                                        seq(
+                                                literal(Text.of("delete"), "delete"),
+                                                string(Text.of("frame_name_num")),
+                                                optional(flags().flag("f").buildWith(none()))
+                                        ),
+                                        // /animate <name> frame display <name|num>
+                                        seq(
+                                                literal(Text.of("display"), "display"),
+                                                string(Text.of("frame_name_num")),
+                                                optional(flags().flag("f").buildWith(none()))
+                                        ),
+                                        // /animate <name> frame duplicate <name|num> [num]
+                                        seq(
+                                                literal(Text.of("duplicate"), "duplicate"),
+                                                string(Text.of("frame_name_num")),
+                                                optional(integer(Text.of("num")))
+                                        ),
+                                        // /animate <name> frame update <name|num> -o
+                                        seq(
+                                                literal(Text.of("update"), "update"),
+                                                string(Text.of("frame_name_num")),
+                                                optional(flags().flag("o").buildWith(none()))
+                                        ),
+                                        // /animate <name> frame list
+                                        seq(
+                                                literal(Text.of("list"), "list")
+                                        ),
+                                        // /animate <name> frame <name|num> info, this NEEDS to be last
+                                        seq(
+                                                string(Text.of("frame_name_num")),
+                                                literal(Text.of("frame_info"), "info")
+                                        )
                                 )
                         )
                 )
@@ -209,6 +243,6 @@ public class Util {
                 .executor(new CommandGateKeeper())
                 .build();
 
-        commandManager.register(plugin, animate, "animate");
+        commandManager.register(plugin, animate, "animate", "animation");
     }
 }
