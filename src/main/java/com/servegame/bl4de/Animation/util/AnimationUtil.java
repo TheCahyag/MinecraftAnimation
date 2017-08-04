@@ -2,6 +2,10 @@ package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.models.Animation;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 import java.io.*;
 import java.util.*;
@@ -134,5 +138,50 @@ public class AnimationUtil {
     public static boolean deleteAnimation(Animation animation){
         File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
         return animationFile.delete();
+    }
+
+    /**
+     * TODO
+     * @param animation
+     * @return
+     */
+    public static Text getButtonsForAnimation(Animation animation){
+        Text message = Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "  [",
+                                ACTION_COLOR, COMMAND_HOVER, "DELETE",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate delete " + animation.getAnimationName()))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "CREATE FRAME",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame create"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "LIST FRAMES",
+                                PRIMARY_COLOR, "]"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame list"))
+                        .build())
+                .build();
+        return message;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public static Text getButtonsForList(){
+        Text message = Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "CREATE",
+                                PRIMARY_COLOR, "]"))
+                        .onClick(TextActions.suggestCommand("/animate create <name>"))
+                        .build())
+                .build();
+        return message;
     }
 }
