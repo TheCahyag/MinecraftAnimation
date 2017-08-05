@@ -2,13 +2,18 @@ package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
-import com.servegame.bl4de.Animation.commands.CommandGateKeeper;
-import com.servegame.bl4de.Animation.commands.animation.*;
+import com.servegame.bl4de.Animation.command.CommandGateKeeper;
+import com.servegame.bl4de.Animation.command.animation.*;
+import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
+import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
 import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.TextActions;
@@ -18,6 +23,9 @@ import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.spongepowered.api.command.args.GenericArguments.*;
 
@@ -91,19 +99,19 @@ public class Util {
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "PLAY",
                                 PRIMARY_COLOR, "]    "))
-                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " start"))
+                        .onClick(TextActions.runCommand("/animate start " + animation.getAnimationName()))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "PAUSE",
                                 PRIMARY_COLOR, "]    "))
-                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " pause"))
+                        .onClick(TextActions.runCommand("/animate pause " + animation.getAnimationName()))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "STOP",
                                 PRIMARY_COLOR, "]"))
-                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " stop"))
+                        .onClick(TextActions.runCommand("/animate stop " + animation.getAnimationName()))
                         .build())
                 .build();
         return message;
@@ -117,7 +125,24 @@ public class Util {
     }
 
     /**
-     * Register commands with the Sponge {@link CommandManager}
+     * TODO should this instead get the user?
+     * @param uuid
+     * @param src
+     * @return
+     */
+    public static Optional<User> getOfflinePlayer(UUID uuid, CommandSource src){
+        // Get offline user
+        Optional<UserStorageService> userStorageServiceOptional = Sponge.getServiceManager().provide(UserStorageService.class);
+        if (!userStorageServiceOptional.isPresent()){
+            src.sendMessage(Text.of(ERROR_COLOR, "Uh oh, the UserStorageService.class couldn't be obtained..."));
+            return Optional.empty();
+        }
+        UserStorageService userStorageService = userStorageServiceOptional.get();
+        return userStorageService.get(uuid);
+    }
+
+    /**
+     * Register command with the Sponge {@link CommandManager}
      * @param plugin {@link AnimationPlugin} plugin instance
      */
     public static void registerCommands(AnimationPlugin plugin){
@@ -125,76 +150,104 @@ public class Util {
 
         // /animate create <name>
         CommandSpec createAnimation = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Create a new animation"))
+                .description(Text.of(PRIMARY_COLOR, "Create a new animation"))
                 .permission(Permissions.ANIMATION_CREATE)
-                .arguments(string(Text.of(Util.NAME_COLOR, "name")))
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
                 .executor(new CreateAnimation())
                 .build();
 
         // /animate delete <name>
         CommandSpec deleteAnimation = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Delete an animation"))
+                .description(Text.of(PRIMARY_COLOR, "Delete an animation"))
                 .permission(Permissions.ANIMATION_DELETE)
-                //.arguments(string(Text.of(Util.NAME_COLOR, "name")))
-                .arguments(flags().flag("f").buildWith(string(Text.of(Util.NAME_COLOR, "name"))))
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
+                .arguments(optional(flags().flag("f").buildWith(none())))
                 .executor(new DeleteAnimation())
                 .build();
 
         // /animate help
         CommandSpec helpAnimation = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Get help with the animation commands"))
+                .description(Text.of(PRIMARY_COLOR, "Get help with the animation command"))
                 .permission(Permissions.ANIMATION_HELP)
                 .executor(new HelpAnimation())
                 .build();
 
         // /animate list
         CommandSpec listAnimation = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Get a list of your animations"))
+                .description(Text.of(PRIMARY_COLOR, "Get a list of your animations"))
                 .permission(Permissions.ANIMATION_LIST)
                 .executor(new ListAnimation())
                 .build();
 
-        // /animate start <name> -f<num> -d<num> -c<num>
+        // /animate start <name> [-f<num>] [-d<num>] [-c<num>]
         CommandSpec startAnimation = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Start a given animation"))
+                .description(Text.of(PRIMARY_COLOR, "Start a given animation"))
                 .permission(Permissions.ANIMATION_START)
-                .arguments(string(Text.of(Util.NAME_COLOR, "name"))) // <name>
-                .arguments(flags()
-                        .valueFlag(integer(Text.of(Util.FLAG_COLOR, "frame")), "f") // -f<num>
-                        .buildWith(none()))
-                .arguments(flags()
-                        .valueFlag(integer(Text.of(Util.FLAG_COLOR, "delay")), "d") // -d<num>
-                        .buildWith(none()))
-                .arguments(flags()
-                        .valueFlag(integer(Text.of(Util.FLAG_COLOR, "cycles")), "c") // -c<num>
-                        .buildWith(none()))
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
+                .arguments(optional(flags()
+                        .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f<num>
+                        .buildWith(none())))
+                .arguments(optional(flags()
+                        .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d<num>
+                        .buildWith(none())))
+                .arguments(optional(flags()
+                        .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c<num>
+                        .buildWith(none())))
                 .executor(new BaseAnimation())
                 .build();
 
         // /animate stop <name>
         CommandSpec stopAnimation = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Stop a given animation"))
+                .description(Text.of(PRIMARY_COLOR, "Stop a given animation"))
                 .permission(Permissions.ANIMATION_STOP)
-                .arguments(string(Text.of(Util.NAME_COLOR, "name")))
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
                 .executor(new StopAnimation())
+                .build();
+
+        // /animate pause <name>
+        CommandSpec pauseAnimation = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Pause a given animation"))
+                .permission(Permissions.ANIMATION_PAUSE)
+                .arguments(string(Text.of("animation_name")))
+                .executor(new PauseAnimation())
                 .build();
 
         // /animate
         CommandSpec animate = CommandSpec.builder()
-                .description(Text.of(Util.PRIMARY_COLOR, "Base animation command"))
+                .description(Text.of(PRIMARY_COLOR, "Base animation command"))
                 .child(createAnimation, "create")
                 .child(deleteAnimation, "delete")
                 .child(helpAnimation, "help", "?")
                 .child(listAnimation, "list")
                 .child(startAnimation, "start")
                 .child(stopAnimation, "stop")
+                .child(pauseAnimation, "pause")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
                                 // /animate <name> info
                                 literal(Text.of("animation_info"), "info"),
+                                // /animate <name> set...
+                                literal(Text.of("animation_set"), "set"),
                                 // /animate <name> frame...
                                 literal(Text.of("frame"), "frame")
+                        ),
+                        optional(
+                                firstParsing(
+                                        // /animate <name> set pos1
+                                        seq(
+                                                literal(Text.of("pos1"), "pos1")
+                                        ),
+                                        // /animate <name> set pos2
+                                        seq(
+                                                literal(Text.of("pos2"), "pos2")
+                                        ),
+                                        // /animate <name> set name <new_name>
+                                        seq(
+                                                literal(Text.of("set_name"), "name"),
+                                                string(Text.of("new_name"))
+                                        )
+                                )
                         ),
                         optional(
                                 firstParsing(
