@@ -16,13 +16,17 @@ public class TextResponses {
 
     // General Error Responses
     public static final Text GENERAL_ARGUMENTS_INCORRECT = Text.of(ERROR_COLOR, "The arguments supplied are incorrect or were not parsed correctly.");
+    public static final Text GENERAL_NO_NAME_ERROR = Text.of(ERROR_COLOR, "The name provided was not parsed correctly/wasn't specified.");
+    public static final Text GENERAL_INDIFFERENT_NAME_ERROR = Text.of(ERROR_COLOR, "The name provided is indifferent to the current name.");
+    public static final Text GENERAL_PROBLEM_RUNNING_COMMAND_ERROR = Text.of(ERROR_COLOR, "There was a problem running this command... check console for stacktrace.");
 
     // Animation Responses
+    public static final Text ANIMATION_SUCCESSFULLY_ALTERED = Text.of(PRIMARY_COLOR, "Animation successfully altered.");
     // Animation Warning Responses
     // Animation Error Responses
     public static final Text ANIMATION_SAVE_ERROR = Text.of(ERROR_COLOR, "There was a problem saving the animation.");
     public static final Text ANIMATION_DELETE_ERROR = Text.of(ERROR_COLOR, "There was a problem deleting the animation.");
-    public static final Text ANIMATION_ALREADY_EXISTS_ERROR = Text.of(ERROR_COLOR, "The specified animation already exists.");
+    public static final Text ANIMATION_ALREADY_EXISTS_ERROR = Text.of(ERROR_COLOR, "The specified animation name already exists.");
     public static final Text ANIMATION_NOT_FOUND_ERROR = Text.of(ERROR_COLOR, "Animation was not found.");
     public static final Text ANIMATION_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Animation name was not parsed correctly/wasn't specified.");
     public static final Text ANIMATION_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The animation is currently not fully initialized:");
