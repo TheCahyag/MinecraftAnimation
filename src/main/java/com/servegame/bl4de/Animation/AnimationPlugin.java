@@ -1,12 +1,14 @@
 package com.servegame.bl4de.Animation;
 
 import com.google.inject.Inject;
+import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.Util;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
+import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.io.File;
@@ -50,6 +52,12 @@ public class AnimationPlugin {
 
     @Listener
     public void onLoad(GameLoadCompleteEvent event){
+    }
+
+    @Listener
+    public void onStop(GameStoppingEvent event){
+        logger.info("Stopping animations...");
+        AnimationUtil.stopAllAnimations();
     }
 
     /**
