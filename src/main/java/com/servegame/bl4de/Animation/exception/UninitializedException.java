@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.exceptions;
+package com.servegame.bl4de.Animation.exception;
 
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.text.Text;
