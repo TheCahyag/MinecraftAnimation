@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.animation;
+package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
@@ -37,13 +37,12 @@ public class HelpAnimation implements CommandExecutor {
             ----------------------------------------------------
         */
         Text message = Text.builder()
-                .append(Text.of(Util.SECONDARY_COLOR, "----------------------------------------------------\n"))
-                .append(Text.of(TextColors.WHITE, "/"))
-                .append(Text.builder()
-                        .append(Text.of(Util.PRIMARY_COLOR, Util.COMMAND_STYLE, "animate\n"))
-                        .onClick(TextActions.runCommand("/animate"))
-                        .onHover(Util.COMMAND_HOVER)
-                        .build())
+//                .append(Text.of(TextColors.WHITE, "/"))
+//                .append(Text.builder()
+//                        .append(Text.of(Util.PRIMARY_COLOR, Util.COMMAND_STYLE, "animate\n"))
+//                        .onClick(TextActions.runCommand("/animate"))
+//                        .onHover(Util.COMMAND_HOVER)
+//                        .build()) // Can't actually call this TODO
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " create",
@@ -62,6 +61,10 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " stop",
                         Util.NAME_COLOR, " <name>\n"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.ACTION_COLOR, " pause",
+                        Util.NAME_COLOR, " <name>\n"))
                 .append(Text.of(TextColors.WHITE, "/"))
                 .append(Text.builder()
                         .append(Text.of(Util.PRIMARY_COLOR, Util.COMMAND_STYLE, "animate", Util.ACTION_COLOR, " list\n"))
@@ -71,7 +74,17 @@ public class HelpAnimation implements CommandExecutor {
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
-                        Util.ACTION_COLOR, " info"))
+                        Util.ACTION_COLOR, " info\n"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.NAME_COLOR, " <name>",
+                        Util.ACTION_COLOR, " set",
+                        Util.PRIMARY_COLOR, " <pos1|pos2>\n"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.NAME_COLOR, " <name>",
+                        Util.ACTION_COLOR, " set name",
+                        Util.NAME_COLOR, " <new_name> (Not impl.)\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
@@ -103,12 +116,6 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
                         Util.PRIMARY_COLOR, " frame",
-                        Util.NAME_COLOR, " <name|num>",
-                        Util.ACTION_COLOR, " info\n"))
-                .append(Text.of(TextColors.WHITE, "/",
-                        Util.PRIMARY_COLOR, "animate",
-                        Util.NAME_COLOR, " <name>",
-                        Util.PRIMARY_COLOR, " frame",
                         Util.ACTION_COLOR, " list\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
@@ -117,6 +124,19 @@ public class HelpAnimation implements CommandExecutor {
                         Util.ACTION_COLOR, " update",
                         Util.NAME_COLOR, " <name|num>",
                         Util.FLAG_COLOR, " -o\n"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.NAME_COLOR, " <name>",
+                        Util.PRIMARY_COLOR, " frame",
+                        Util.NAME_COLOR, " <name|num>",
+                        Util.ACTION_COLOR, " info\n"))
+                .append(Text.of(TextColors.WHITE, "/",
+                        Util.PRIMARY_COLOR, "animate",
+                        Util.NAME_COLOR, " <name>",
+                        Util.PRIMARY_COLOR, " frame",
+                        Util.NAME_COLOR, " <name|num>",
+                        Util.ACTION_COLOR, " set name",
+                        Util.NAME_COLOR, " <new_name> (not impl)\n"))
                 .append(Text.of(Util.SECONDARY_COLOR, "----------------------------------------------------"))
                 .build();
         src.sendMessage(message);
