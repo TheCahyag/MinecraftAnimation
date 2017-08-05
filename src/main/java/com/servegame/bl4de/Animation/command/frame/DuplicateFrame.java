@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.frame;
+package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.command.CommandException;
@@ -9,30 +9,22 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
 /**
- * File: DisplayFrame.java
+ * File: DuplicateFrame.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DisplayFrame implements CommandExecutor {
+public class DuplicateFrame implements CommandExecutor {
 
     private Animation animation;
 
-    public DisplayFrame(Animation animation){
+    public DuplicateFrame(Animation animation){
         this.animation = animation;
     }
 
-    /**
-     * Takes a string and will parse the arguments
-     * @param rawString
-     * @return
-     */
-    public static CommandContext parseArguments(String rawString){
-        return null;
-    }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        src.sendMessage(Text.of("Hello from displayframe"));
+        src.sendMessage(Text.of("Hello from duplicateframe"));
         return CommandResult.success();
     }
 }

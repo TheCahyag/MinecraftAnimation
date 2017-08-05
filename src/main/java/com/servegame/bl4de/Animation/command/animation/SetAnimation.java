@@ -1,30 +1,19 @@
-package com.servegame.bl4de.Animation.commands.frame;
+package com.servegame.bl4de.Animation.command.animation;
 
-import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.text.Text;
 
 /**
- * File: DuplicateFrame.java
+ * File: SetAnimation.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DuplicateFrame implements CommandExecutor {
-
-    private Animation animation;
-
-    public DuplicateFrame(Animation animation){
-        this.animation = animation;
-    }
-
-
+public class SetAnimation implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        src.sendMessage(Text.of("Hello from duplicateframe"));
-        return CommandResult.success();
+        return null;
     }
 }

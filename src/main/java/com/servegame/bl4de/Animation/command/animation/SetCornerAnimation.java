@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.animation.action;
+package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
@@ -13,11 +13,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.Optional;
 
 /**
- * File: StartAnimation.java
+ * File: SetCornerAnimation.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class StartAnimation implements CommandExecutor {
+public class SetCornerAnimation implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (!(src instanceof Player)){
@@ -26,32 +26,24 @@ public class StartAnimation implements CommandExecutor {
         }
         Player player = ((Player) src);
 
-        // Get animation
+        // Get the animation name
         Optional<String> animationNameOptional = args.getOne("animation_name");
-        if (!animationNameOptional.isPresent()){
+        if (!(animationNameOptional.isPresent())){
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();
         }
-        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationNameOptional.get(), player.getUniqueId());
-        if (!animationOptional.isPresent()){
+        String animationName = animationNameOptional.get();
+
+        // Get the animation
+        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationName, player.getUniqueId());
+        if (!(animationOptional.isPresent())){
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
             return CommandResult.success();
         }
         Animation animation = animationOptional.get();
 
-        // Parse flag arguments
-        Optional<Integer> frameToStartOnOptional = args.getOne("frame");
-        Optional<Integer> tickDelayOptional = args.getOne("delay");
-        Optional<Integer> cyclesOptional = args.getOne("cycles");
-        tickDelayOptional.ifPresent(animation::setTickDelay);
-        cyclesOptional.ifPresent(animation::setCycles);
+        // Need to make structure the command before I implement this part TODO
 
-        if (frameToStartOnOptional.isPresent()){
-            animation.start(frameToStartOnOptional.get());
-        } else {
-            animation.start();
-        }
         return CommandResult.success();
-
     }
 }

@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.animation;
+package com.servegame.bl4de.Animation.command.animation.action;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
@@ -13,11 +13,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.Optional;
 
 /**
- * File: SetCornerAnimation.java
+ * File: StopAnimation.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class SetCornerAnimation implements CommandExecutor {
+public class StopAnimation implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (!(src instanceof Player)){
@@ -26,23 +26,20 @@ public class SetCornerAnimation implements CommandExecutor {
         }
         Player player = ((Player) src);
 
-        // Get the animation name
+        // Get animation
         Optional<String> animationNameOptional = args.getOne("animation_name");
-        if (!(animationNameOptional.isPresent())){
+        if (!animationNameOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();
         }
-        String animationName = animationNameOptional.get();
-
-        // Get the animation
-        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationName, player.getUniqueId());
-        if (!(animationOptional.isPresent())){
+        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationNameOptional.get(), player.getUniqueId());
+        if (!animationOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
             return CommandResult.success();
         }
         Animation animation = animationOptional.get();
 
-        // Need to make structure the command before I implement this part TODO
+        animation.stop();
 
         return CommandResult.success();
     }

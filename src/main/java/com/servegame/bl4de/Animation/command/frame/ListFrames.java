@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.frame;
+package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.command.CommandException;
@@ -9,15 +9,15 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
 /**
- * File: UpdateFrame.java
+ * File: ListFrames.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class UpdateFrame implements CommandExecutor {
+public class ListFrames implements CommandExecutor {
 
     private Animation animation;
 
-    public UpdateFrame(Animation animation){
+    public ListFrames(Animation animation){
         this.animation = animation;
     }
 
@@ -32,6 +32,7 @@ public class UpdateFrame implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        src.sendMessage(Text.of("Hello from updateframe"));
-        return CommandResult.success();    }
+        src.sendMessage(Text.of("Hello from listframe"));
+        return CommandResult.success();
+    }
 }

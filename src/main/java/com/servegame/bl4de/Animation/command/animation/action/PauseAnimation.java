@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.animation.action;
+package com.servegame.bl4de.Animation.command.animation.action;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
@@ -13,11 +13,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.Optional;
 
 /**
- * File: StopAnimation.java
+ * File: PauseAnimation.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class StopAnimation implements CommandExecutor {
+public class PauseAnimation implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (!(src instanceof Player)){
@@ -39,7 +39,7 @@ public class StopAnimation implements CommandExecutor {
         }
         Animation animation = animationOptional.get();
 
-        animation.stop();
+        animation.pause();
 
         return CommandResult.success();
     }

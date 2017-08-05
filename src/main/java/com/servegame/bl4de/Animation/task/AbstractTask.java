@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.tasks;
+package com.servegame.bl4de.Animation.task;
 
 /**
  * File: AbstractTask.java

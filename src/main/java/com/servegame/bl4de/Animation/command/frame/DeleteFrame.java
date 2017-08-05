@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.commands.frame;
+package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import org.spongepowered.api.command.CommandException;

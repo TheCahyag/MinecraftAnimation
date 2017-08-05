@@ -1,7 +1,7 @@
-package com.servegame.bl4de.Animation.commands;
+package com.servegame.bl4de.Animation.command;
 
-import com.servegame.bl4de.Animation.commands.animation.InfoAnimation;
-import com.servegame.bl4de.Animation.commands.frame.*;
+import com.servegame.bl4de.Animation.command.animation.InfoAnimation;
+import com.servegame.bl4de.Animation.command.frame.*;
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -49,13 +49,13 @@ public class CommandGateKeeper implements CommandExecutor {
         if (animationInfo){
             return new InfoAnimation(animation).execute(src, args);
         } else if (frame){
-            boolean create = (boolean) args.getOne("create").orElse(false);
-            boolean delete = (boolean) args.getOne("delete").orElse(false);
-            boolean display = (boolean) args.getOne("display").orElse(false);
-            boolean duplicate = (boolean) args.getOne("duplicate").orElse(false);
-            boolean update = (boolean) args.getOne("update").orElse(false);
-            boolean list = (boolean) args.getOne("list").orElse(false);
-            boolean frameInfo = (boolean) args.getOne("frame_info").orElse(false);
+            boolean create      = (boolean) args.getOne("create").orElse(false);
+            boolean delete      = (boolean) args.getOne("delete").orElse(false);
+            boolean display     = (boolean) args.getOne("display").orElse(false);
+            boolean duplicate   = (boolean) args.getOne("duplicate").orElse(false);
+            boolean update      = (boolean) args.getOne("update").orElse(false);
+            boolean list        = (boolean) args.getOne("list").orElse(false);
+            boolean frameInfo   = (boolean) args.getOne("frame_info").orElse(false);
 
             if (create)
                 return new CreateFrame(animation).execute(src, args);

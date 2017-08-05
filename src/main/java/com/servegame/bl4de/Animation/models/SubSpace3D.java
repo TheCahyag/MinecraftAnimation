@@ -1,6 +1,6 @@
 package com.servegame.bl4de.Animation.models;
 
-import com.servegame.bl4de.Animation.exceptions.UninitializedException;
+import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class SubSpace3D implements Serializable {
-    private long serialVersionUID = -34561563741840235L;
+    private static final long serialVersionUID = -34561563741840235L;
 
     private Location<World> cornerOne;
     private Location<World> cornerTwo;
