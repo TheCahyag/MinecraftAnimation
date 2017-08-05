@@ -14,7 +14,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 /animate start \<name> [-f\<num>] [-d\<num>] [-c\<num>]  
 /animate stop \<name>  
 /animate pause \<name>  
-/animate \<name> info
+/animate \<name> info  
 /animate \<name> set <pos1|pos2>  
 /animate \<name> set name <new_name>  
 /animate \<name> frame create [name]  
@@ -24,7 +24,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 /animate \<name> frame list  
 /animate \<name> frame update <name|num> -o  
 /animate \<name> frame <name|num> info  
-/animate \<name> frame <name|num> set <new_name>
+/animate \<name> frame <name|num> set name <new_name>
 
 ## TODO
 * Set warning for a animation that has a large subspace (since it might lag the server)
@@ -45,6 +45,9 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
     * Should stopping an animation remove all visible contents of the animation
     * Pausing should keep track of the current frame it is on
 * Make a config where the user can specify the default values of animation's states (frame, delay, cycles)
+* Register the commands that arn't registered see InfoAnimation
+* Make specific response messages for every command rather than generic messages?
+* Fix /animate delete sub command
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
