@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation.command;
 
 import com.servegame.bl4de.Animation.command.animation.InfoAnimation;
+import com.servegame.bl4de.Animation.command.animation.SetAnimation;
 import com.servegame.bl4de.Animation.command.frame.*;
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
@@ -31,6 +32,7 @@ public class CommandGateKeeper implements CommandExecutor {
         // Get essential arguments
         Optional<String> animationNameOptional = args.getOne("animation_name");
         boolean animationInfo = (boolean) args.getOne("animation_info").orElse(false);
+        boolean animationSet = (boolean) args.getOne("animation_set").orElse(false);
         boolean frame = (boolean) args.getOne("frame").orElse(false);
 
         if (!animationNameOptional.isPresent()){
@@ -48,6 +50,8 @@ public class CommandGateKeeper implements CommandExecutor {
         Animation animation = animationOptional.get();
         if (animationInfo){
             return new InfoAnimation(animation).execute(src, args);
+        } else if (animationSet){
+            return new SetAnimation(animation).execute(src, args);
         } else if (frame){
             boolean create      = (boolean) args.getOne("create").orElse(false);
             boolean delete      = (boolean) args.getOne("delete").orElse(false);
