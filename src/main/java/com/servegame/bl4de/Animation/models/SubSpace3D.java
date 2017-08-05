@@ -35,6 +35,7 @@ public class SubSpace3D implements Serializable {
     public SubSpace3D(Location<World> bound1, Location<World> bound2){
         this.cornerOne = bound1;
         this.cornerTwo = bound2;
+        this.set3DArray();
     }
 
     /**
@@ -64,10 +65,10 @@ public class SubSpace3D implements Serializable {
      * @return boolean indicating complete initialization
      */
     public boolean isInitialized() {
-        if (this.getCornerOne() == null) {
+        if (this.cornerOne == null) {
             return false;
         }
-        if (this.getCornerTwo() == null) {
+        if (this.cornerTwo == null) {
             return false;
         }
         return true;
