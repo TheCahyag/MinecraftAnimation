@@ -43,7 +43,7 @@ public class AnimationUtil {
             } else {
                 return Optional.empty();
             }
-            // There's a lot of exceptions here, possible point of refactor TODO
+            // There's a lot of exception here, possible point of refactor TODO
         } catch (NullPointerException npe){
             // If the fileList is of size zero
             npe.printStackTrace();
@@ -104,6 +104,21 @@ public class AnimationUtil {
     }
 
     /**
+     * Stops all animations, usually ran when the server is shutting down.
+     */
+    public static void stopAllAnimations(){
+        Map<UUID, ArrayList<String>> animations = getAnimations();
+        for (Map.Entry<UUID, ArrayList<String>> entry :
+                animations.entrySet()) {
+            ArrayList<String> animationNames = entry.getValue();
+            UUID uuid = entry.getKey();
+            for (int i = 0; i < animationNames.size(); i++) {
+                getAnimation(animationNames.get(i), uuid).get().stop();
+            }
+        }
+    }
+
+    /**
      * Create or overwrite an existing file that will contain the serialized data from the Animation plugin
      * @param animation given {@link Animation}
      * @return Success status: true=success, false=failed
@@ -148,21 +163,21 @@ public class AnimationUtil {
     public static Text getButtonsForAnimation(Animation animation){
         Text message = Text.builder()
                 .append(Text.builder()
-                        .append(Text.of(PRIMARY_COLOR, "  [",
+                        .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "DELETE",
-                                PRIMARY_COLOR, "]    "))
+                                PRIMARY_COLOR, "] "))
                         .onClick(TextActions.runCommand("/animate delete " + animation.getAnimationName()))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "CREATE FRAME",
-                                PRIMARY_COLOR, "]    "))
+                                PRIMARY_COLOR, "] "))
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame create"))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "LIST FRAMES",
-                                PRIMARY_COLOR, "]"))
+                                PRIMARY_COLOR, "] | "))
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame list"))
                         .build())
                 .build();
