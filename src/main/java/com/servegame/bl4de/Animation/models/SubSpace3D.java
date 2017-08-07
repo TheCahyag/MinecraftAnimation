@@ -1,10 +1,10 @@
 package com.servegame.bl4de.Animation.models;
 
 import com.servegame.bl4de.Animation.exception.UninitializedException;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.world.Location;
@@ -18,12 +18,15 @@ import java.util.Optional;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class SubSpace3D implements Serializable {
-    private static final long serialVersionUID = -34561563741840235L;
+@ConfigSerializable
+public class SubSpace3D /*implements Serializable */{
+    //private static final long serialVersionUID = -34561563741840235L;
 
-    // Location<World>
-    private ConfigurationNode cornerOne;
-    private ConfigurationNode cornerTwo;
+    @Setting(value = "corner_one", comment = "Location<World> of the first corner")
+    private Location<World> cornerOne;
+
+    @Setting(value = "corner_two", comment = "Location<World> of the second corner")
+    private Location<World> cornerTwo;
 
     private BlockSnapshot[][][] subSpace;
 
@@ -38,8 +41,8 @@ public class SubSpace3D implements Serializable {
      * @param bound2 {@link Location}
      */
     public SubSpace3D(Location<World> bound1, Location<World> bound2){
-//        this.cornerOne = AnimationUtil.translateFromConfig(bo);
-//        this.cornerTwo = bound2.toContainer(); TODO not sure if this is useable
+//        this.cornerOne = bound1.toContainer();
+//        this.cornerTwo = bound2.toContainer();
         this.set3DArray();
     }
 
@@ -48,13 +51,13 @@ public class SubSpace3D implements Serializable {
      * @param subSpace3D SubSpace
      */
     public SubSpace3D(SubSpace3D subSpace3D) throws UninitializedException {
-        Optional<Location> cornerOneOptional = subSpace3D.getCornerOne();
-        Optional<Location> cornerTwoOptional = subSpace3D.getCornerTwo();
+        Optional<Location<World>> cornerOneOptional = subSpace3D.getCornerOne();
+        Optional<Location<World>> cornerTwoOptional = subSpace3D.getCornerTwo();
         if (subSpace3D.isInitialized()){
             throw new UninitializedException(TextResponses.SUBSPACE_NOT_INITIALIZED_ERROR);
         } else {
-            this.cornerOne = AnimationUtil.translateToConfig(cornerOneOptional.get());
-            this.cornerTwo = AnimationUtil.translateToConfig(cornerTwoOptional.get());
+            this.cornerOne = cornerOneOptional.get();
+            this.cornerTwo = cornerTwoOptional.get();
         }
     }
 
@@ -83,20 +86,19 @@ public class SubSpace3D implements Serializable {
      * Getter for corner one
      * @return {@link Location}
      */
-    public Optional<Location> getCornerOne() {
+    public Optional<Location<World>> getCornerOne() {
         if (this.cornerOne == null){
             return Optional.empty();
         } else {
-            return AnimationUtil.translateFromConfig(this.cornerOne);
-        }
+            return Optional.of(this.cornerOne);        }
     }
 
     /**
      * Setter for corner one
      * @param cornerOne {@link Location}
      */
-    public void setCornerOne(Location cornerOne) {
-        this.cornerOne = AnimationUtil.translateToConfig(cornerOne);
+    public void setCornerOne(Location<World> cornerOne) {
+        this.cornerOne = cornerOne;
         if (this.isInitialized()){
             this.set3DArray();
         }
@@ -106,11 +108,11 @@ public class SubSpace3D implements Serializable {
      * Getter for corner two
      * @return {@link Location}
      */
-    public Optional<Location> getCornerTwo() {
+    public Optional<Location<World>> getCornerTwo() {
         if (this.cornerTwo == null){
             return Optional.empty();
         } else {
-            return AnimationUtil.translateFromConfig(this.cornerTwo);
+            return Optional.of(this.cornerTwo);
         }
     }
 
@@ -118,8 +120,8 @@ public class SubSpace3D implements Serializable {
      * Setter for corner two
      * @param cornerTwo {@link Location}
      */
-    public void setCornerTwo(Location cornerTwo) {
-        this.cornerTwo = AnimationUtil.translateToConfig(cornerTwo);
+    public void setCornerTwo(Location<World> cornerTwo) {
+        this.cornerTwo = cornerTwo;
         if (this.isInitialized()){
             this.set3DArray();
         }
