@@ -29,16 +29,16 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 ## TODO
 * Set warning for a animation that has a large subspace (since it might lag the server)
 * Set up permissions (kinda done with this, need to add permissions for sub commands and such)
-* Add a way to start an animation without a command? Or just force people to use command blocks to run the command
+* ~~Add a way to start an animation without a command? Or just force people to use command blocks to run the command~~ (No go)
 * ~~Create~~ ~~Format a info message that can be displayed for each animation~~
 * ~~Refactor core models to check all input that is given~~
-* Refactor ListAnimation command to display buttons that will act as commands
+* ~~Refactor ListAnimation command to display buttons that will act as commands~~
 * Add .complete() lists on all arguments for tabbing arguments
 * Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)
-* When running /animate list if there are zero animations send a "there are no animations" message
+* ~~When running /animate list if there are zero animations send a "there are no animations" message~~
     * Maybe have a counter of how many animations there are and how many are being displayed
 * Look into making FrameElement and AnimationElement
-* Should the state of the subspace be saved before an animation is played?
+* Should the state of the subspace be saved before an animation is played, stuff other than the animation stuff?
 * Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)
 * Fix the buttons so that clicking on the spaces don't execute the command
 * Implement pause operation
@@ -48,6 +48,8 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Register the commands that arn't registered see InfoAnimation
 * Make specific response messages for every command rather than generic messages?
 * Fix /animate delete sub command
+* Use pageation to display only a certain number of frames and animations when listing the frames and animations
+* Make a animation's subspace the place where the animation is played, but allow a different subspace for the frame so the user can place all frames down at the same time.
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
