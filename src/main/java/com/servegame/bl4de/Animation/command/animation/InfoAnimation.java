@@ -56,8 +56,7 @@ public class InfoAnimation implements CommandExecutor {
         cornerTwo = cornerTwoOptional.map(Location::toString).orElse("nil");
 
         Text message = Text.builder()
-                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n",
-                        PRIMARY_COLOR, "Name",
+                .append(Text.of(PRIMARY_COLOR, "Name",
                         WHITE, ": ",
                         NAME_COLOR, this.animation.getAnimationName() + "\n",
                         PRIMARY_COLOR, "Owner",
@@ -74,7 +73,16 @@ public class InfoAnimation implements CommandExecutor {
                         SECONDARY_COLOR, cornerOne + "\n",
                         PRIMARY_COLOR, "Corner 2",
                         WHITE, ": ",
-                        SECONDARY_COLOR, cornerTwo + "\n"))
+                        SECONDARY_COLOR, cornerTwo + "\n",
+                        PRIMARY_COLOR, "Frame Delay",
+                        WHITE, ": ",
+                        SECONDARY_COLOR, animation.getTickDelay() + "\n",
+                        PRIMARY_COLOR, "Start Frame",
+                        WHITE, ": ",
+                        SECONDARY_COLOR, this.animation.getFrameIndex() + "\n",
+                        PRIMARY_COLOR, "Cycles to Complete",
+                        WHITE, ": ",
+                        SECONDARY_COLOR, this.animation.getCycles() + "\n"))
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n"))
                 .append(getAnimationButtons(this.animation))
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
