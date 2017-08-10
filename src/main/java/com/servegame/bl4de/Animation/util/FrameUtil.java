@@ -2,6 +2,11 @@ package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.models.Animation;
 import com.servegame.bl4de.Animation.models.Frame;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
+import static org.spongepowered.api.text.format.TextColors.*;
 
 import java.util.List;
 import java.util.Random;
@@ -43,5 +48,33 @@ public class FrameUtil {
         }
         // This line should never execute
         return ((Integer) new Random().nextInt(999999)).toString();
+    }
+
+    public static void displayFrame(Frame frame){
+
+    }
+
+    public static Text linkToFrameInfo(Frame frame, Animation animation){
+        Text message = Text.builder()
+                .append(Text.of(NAME_COLOR, COMMAND_STYLE, frame.getName()))
+                .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame " + frame.getName() + " info"))
+                .build();
+        return message;
+    }
+
+    public static Text getButtonsForList(Animation animation){
+        Text message = Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "CREATE FRAME",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame create"))
+                        .build())
+                .build();
+        return message;
+    }
+
+    public static Text getButtonsForFrameInfo(Frame frame, Animation animation){
+        return null;
     }
 }
