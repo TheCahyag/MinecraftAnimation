@@ -17,20 +17,25 @@ import java.util.Random;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class FrameUtil {
+    private static int lastNumberForName = 0;
 
     /**
      * Generates a name for a frame by starting with the string frame0,
-     * checking if that exists and if so will check for frame1 and so
+     * checking if that exists and if not it will check for frame1 and so
      * on until there is an availability
      *
      * TODO:
      * May need to refactor this to remember the last number it was
      * on to reduce redundant code execution
+     * This might be fixed now, it won't persist after a restart, but if it 
+     * does persist throughout the life of a server it will only be running 
+     * redundent code the first time it creates a frame name.
+     *
      * @param animation the {@link Animation} the {@link Frame} will belong to
      * @return String - name for the frame
      */
     public static String generateFrameName(Animation animation){
-        int counter = 0;
+        int counter = lastNumberForName;
         List<Frame> frames = animation.getFrames();
         boolean valid = true;
         while (valid){
@@ -41,6 +46,7 @@ public class FrameUtil {
                 }
             }
             if (valid){
+                lastNumberForName = ++counter;
                 return nameTrial;
             } else {
                 counter++;
@@ -51,7 +57,7 @@ public class FrameUtil {
     }
 
     public static void displayFrame(Frame frame){
-
+        // This should be moved to either the Frame or Animation Class
     }
 
     public static Text linkToFrameInfo(Frame frame, Animation animation){
