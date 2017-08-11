@@ -50,6 +50,9 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Fix /animate delete sub command
 * Use pageation to display only a certain number of frames and animations when listing the frames and animations
 * Make a animation's subspace the place where the animation is played, but allow a different subspace for the frame so the user can place all frames down at the same time.
+* When a user updates a frame it would be cool to show the additions and deletions.
+   * Additions being when a block goes from air to not air
+   * Deletions being when a block goes from not air to air
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
