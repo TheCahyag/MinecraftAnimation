@@ -1,6 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation;
 
-import com.servegame.bl4de.Animation.models.Animation;
+import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;

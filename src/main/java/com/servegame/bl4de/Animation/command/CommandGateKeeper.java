@@ -3,7 +3,7 @@ package com.servegame.bl4de.Animation.command;
 import com.servegame.bl4de.Animation.command.animation.InfoAnimation;
 import com.servegame.bl4de.Animation.command.animation.SetAnimation;
 import com.servegame.bl4de.Animation.command.frame.*;
-import com.servegame.bl4de.Animation.models.Animation;
+import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandException;
