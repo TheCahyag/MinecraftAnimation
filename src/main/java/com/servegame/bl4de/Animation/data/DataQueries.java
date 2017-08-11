@@ -11,21 +11,21 @@ import static org.spongepowered.api.data.DataQuery.of;
  */
 public class DataQueries {
     // Animation
-    public static final DataQuery ANIMATION_NAME = of();
-    public static final DataQuery ANIMATION_OWNER = of();
-    public static final DataQuery ANIMATION_FRAMES = of();
-    public static final DataQuery ANIMATION_SUBSPACE = of();
-    public static final DataQuery ANIMATION_FRAME_INDEX = of();
-    public static final DataQuery ANIMATION_TICK_DELAY = of();
-    public static final DataQuery ANIMATION_CYCLES = of();
-    public static final DataQuery ANIMATION_STATUS = of();
+    public static final DataQuery ANIMATION_NAME = of("animation_name");
+    public static final DataQuery ANIMATION_OWNER = of("animation_owner");
+    public static final DataQuery ANIMATION_FRAMES = of("animation_frames");
+    public static final DataQuery ANIMATION_SUBSPACE = of("animation_subspace");
+    public static final DataQuery ANIMATION_FRAME_INDEX = of("animation_frame_index");
+    public static final DataQuery ANIMATION_TICK_DELAY = of("animation_tick_delay");
+    public static final DataQuery ANIMATION_CYCLES = of("animation_cycles");
+    public static final DataQuery ANIMATION_STATUS = of("animation_status");
 
     // Frame
-    public static final DataQuery FRAME_CREATOR = of();
-    public static final DataQuery FRAME_NAME = of();
+    public static final DataQuery FRAME_CREATOR = of("frame_creator");
+    public static final DataQuery FRAME_NAME = of("frame_name");
 
     // SubSpace
-    public static final DataQuery SUBSPACE_CORNER_ONE = of();
-    public static final DataQuery SUBSPACE_CORNER_TWO = of();
-    public static final DataQuery SUBSPACE_CONTENTS = of();
+    public static final DataQuery SUBSPACE_CORNER_ONE = of("subspace_corner_one");
+    public static final DataQuery SUBSPACE_CORNER_TWO = of("subspace_corner_two");
+    public static final DataQuery SUBSPACE_CONTENTS = of("subspace_contents");
 }
