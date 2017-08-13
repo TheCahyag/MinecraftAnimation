@@ -35,7 +35,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
      * @param name name of the frame
      * @param subSpace {@link SubSpace3D}
      */
-    public Frame(UUID creator, String name, SubSpace3D subSpace) throws UninitializedException {
+    public Frame(UUID creator, String name, SubSpace3D subSpace) {
         super(subSpace); // Init the subspace
         this.creator = creator;
         this.name = name;
@@ -130,12 +130,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
                 UUID creator = container.getObject(FRAME_CREATOR, UUID.class).get();
                 String name = container.getString(FRAME_NAME).get();
                 SubSpace3D subSpace3D = container.getObject(FRAME_SUBSPACE, SubSpace3D.class).get();
-                try {
-                    frame = new Frame(creator, name, subSpace3D);
-                } catch (UninitializedException e){
-                    e.printStackTrace();
-                    System.out.println("Failed to recreated frame.");
-                }
+                frame = new Frame(creator, name, subSpace3D);
             }
             return Optional.ofNullable(frame);
         }

@@ -13,6 +13,7 @@ import org.spongepowered.api.world.World;
 
 import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
+import java.lang.reflect.Array;
 import java.util.Optional;
 
 /**
@@ -47,16 +48,12 @@ public class SubSpace3D implements DataSerializable {
      * Copy constructor
      * @param subSpace3D SubSpace
      */
-    public SubSpace3D(SubSpace3D subSpace3D) throws UninitializedException {
+    protected SubSpace3D(SubSpace3D subSpace3D) {
         Optional<Location<World>> cornerOneOptional = subSpace3D.getCornerOne();
         Optional<Location<World>> cornerTwoOptional = subSpace3D.getCornerTwo();
-        if (subSpace3D.isInitialized()){
-            throw new UninitializedException(TextResponses.SUBSPACE_NOT_INITIALIZED_ERROR);
-        } else {
-            this.cornerOne = cornerOneOptional.get();
-            this.cornerTwo = cornerTwoOptional.get();
-            this.contents = subSpace3D.getContents();
-        }
+        cornerOneOptional.ifPresent(worldLocation -> this.cornerOne = worldLocation);
+        cornerTwoOptional.ifPresent(worldLocation -> this.cornerTwo = worldLocation);
+        this.contents = subSpace3D.getContents();
     }
 
     /**
@@ -88,7 +85,8 @@ public class SubSpace3D implements DataSerializable {
         if (this.cornerOne == null){
             return Optional.empty();
         } else {
-            return Optional.of(this.cornerOne);        }
+            return Optional.of(this.cornerOne);
+        }
     }
 
     /**
@@ -163,7 +161,15 @@ public class SubSpace3D implements DataSerializable {
 
         @Override
         protected Optional<SubSpace3D> buildContent(DataView container) throws InvalidDataException {
-            return null;
+            SubSpace3D subSpace3D = new SubSpace3D();
+            if (container.contains(SUBSPACE_CORNER_ONE)){
+                subSpace3D.setCornerOne(container.getObject(SUBSPACE_CORNER_ONE, Location.class).get()); // Not sure if I can ignore this warning
+            }
+            if (container.contains(SUBSPACE_CORNER_TWO)){
+                subSpace3D.setCornerTwo(container.getObject(SUBSPACE_CORNER_TWO, Location.class).get());
+            }
+            // I may need to find a different way to save contents here TODO
+            return Optional.of(subSpace3D);
         }
     }
 }

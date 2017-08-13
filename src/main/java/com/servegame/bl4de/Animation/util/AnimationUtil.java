@@ -1,13 +1,19 @@
 package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
-import com.servegame.bl4de.Animation.models.Animation;
+import com.servegame.bl4de.Animation.model.Animation;
+import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.persistence.DataTranslator;
+import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.world.Location;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -28,18 +34,18 @@ public class AnimationUtil {
      */
     public static Optional<Animation> getAnimation(String name, UUID owner){
         ArrayList<String> animations = getAnimationsByOwner(owner);
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        Animation newAnimation;
+        Animation newAnimation = null;
         try {
             if (animations.contains(name)){
                 File f = new File(ANIMATION_DATA_DIR + "/" + owner.toString() + "." + name);
-                fis = new FileInputStream(f); // this needs to be closed TODO
-                ois = new ObjectInputStream(fis); // this needs to be closed TODO
-                newAnimation = (Animation) ois.readObject();
-                fis.close();
-                ois.close();
-                return Optional.of(newAnimation);
+                InputStream in = Files.newInputStream(f.toPath()); // TODO Refactor
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+                String line, toDeserialize = null;
+                while ((line = bufferedReader.readLine()) != null){
+                    toDeserialize += line;
+                }
+                newAnimation = Animation.deserialize(toDeserialize);
+                return Optional.ofNullable(newAnimation);
             } else {
                 return Optional.empty();
             }
@@ -54,9 +60,6 @@ public class AnimationUtil {
         } catch (IOException ioe){
             ioe.printStackTrace();
             AnimationPlugin.logger.info("IOE: IOException with ObjectInputStream.");
-        } catch (ClassNotFoundException cnfe){
-            cnfe.printStackTrace();
-            AnimationPlugin.logger.info("CNFE: Class 'Animation.class' was not found. <- This is a pretty bad error to get...");
         }
         return Optional.empty();
     }
@@ -124,24 +127,15 @@ public class AnimationUtil {
      * @return Success status: true=success, false=failed
      */
     public static boolean saveAnimation(Animation animation){
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
         try {
             File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
-            fos = new FileOutputStream(animationFile);
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(animation);
+            String serializedAnimation = Animation.serialize(animation);
+            PrintWriter printWriter = new PrintWriter(animationFile);
+            printWriter.write(serializedAnimation);
             return true;
         } catch (IOException e){
             e.printStackTrace();
             return false;
-        } finally {
-            try {
-                oos.close();
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -153,6 +147,14 @@ public class AnimationUtil {
     public static boolean deleteAnimation(Animation animation){
         File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
         return animationFile.delete();
+    }
+
+    public static Text linkToAnimationInfo(Animation animation){
+        Text message = Text.builder()
+                .append(Text.of(NAME_COLOR, COMMAND_STYLE, animation.getAnimationName()))
+                .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " info"))
+                .build();
+        return message;
     }
 
     /**

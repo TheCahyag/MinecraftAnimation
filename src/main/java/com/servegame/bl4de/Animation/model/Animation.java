@@ -1,10 +1,13 @@
 package com.servegame.bl4de.Animation.model;
 
+import com.google.common.reflect.TypeToken;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
@@ -13,6 +16,10 @@ import org.spongepowered.api.data.persistence.InvalidDataException;
 
 import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -241,6 +248,14 @@ public class Animation implements DataSerializable {
     }
 
     /**
+     * Setter for the master subspace
+     * @param subSpace
+     */
+    private void setSubSpace(SubSpace3D subSpace){
+        this.masterSubSpace = subSpace;
+    }
+
+    /**
      * Getter for the {@link Frame}s of the {@link Animation}
      * @return All the {@link Frame}s in an ArrayList
      */
@@ -399,18 +414,42 @@ public class Animation implements DataSerializable {
                 animation.setTickDelay(tickDelay);
                 animation.setCycles(cycles);
 
-
                 // Check for objects that may be there
                 if (container.contains(ANIMATION_SUBSPACE)){
                     // SubSpace is available
                     SubSpace3D subSpace = container.getObject(ANIMATION_SUBSPACE, SubSpace3D.class).get();
-                    animation.getSubSpace().setCornerOne(subSpace.getCornerOne().get());
-                    animation.getSubSpace().setCornerTwo(subSpace.getCornerTwo().get());
+                    animation.setSubSpace(subSpace);
                 }
             } else {
                 System.out.println("Didn't have all the animation criteria");
             }
             return Optional.ofNullable(animation);
+        }
+    }
+
+    public static String serialize(Animation animation) {
+        try {
+            StringWriter sink = new StringWriter();
+            HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSink(() -> new BufferedWriter(sink)).build();
+            ConfigurationNode node = loader.createEmptyNode();
+            node.setValue(TypeToken.of(Animation.class), animation);
+            loader.save(node);
+            return sink.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Animation deserialize(String item) {
+        try {
+            StringReader source = new StringReader(item);
+            HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(source)).build();
+            ConfigurationNode node = loader.load();
+            return node.getValue(TypeToken.of(Animation.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
