@@ -1,16 +1,18 @@
-package com.servegame.bl4de.Animation.models;
+package com.servegame.bl4de.Animation.model;
 
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.util.TextResponses;
-import com.servegame.bl4de.Animation.util.Util;
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataSerializable;
+import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
+import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.io.Serializable;
+import static com.servegame.bl4de.Animation.data.DataQueries.*;
+
 import java.util.Optional;
 
 /**
@@ -18,17 +20,12 @@ import java.util.Optional;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-@ConfigSerializable
-public class SubSpace3D /*implements Serializable */{
-    //private static final long serialVersionUID = -34561563741840235L;
+public class SubSpace3D implements DataSerializable {
 
-    @Setting(value = "corner_one", comment = "Location<World> of the first corner")
     private Location<World> cornerOne;
-
-    @Setting(value = "corner_two", comment = "Location<World> of the second corner")
     private Location<World> cornerTwo;
 
-    private BlockSnapshot[][][] subSpace;
+    private BlockSnapshot[][][] contents;
 
     /**
      * Does-nothing constructor does nothing
@@ -58,6 +55,7 @@ public class SubSpace3D /*implements Serializable */{
         } else {
             this.cornerOne = cornerOneOptional.get();
             this.cornerTwo = cornerTwoOptional.get();
+            this.contents = subSpace3D.getContents();
         }
     }
 
@@ -124,6 +122,48 @@ public class SubSpace3D /*implements Serializable */{
         this.cornerTwo = cornerTwo;
         if (this.isInitialized()){
             this.set3DArray();
+        }
+    }
+
+    /**
+     * Getter for the contents of the given {@link SubSpace3D}
+     * @return contents received
+     */
+    public BlockSnapshot[][][] getContents(){
+        return this.contents;
+    }
+
+    /**
+     * Setter for the contents of the given {@link SubSpace3D}
+     * @param contents contents to set
+     */
+    public void setContents(BlockSnapshot[][][] contents){
+        this.contents = contents;
+    }
+
+    @Override
+    public int getContentVersion() {
+        return 0;
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        DataContainer container = DataContainer.createNew()
+                .set(SUBSPACE_CORNER_ONE, getCornerOne())
+                .set(SUBSPACE_CORNER_TWO, getCornerTwo())
+                .set(SUBSPACE_CONTENTS, getContents());
+        return container;
+    }
+
+    public static class Builder extends AbstractDataBuilder<SubSpace3D> {
+
+        public Builder(){
+            super(SubSpace3D.class, 0);
+        }
+
+        @Override
+        protected Optional<SubSpace3D> buildContent(DataView container) throws InvalidDataException {
+            return null;
         }
     }
 }

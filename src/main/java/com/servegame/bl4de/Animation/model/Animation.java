@@ -1,31 +1,42 @@
-package com.servegame.bl4de.Animation.models;
+package com.servegame.bl4de.Animation.model;
 
-import com.servegame.bl4de.Animation.exceptions.UninitializedException;
+import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
+import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataSerializable;
+import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
+import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.UUID;
+import static com.servegame.bl4de.Animation.data.DataQueries.*;
+
+import java.util.*;
 
 /**
  * File: AnimationPlugin.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class Animation implements Serializable {
-    private long serialVersionUID = -334896027741840235L;
+public class Animation implements DataSerializable {
 
     private final Status DEFAULT_STATUS = Status.STOPPED;
     private Status status;
 
     private UUID owner;
     private String animationName;
-    private ArrayList<Frame> frames;
+    private List<Frame> frames;
     private SubSpace3D masterSubSpace;
     private int frameIndex = 0;
     private int tickDelay = 20;
-    private int cycles = 10;
+    private int cycles = -1;
+
+    /**
+     * Does-nothing constructor does nothing
+     */
+    public Animation(){}
 
     /**
      * Designated Animation constructor
@@ -42,15 +53,17 @@ public class Animation implements Serializable {
     /**
      * The possible states for the {@link Animation}
      */
-    public static enum Status {
+    private enum Status {
         /**
          * The paused state.
          */
         PAUSED,
+
         /**
          * The running state.
          */
         RUNNING,
+
         /**
          * The stopped state.
          */
@@ -102,7 +115,7 @@ public class Animation implements Serializable {
      * Checks to make sure everything that needs to be setup is setup
      * @return boolean indicating if an animation is ready to be played
      */
-    public boolean isReady(){
+    public boolean isInitialized(){
         if (!this.masterSubSpace.isInitialized()){
             return false;
         }
@@ -114,16 +127,49 @@ public class Animation implements Serializable {
 
     /* START ACTION METHODS */
 
-    public void start(){
+    /**
+     * TODO
+     * @param frame
+     */
+    public void start(int frame){
+        this.frameIndex = frame;
         setStatus(Status.RUNNING);
+        if (AnimationUtil.saveAnimation(this)){
+
+        } else {
+
+        }
     }
 
+    /**
+     * TODO
+     */
+    public void start(){
+        start(0);
+    }
+
+    /**
+     * TODO
+     */
     public void stop(){
         setStatus(Status.STOPPED);
+        if (AnimationUtil.saveAnimation(this)){
+
+        } else {
+
+        }
     }
 
+    /**
+     * TODO
+     */
     public void pause(){
         setStatus(Status.PAUSED);
+        if (AnimationUtil.saveAnimation(this)){
+
+        } else {
+
+        }
     }
 
     /* END ACTION METHODS */
@@ -198,12 +244,56 @@ public class Animation implements Serializable {
      * Getter for the {@link Frame}s of the {@link Animation}
      * @return All the {@link Frame}s in an ArrayList
      */
-    public ArrayList<Frame> getFrames() {
+    public List<Frame> getFrames() {
         return this.frames;
     }
 
     /**
-     * Getter for the frame index (-f flag in {@link com.servegame.bl4de.Animation.commands.animation.StartAnimation} command)
+     * Setter for the frames
+     * @param frames
+     */
+    private void setFrames(List<Frame> frames){
+        this.frames = frames;
+    }
+
+    /**
+     * Gets a particular {@link Frame} at a given index
+     * @param frameNum index for frame array
+     * @return resulting {@link Frame}
+     */
+    public Optional<Frame> getFrame(int frameNum){
+        if (frameNum > this.frames.size()){
+            return Optional.empty();
+        } else {
+            return Optional.of(this.frames.get(frameNum));
+        }
+    }
+
+    /**
+     * Gets a particular named {@link Frame}
+     * @param frameName given string name
+     * @return given {@link Frame}
+     */
+    public Optional<Frame> getFrame(String frameName){
+        for (Frame frame :
+                this.frames) {
+            if (frame.getName().equals(frameName)) {
+                return Optional.of(frame);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Deletes a frame from the frame list
+     * @param frame given {@link Frame}
+     */
+    public void deleteFrame(Frame frame){
+        this.frames.remove(frame);
+    }
+
+    /**
+     * Getter for the frame index (-f flag in {@link StartAnimation} command)
      * @return int - the frame the animation will start on when it is ran
      */
     public int getFrameIndex() {
@@ -211,7 +301,7 @@ public class Animation implements Serializable {
     }
 
     /**
-     * Setter for the frame index (-f flag in {@link com.servegame.bl4de.Animation.commands.animation.StartAnimation} command)
+     * Setter for the frame index (-f flag in {@link StartAnimation} command)
      * @param frameIndex int - the new frame index
      */
     public void setFrameIndex(int frameIndex) {
@@ -253,4 +343,74 @@ public class Animation implements Serializable {
     }
 
     /* END GETTERS AND SETTERS */
+
+    /* START DATA SERIALIZATION METHODS */
+
+    @Override
+    public int getContentVersion() {
+        return 0;
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        DataContainer container = DataContainer.createNew()
+                .set(ANIMATION_STATUS, getStatus().name())
+                .set(ANIMATION_OWNER, getOwner())
+                .set(ANIMATION_NAME, getAnimationName())
+                .set(ANIMATION_FRAMES, getFrames())
+                .set(ANIMATION_SUBSPACE, getSubSpace())
+                .set(ANIMATION_FRAME_INDEX, getFrameIndex())
+                .set(ANIMATION_TICK_DELAY, getTickDelay())
+                .set(ANIMATION_CYCLES, getCycles());
+        return container;
+    }
+
+    /* END DATA SERIALIZATION METHODS */
+
+    public static class Builder extends AbstractDataBuilder<Animation> {
+
+        /**
+         * TODO
+         */
+        public Builder(){
+            super(Animation.class, 0);
+        }
+
+        @Override
+        protected Optional<Animation> buildContent(DataView container) throws InvalidDataException {
+            Animation animation = null;
+            if (container.contains(ANIMATION_STATUS, ANIMATION_OWNER, ANIMATION_NAME,
+                    ANIMATION_FRAMES, ANIMATION_FRAME_INDEX,
+                    ANIMATION_TICK_DELAY, ANIMATION_CYCLES)){
+                // Get data from the container
+                Status status = Status.valueOf(container.getString(ANIMATION_STATUS).get());
+                UUID owner = container.getObject(ANIMATION_OWNER, UUID.class).get();
+                String name = container.getString(ANIMATION_NAME).get();
+                List<Frame> frames = container.getObjectList(ANIMATION_FRAMES, Frame.class).get();
+                int frameIndex = container.getInt(ANIMATION_FRAME_INDEX).get();
+                int tickDelay = container.getInt(ANIMATION_TICK_DELAY).get();
+                int cycles = container.getInt(ANIMATION_CYCLES).get();
+
+                // Create animation and set information
+                animation = new Animation(owner, name);
+                animation.setStatus(status);
+                animation.setFrames(frames);
+                animation.setFrameIndex(frameIndex);
+                animation.setTickDelay(tickDelay);
+                animation.setCycles(cycles);
+
+
+                // Check for objects that may be there
+                if (container.contains(ANIMATION_SUBSPACE)){
+                    // SubSpace is available
+                    SubSpace3D subSpace = container.getObject(ANIMATION_SUBSPACE, SubSpace3D.class).get();
+                    animation.getSubSpace().setCornerOne(subSpace.getCornerOne().get());
+                    animation.getSubSpace().setCornerTwo(subSpace.getCornerTwo().get());
+                }
+            } else {
+                System.out.println("Didn't have all the animation criteria");
+            }
+            return Optional.ofNullable(animation);
+        }
+    }
 }
