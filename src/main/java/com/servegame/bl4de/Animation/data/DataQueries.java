@@ -23,6 +23,7 @@ public class DataQueries {
     // Frame
     public static final DataQuery FRAME_CREATOR = of("frame_creator");
     public static final DataQuery FRAME_NAME = of("frame_name");
+    public static final DataQuery FRAME_SUBSPACE = of("frame_subspace");
 
     // SubSpace
     public static final DataQuery SUBSPACE_CORNER_ONE = of("subspace_corner_one");
