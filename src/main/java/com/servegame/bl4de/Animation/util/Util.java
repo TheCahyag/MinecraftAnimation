@@ -6,12 +6,13 @@ import com.servegame.bl4de.Animation.command.CommandGateKeeper;
 import com.servegame.bl4de.Animation.command.animation.*;
 import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
-import com.servegame.bl4de.Animation.models.Animation;
+import com.servegame.bl4de.Animation.model.Animation;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
@@ -142,6 +143,15 @@ public class Util {
     }
 
     /**
+     *
+     * @param container
+     * @return
+     */
+    public static Optional<Location> deserializeLocation(DataView container){
+        return Sponge.getDataManager().deserialize(Location.class, container);
+    }
+
+    /**
      * Register command with the Sponge {@link CommandManager}
      * @param plugin {@link AnimationPlugin} plugin instance
      */
@@ -212,6 +222,13 @@ public class Util {
                 .executor(new PauseAnimation())
                 .build();
 
+        // /animate stats
+        CommandSpec statsAnimation = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Show stats about the current animations"))
+                .permission(Permissions.ANIMATION_STATS)
+                .executor(new StatisticAnimation())
+                .build();
+
         // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Base animation command"))
@@ -222,6 +239,7 @@ public class Util {
                 .child(startAnimation, "start")
                 .child(stopAnimation, "stop")
                 .child(pauseAnimation, "pause")
+                .child(statsAnimation, "stats", "statistics")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
