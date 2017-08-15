@@ -42,7 +42,7 @@ public class AnimationUtil {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
                 String line, toDeserialize = null;
                 while ((line = bufferedReader.readLine()) != null){
-                    toDeserialize += line;
+                    toDeserialize = toDeserialize + line;
                 }
                 newAnimation = Animation.deserialize(toDeserialize);
                 return Optional.ofNullable(newAnimation);
@@ -149,12 +149,16 @@ public class AnimationUtil {
         return animationFile.delete();
     }
 
+    /**
+     * TODO
+     * @param animation
+     * @return
+     */
     public static Text linkToAnimationInfo(Animation animation){
-        Text message = Text.builder()
+        return Text.builder()
                 .append(Text.of(NAME_COLOR, COMMAND_STYLE, animation.getAnimationName()))
                 .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " info"))
                 .build();
-        return message;
     }
 
     /**
@@ -163,7 +167,7 @@ public class AnimationUtil {
      * @return
      */
     public static Text getButtonsForAnimation(Animation animation){
-        Text message = Text.builder()
+        return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "DELETE",
@@ -183,7 +187,6 @@ public class AnimationUtil {
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame list"))
                         .build())
                 .build();
-        return message;
     }
 
     /**
@@ -191,7 +194,7 @@ public class AnimationUtil {
      * @return
      */
     public static Text getButtonsForList(){
-        Text message = Text.builder()
+        return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "CREATE",
@@ -199,6 +202,5 @@ public class AnimationUtil {
                         .onClick(TextActions.suggestCommand("/animate create <name>"))
                         .build())
                 .build();
-        return message;
     }
 }

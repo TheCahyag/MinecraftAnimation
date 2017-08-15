@@ -1,12 +1,11 @@
 package com.servegame.bl4de.Animation.util;
 
-import com.servegame.bl4de.Animation.models.Animation;
-import com.servegame.bl4de.Animation.models.Frame;
+import com.servegame.bl4de.Animation.model.Animation;
+import com.servegame.bl4de.Animation.model.Frame;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
-import static org.spongepowered.api.text.format.TextColors.*;
 
 import java.util.List;
 import java.util.Random;
@@ -56,20 +55,34 @@ public class FrameUtil {
         return ((Integer) new Random().nextInt(999999)).toString();
     }
 
+    /**
+     * TODO
+     * @param frame
+     */
     public static void displayFrame(Frame frame){
         // This should be moved to either the Frame or Animation Class
     }
 
+    /**
+     * TODO
+     * @param frame
+     * @param animation
+     * @return
+     */
     public static Text linkToFrameInfo(Frame frame, Animation animation){
-        Text message = Text.builder()
+        return Text.builder()
                 .append(Text.of(NAME_COLOR, COMMAND_STYLE, frame.getName()))
                 .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame " + frame.getName() + " info"))
                 .build();
-        return message;
     }
 
+    /**
+     * TODO
+     * @param animation
+     * @return
+     */
     public static Text getButtonsForList(Animation animation){
-        Text message = Text.builder()
+        return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "CREATE FRAME",
@@ -77,10 +90,16 @@ public class FrameUtil {
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame create"))
                         .build())
                 .build();
-        return message;
     }
 
+    /**
+     * TODO
+     * @param frame
+     * @param animation
+     * @return
+     */
     public static Text getButtonsForFrameInfo(Frame frame, Animation animation){
+        // TODO
         return null;
     }
 }
