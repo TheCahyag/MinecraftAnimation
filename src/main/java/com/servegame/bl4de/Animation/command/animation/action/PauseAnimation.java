@@ -39,6 +39,11 @@ public class PauseAnimation implements CommandExecutor {
         }
         Animation animation = animationOptional.get();
 
+        if (animation.getStatus() == Animation.Status.PAUSED){
+            // Animation is already paused
+            player.sendMessage(TextResponses.ANIMATION_ALREADY_PAUSED);
+            return CommandResult.success();
+        }
         animation.pause();
 
         return CommandResult.success();

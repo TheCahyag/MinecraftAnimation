@@ -39,6 +39,12 @@ public class StartAnimation implements CommandExecutor {
         }
         Animation animation = animationOptional.get();
 
+        if (animation.getStatus() == Animation.Status.RUNNING){
+            // Animation is already running
+            player.sendMessage(TextResponses.ANIMATION_ALREADY_RUNNING);
+            return CommandResult.success();
+        }
+
         // Parse flag arguments
         Optional<Integer> frameToStartOnOptional = args.getOne("frame");
         Optional<Integer> tickDelayOptional = args.getOne("delay");

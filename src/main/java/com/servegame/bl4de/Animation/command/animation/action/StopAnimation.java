@@ -39,6 +39,12 @@ public class StopAnimation implements CommandExecutor {
         }
         Animation animation = animationOptional.get();
 
+        if (animation.getStatus() == Animation.Status.STOPPED){
+            // Animation is already paused
+            player.sendMessage(TextResponses.ANIMATION_ALREADY_STOPPED);
+            return CommandResult.success();
+        }
+
         animation.stop();
 
         return CommandResult.success();
