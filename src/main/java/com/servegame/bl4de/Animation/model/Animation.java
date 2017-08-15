@@ -60,7 +60,7 @@ public class Animation implements DataSerializable {
     /**
      * The possible states for the {@link Animation}
      */
-    private enum Status {
+    public static enum Status {
         /**
          * The paused state.
          */
@@ -382,6 +382,9 @@ public class Animation implements DataSerializable {
 
     /* END DATA SERIALIZATION METHODS */
 
+    /**
+     * TODO?
+     */
     public static class Builder extends AbstractDataBuilder<Animation> {
 
         /**
