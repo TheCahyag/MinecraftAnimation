@@ -1,15 +1,17 @@
 package com.servegame.bl4de.Animation;
 
 import com.google.inject.Inject;
+import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
+import com.servegame.bl4de.Animation.util.Resource;
 import com.servegame.bl4de.Animation.util.Util;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
-import org.spongepowered.api.event.game.state.GameStoppingEvent;
+import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 
@@ -18,13 +20,15 @@ import java.io.File;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-@Plugin(id = "animation", name = "animation", version = "0.0.0",
-        authors = {"TheCahyag"},
-        url = "https://github.com/TheCahyag/animation")
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION,
+        authors = Resource.AUTHORS, url = Resource.URL)
 public class AnimationPlugin {
 
     @Inject
     public static Logger logger;
+    public static AnimationPlugin instance;
+    public static PluginContainer plugin;
+    public static TaskManager taskManager;
 
     @Inject
     private Game game;
@@ -33,6 +37,13 @@ public class AnimationPlugin {
     private final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";
 
     private boolean debug;
+
+    @Listener
+    public void onConstruction(GameConstructionEvent event){
+        instance = this;
+        plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
+        taskManager = new TaskManager();
+    }
 
     @Listener
     public void onInit(GameInitializationEvent event){
