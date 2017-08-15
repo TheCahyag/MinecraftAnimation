@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class AnimationTasks {
 
-    protected Animation animation;
+    private Animation animation;
     private List<Task> tasks;
     private SpongeExecutorService syncExecutorService;
 
@@ -34,7 +34,7 @@ public class AnimationTasks {
      * PopulateTaskList will start a new task for each {@link Frame} of the {@link Animation}and give
      * it to {@link org.spongepowered.api.Sponge} to execute
      */
-    private void populateTaskList(){
+    public void populateTaskList(){
         List<Frame> frames = this.animation.getFrames();
         long initDelay = 0;
         long periodBetweenRepeat = this.animation.getTickDelay() * frames.size();
@@ -72,6 +72,14 @@ public class AnimationTasks {
      */
     private long ticksToMilliseconds(long ticks) {
         return ticks * 50L;
+    }
+
+    /**
+     * Getter for the {@link Animation}'s name
+     * @return String - name of the animation
+     */
+    public String getAnimationName(){
+        return this.animation.getAnimationName();
     }
 
 }
