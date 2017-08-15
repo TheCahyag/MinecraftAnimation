@@ -6,6 +6,7 @@ package com.servegame.bl4de.Animation;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class Permissions {
+    // Animation permissions
     public static final String ANIMATION_BASE               = "animate.base";
     public static final String ANIMATION_CREATE             = "animate.create.base";
     public static final String ANIMATION_DELETE             = "animate.delete.base";
@@ -20,12 +21,19 @@ public class Permissions {
     public static final String ANIMATION_PAUSE              = "animate.pause.base";
     public static final String ANIMATION_SET_NAME           = "animate.set.name";
     public static final String ANIMATION_SET_POS            = "animate.set.pos";
+    public static final String ANIMATION_STATS              = "animate.stats.base";
 
+    // Frame permissions
     public static final String FRAME_CREATE                 = "animate.frame.create.base";
     public static final String FRAME_DELETE                 = "animate.frame.delete.base";
     public static final String FRAME_DISPLAY                = "animate.frame.display.base";
     public static final String FRAME_DUPLICATE              = "animate.frame.duplicate.base";
     public static final String FRAME_LIST                   = "animate.frame.list.base";
     public static final String FRAME_UPDATE                 = "animate.frame.update.base";
+
+    // Admin permissions
+    public static final String STOP_ALL_ANIMATIONS          = "animate.admin.stopall";
+    public static final String LIST_RUNNING_ANIMAITONS      = "animate.admin.listall";
+    public static final String FORCE_STOP_ANIMATION         = "animate.admin.forcestop";
 
 }
