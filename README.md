@@ -44,7 +44,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Implement pause operation
     * Should stopping an animation remove all visible contents of the animation
     * Pausing should keep track of the current frame it is on
-* Make a config where the user can specify the default values of animation's states (frame, delay, cycles)
+* Make a config where the user can specify the default values of animation's states (frame, delay, cycles) or just other config stuff
 * Register the commands that arn't registered see InfoAnimation
 * Make specific response messages for every command rather than generic messages?
 * Fix /animate delete sub command
@@ -54,6 +54,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
    * Additions being when a block goes from air to not air
    * Deletions being when a block goes from not air to air
    * And if a block changes that would be both a deletion and an addition
+* Add sound to animations? Allow adding a sound or a list of sounds to play among rendering a frame of a animation
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
