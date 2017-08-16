@@ -13,6 +13,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
+import static com.servegame.bl4de.Animation.util.Util.*;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,14 +46,14 @@ public class DeleteAnimation implements CommandExecutor {
         }
         if (!args.hasAny("f")){
             // Check for the -f
-            player.sendMessage(Text.of(Util.ERROR_COLOR, "If you sure you want to delete the '",
-                    Util.NAME_COLOR, animationName,
-                    Util.ERROR_COLOR, "' animation, run",
-                    Util.PRIMARY_COLOR, " /animation delete " + animationName,
-                    Util.FLAG_COLOR, " -f").toBuilder()
-                    .append(Text.of(Util.ERROR_COLOR, Util.COMMAND_STYLE, ", or click this message."))
+            player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to delete the '",
+                    NAME_COLOR, animationName,
+                    ERROR_COLOR, "' animation, run",
+                    PRIMARY_COLOR, " /animation delete " + animationName,
+                    FLAG_COLOR, " -f").toBuilder()
+                    .append(Text.of(ERROR_COLOR, COMMAND_STYLE, ", or click this message."))
                     .onClick(TextActions.runCommand("/animate delete " + animationName + " -f"))
-                    .onHover(Util.COMMAND_HOVER)
+                    .onHover(COMMAND_HOVER)
                     .build());
             return CommandResult.success();
         }
@@ -64,12 +66,12 @@ public class DeleteAnimation implements CommandExecutor {
 
         if (AnimationUtil.deleteAnimation(animation)){
             // Animation was deleted successfully
-            player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Animation ",
-                    Util.PRIMARY_COLOR, "'",
-                    Util.NAME_COLOR, animationName,
-                    Util.PRIMARY_COLOR, "' ",
-                    Util.ACTION_COLOR, "deleted ",
-                    Util.PRIMARY_COLOR, "successfully."));
+            player.sendMessage(Text.of(PRIMARY_COLOR, "Animation ",
+                    PRIMARY_COLOR, "'",
+                    NAME_COLOR, animationName,
+                    PRIMARY_COLOR, "' ",
+                    ACTION_COLOR, "deleted ",
+                    PRIMARY_COLOR, "successfully."));
             return CommandResult.success();
         } else {
             // Animation was not deleted successfully
