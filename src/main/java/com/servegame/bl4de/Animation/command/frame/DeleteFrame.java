@@ -15,6 +15,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
+import static com.servegame.bl4de.Animation.util.Util.*;
+
 import java.util.Optional;
 
 /**
@@ -30,15 +32,6 @@ public class DeleteFrame implements CommandExecutor {
         this.animation = animation;
     }
 
-    /**
-     * Takes a string and will parse the arguments
-     * @param rawString
-     * @return
-     */
-    public static CommandContext parseArguments(String rawString){
-        return null;
-    }
-
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (!(src instanceof Player)){
@@ -47,18 +40,10 @@ public class DeleteFrame implements CommandExecutor {
         }
         Player player = ((Player) src);
 
-        // Get animation
-        Optional<String> animationNameOptional = args.getOne("animation_name");
-        if (!animationNameOptional.isPresent()){
-            player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
-            return CommandResult.empty();
-        }
-        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationNameOptional.get(), player.getUniqueId());
-        if (!animationOptional.isPresent()){
-            player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
+        if (this.animation.isRunning()){
+            player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
             return CommandResult.success();
         }
-        Animation animation = animationOptional.get();
 
         // Get Frame
         Optional<String> frameNameOptional = args.getOne("frame_name_num");
@@ -72,10 +57,10 @@ public class DeleteFrame implements CommandExecutor {
         if (StringUtils.isNumeric(frameName)){
             // They gave the frame number
             Integer frameNum = Integer.valueOf(frameName);
-            frameOptional = animation.getFrame(frameNum);
+            frameOptional = this.animation.getFrame(frameNum);
         } else {
             // They gave the frame name
-            frameOptional = animation.getFrame(frameName);
+            frameOptional = this.animation.getFrame(frameName);
         }
 
         if (!frameOptional.isPresent()){
@@ -84,23 +69,37 @@ public class DeleteFrame implements CommandExecutor {
         }
         Frame frameToDelete = frameOptional.get();
 
-        // Parse arguments
+        // Parse flag argument
         if (!args.hasAny("f")){
             // Check for the -f
-            player.sendMessage(Text.of(Util.ERROR_COLOR, "If you sure you want to delete the '",
-                    Util.NAME_COLOR, frameName,
-                    Util.ERROR_COLOR, "' frame, run",
-                    Util.PRIMARY_COLOR, " /animation " + animation.getAnimationName() + " frame delete " + frameName + " -f",
-                    Util.FLAG_COLOR, " -f").toBuilder()
-                    .append(Text.of(Util.ERROR_COLOR, Util.COMMAND_STYLE, ", or click this message."))
+            player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to delete the '",
+                    NAME_COLOR, frameName,
+                    ERROR_COLOR, "' frame, run",
+                    PRIMARY_COLOR, " /animation " + animation.getAnimationName() + " frame delete " + frameName + " -f",
+                    FLAG_COLOR, " -f").toBuilder()
+                    .append(Text.of(ERROR_COLOR, COMMAND_STYLE, ", or click this message."))
                     .onClick(TextActions.runCommand("/animation " + animation.getAnimationName() + " frame delete " + frameName + " -f"))
-                    .onHover(Util.COMMAND_HOVER)
+                    .onHover(COMMAND_HOVER)
                     .build());
             return CommandResult.success();
         }
 
-        animation.deleteFrame(frameToDelete);
-        AnimationUtil.saveAnimation(animation);
+        this.animation.deleteFrame(frameToDelete);
+        if (AnimationUtil.saveAnimation(this.animation)){
+            // Animation changed and saved
+            Text message = Text.builder()
+                    .append(Text.of(PRIMARY_COLOR, "Frame '",
+                            NAME_COLOR, frameToDelete.getName(),
+                            PRIMARY_COLOR, "' ",
+                            ACTION_COLOR, "deleted ",
+                            PRIMARY_COLOR, "successfully."))
+                    .build();
+            player.sendMessage(message);
+        } else {
+            // Animation wasn't saved
+            player.sendMessage(TextResponses.FRAME_DELETE_ERROR);
+            return CommandResult.empty();
+        }
         return CommandResult.success();
     }
 }

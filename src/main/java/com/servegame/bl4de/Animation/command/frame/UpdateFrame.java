@@ -1,12 +1,17 @@
 package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.model.Animation;
+import com.servegame.bl4de.Animation.model.Frame;
+import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+
+import java.util.Optional;
 
 /**
  * File: UpdateFrame.java
@@ -21,17 +26,21 @@ public class UpdateFrame implements CommandExecutor {
         this.animation = animation;
     }
 
-    /**
-     * Takes a string and will parse the arguments
-     * @param rawString
-     * @return
-     */
-    public static CommandContext parseArguments(String rawString){
-        return null;
-    }
-
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (!(src instanceof Player)){
+            src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
+            return CommandResult.success();
+        }
+        Player player = ((Player) src);
+        Optional<String> frameNameOptional = args.getOne("frame_name");
+        Frame frame;
+
+        if (this.animation.isRunning()){
+            player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
+            return CommandResult.success();
+        }
         src.sendMessage(Text.of("Hello from updateframe"));
+
         return CommandResult.success();    }
 }

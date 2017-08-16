@@ -39,6 +39,12 @@ public class CreateFrame implements CommandExecutor {
         Player player = ((Player) src);
         Optional<String> frameNameOptional = args.getOne("frame_name");
         Frame frame;
+
+        if (this.animation.isRunning()){
+            player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
+            return CommandResult.success();
+        }
+
         try {
             // Make the new frame and insert it into the animation
             if (frameNameOptional.isPresent()){
