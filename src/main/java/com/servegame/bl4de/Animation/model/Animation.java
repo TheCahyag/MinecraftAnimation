@@ -132,6 +132,15 @@ public class Animation implements DataSerializable {
         return true;
     }
 
+    /**
+     * isRunning returns a boolean if the {@link Animation}'s
+     * {@link Animation.Status} is {@link Animation.Status#RUNNING}
+     * @return boolean representing if the animation is running or not
+     */
+    public boolean isRunning(){
+        return this.getStatus() == Status.RUNNING;
+    }
+
     /* START ACTION METHODS */
 
     /**
