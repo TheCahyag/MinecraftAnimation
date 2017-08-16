@@ -55,6 +55,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
    * Deletions being when a block goes from not air to air
    * And if a block changes that would be both a deletion and an addition
 * Add sound to animations? Allow adding a sound or a list of sounds to play among rendering a frame of a animation
+* If the animation is already running and the user calls /animate start <name> and specifies a flag, those flag values should update on the currently playing animation (this would probably require stopping the animation, changing the internal states and then starting the animation backup on the frame it stopped on)
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
