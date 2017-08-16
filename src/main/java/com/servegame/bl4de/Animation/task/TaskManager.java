@@ -5,6 +5,7 @@ import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
@@ -63,7 +64,59 @@ public class TaskManager {
     }
 
     /**
+     * Stops the given {@link Animation}. Currently the {@link UUID}
+     * of the {@link Player} is also required. This is to allow for
+     * future expansions. Specifically accounting for the ability of
+     * a {@link Player} to transfer ownership of the {@link Animation}
+     * or if there will be multiple owners for a single {@link Animation}.
+     *
+     * When calling ensure to specify the {@link Player} who originally
+     * started the {@link Animation}.
+     * @param animation {@link Animation} to stop
+     * @param starter {@link UUID} of the {@link Player} who started the animation
+     */
+    public boolean stopAnimation(Animation animation, UUID starter) {
+        if (!this.runningAnimations.containsKey(starter)) {
+            // Owner isn't running any animations
+            AnimationPlugin.logger.info(
+                    "Couldn't stop "
+                            + animation.getAnimationName()
+                            + "."
+                            + starter.toString()
+                            + ": Owner not present in map.");
+            return false;
+        }
+        List<AnimationTasks> tasks = this.runningAnimations.get(starter);
+        for (AnimationTasks taskSet :
+                tasks) {
+            if (taskSet.getAnimationName().equals(animation.getAnimationName())) {
+                // Animation name matches
+                taskSet.stopAll();
+                if (tasks.size() == 0) {
+                    // Remove the Map entry
+                    this.runningAnimations.remove(starter);
+                } else {
+                    // Remove the AnimationTasks from the List from the entry
+                    tasks.remove(taskSet);
+                    this.runningAnimations.replace(starter, tasks);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@link TaskManager#stopAnimation(Animation, UUID)}
+     * @param animation {@link Animation} that needs to be stopped
+     */
+    public boolean stopAnimation(Animation animation){
+        return this.stopAnimation(animation, animation.getOwner());
+    }
+
+    /**
      * Goes through every {@link AnimationTasks} and stops all tasks
+     * effectively stopping every {@link Animation}
      */
     public void stopAllAnimations(){
         for (Map.Entry<UUID, List<AnimationTasks>> entry :
