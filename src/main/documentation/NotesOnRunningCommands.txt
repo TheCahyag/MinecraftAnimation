@@ -1,0 +1,11 @@
+The following commands can not be ran while the given Animation is running:
+/animate start <name> # Not sure about this one
+/animate delete <name>
+/animate <name> set <pos1|pos2>
+/animate <name> set name <new_name>
+/animate <name> frame create [name]
+/animate <name> frame delete <name|num> -f
+/animate <name> frame display <name|num>
+/animate <name> frame duplicate <name|num> [num]
+/animate <name> frame <name|num> set name <new_name>
+/animate <name> frame update <name|num> -o
