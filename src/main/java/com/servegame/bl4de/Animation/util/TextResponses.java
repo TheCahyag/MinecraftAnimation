@@ -29,14 +29,21 @@ public class TextResponses {
     public static final Text ANIMATION_ALREADY_EXISTS_ERROR = Text.of(ERROR_COLOR, "The specified animation name already exists.");
     public static final Text ANIMATION_NOT_FOUND_ERROR = Text.of(ERROR_COLOR, "Animation was not found.");
     public static final Text ANIMATION_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Animation name was not parsed correctly/wasn't specified.");
-    public static final Text ANIMATION_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The animation is currently not fully initialized:");
+    public static final Text ANIMATION_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The animation is currently not fully initialized.");
+    public static final Text ANIMATION_ALREADY_RUNNING = Text.of(ERROR_COLOR, "The animation is already running.");
+    public static final Text ANIMATION_ALREADY_PAUSED = Text.of(ERROR_COLOR, "The animation is already paused.");
+    public static final Text ANIMATION_ALREADY_STOPPED = Text.of(ERROR_COLOR, "The animation is already stopped.");
+    public static final Text ANIMATION_CANT_BE_RUNNING = Text.of(ERROR_COLOR, "The action could not be performed because the specified animation is running.");
 
     // Frame Responses
+    public static final Text FRAME_SUCCESSFULLY_DELETED = Text.of(PRIMARY_COLOR, "The frame was successfully deleted.");
     // Frame Warning Responses
     // Frame Error Responses
     public static final Text FRAME_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The frame is not initialized correctly/completely. (This shouldn't happen)");
     public static final Text FRAME_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Frame name/num was not parsed correctly/wasn't specified.");
     public static final Text FRAME_NOT_FOUND_ERROR = Text.of(ERROR_COLOR, "Frame was not found.");
+    public static final Text FRAME_DELETE_ERROR = Text.of(ERROR_COLOR, "There was a problem deleting the frame.");
+
 
     // Other Error Responses
     public static final Text SUBSPACE_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The subspace is not fully initialized. (Set the animation corners)");
