@@ -40,6 +40,11 @@ public class SetAnimation implements CommandExecutor {
         boolean setPos2 = (boolean) args.getOne("pos2").orElse(false);
         boolean setName = (boolean) args.getOne("set_name").orElse(false);
 
+        if (this.animation.isRunning()){
+            player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
+            return CommandResult.success();
+        }
+
         if (setPos1){
             this.animation.getSubSpace().setCornerOne(player.getLocation());
             if (AnimationUtil.saveAnimation(this.animation)){
@@ -83,12 +88,12 @@ public class SetAnimation implements CommandExecutor {
                 player.sendMessage(TextResponses.ANIMATION_SUCCESSFULLY_ALTERED);
             } else {
                 // Animation wasn't saved
-                player.sendMessage(TextResponses.GENERAL_PROBLEM_RUNNING_COMMAND_ERROR);
+                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 return CommandResult.empty();
             }
             if (!AnimationUtil.deleteAnimation(this.animation)){
                 // Couldn't delete the animation
-                player.sendMessage(TextResponses.GENERAL_PROBLEM_RUNNING_COMMAND_ERROR);
+                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 new Throwable().printStackTrace();
             }
         }

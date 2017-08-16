@@ -55,7 +55,14 @@ public class DeleteAnimation implements CommandExecutor {
                     .build());
             return CommandResult.success();
         }
-        if (AnimationUtil.deleteAnimation(animationOptional.get())){
+
+        Animation animation = animationOptional.get();
+        if (animation.isRunning()){
+            player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
+            return CommandResult.success();
+        }
+
+        if (AnimationUtil.deleteAnimation(animation)){
             // Animation was deleted successfully
             player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Animation ",
                     Util.PRIMARY_COLOR, "'",
