@@ -59,6 +59,7 @@ public class AnimationPlugin {
         }
         this.debug = false;
         Util.registerCommands(this);
+        taskManager.stopAllAnimations();
     }
 
     @Listener
