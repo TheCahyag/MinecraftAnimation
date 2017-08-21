@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.task;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.model.Frame;
 
 /**
@@ -19,11 +20,33 @@ public class FrameDisplayTask implements FrameTask {
 
     @Override
     public void run() {
+        boolean debug = AnimationPlugin.instance.isDebug();
+        if (debug) {
+            this.debugInfo();
+        }
         this.modifyWorld();
     }
 
     @Override
     public void modifyWorld() {
 
+    }
+
+    @Override
+    public void debugInfo() {
+        String messageToPrint   = "\n********************************* DEBUG   START  ********************************\n";
+        messageToPrint          +=  "********************************  FRAME    INFO   *******************************\n";
+        messageToPrint          +=  this.frame.toString();
+        messageToPrint          +=  "********************************  TASK SETTINGS   *******************************\n";
+        messageToPrint          +=  this.toString();
+        messageToPrint          +=  "********************************* DEBUG     END  ********************************";
+        System.out.println(messageToPrint);
+    }
+
+    @Override
+    public String toString() {
+        return "Tick Delay: " + this.tickDelay + "\n" +
+                "Animation Index: " + this.index + "\n" +
+                "Current System Time: " + System.currentTimeMillis() + "\n";
     }
 }
