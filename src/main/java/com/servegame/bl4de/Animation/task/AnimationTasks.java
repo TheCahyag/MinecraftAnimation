@@ -2,6 +2,8 @@ package com.servegame.bl4de.Animation.task;
 
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scheduler.Task;
 
@@ -66,12 +68,24 @@ public class AnimationTasks {
     }
 
     /**
-     * Convert Minecraft Ticks to milliseconds
+     * Convert Minecraft Ticks to milliseconds by getting the
+     * preferred tick interval {@link Scheduler#getPreferredTickInterval()}
      * @param ticks - number of ticks
      * @return - ticks in milliseconds
      */
     private long ticksToMilliseconds(long ticks) {
-        return ticks * 50L;
+        /*
+         * This has some downfalls... If a user starts an animation at a
+         * given time and lets it run for a while, wouldn't the preferred
+         * tick interval change? If so we would need to add functionality
+         * somewhere to keep track of the what the updated interval is in
+         * order for the delay between frames to be a consistent time and
+         * not changing because the preferred tick interval is changing.
+         * But wait... aren't the Frame Tasks synchronous? Meaning that
+         * they just happen every few ticks? (Look into this) TODO
+         */
+        Scheduler scheduler = Sponge.getScheduler();
+        return ticks * scheduler.getPreferredTickInterval();
     }
 
     /**
