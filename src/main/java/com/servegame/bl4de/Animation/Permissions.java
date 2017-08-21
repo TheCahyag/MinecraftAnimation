@@ -35,5 +35,6 @@ public class Permissions {
     public static final String STOP_ALL_ANIMATIONS          = "animate.admin.stopall";
     public static final String LIST_RUNNING_ANIMAITONS      = "animate.admin.listall";
     public static final String FORCE_STOP_ANIMATION         = "animate.admin.forcestop";
+    public static final String TOGGLE_DEBUG                 = "animate.admin.debug";
 
 }
