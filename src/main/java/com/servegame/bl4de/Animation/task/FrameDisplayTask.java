@@ -35,9 +35,7 @@ public class FrameDisplayTask implements FrameTask {
     @Override
     public void debugInfo() {
         String messageToPrint   = "\n********************************* DEBUG   START  ********************************\n";
-        messageToPrint          +=  "********************************  FRAME    INFO   *******************************\n";
         messageToPrint          +=  this.frame.toString();
-        messageToPrint          +=  "********************************  TASK SETTINGS   *******************************\n";
         messageToPrint          +=  this.toString();
         messageToPrint          +=  "********************************* DEBUG     END  ********************************";
         System.out.println(messageToPrint);
@@ -45,7 +43,8 @@ public class FrameDisplayTask implements FrameTask {
 
     @Override
     public String toString() {
-        return "Tick Delay: " + this.tickDelay + "\n" +
+        return "********************************  TASK SETTINGS   *******************************\n" +
+                "Tick Delay: " + this.tickDelay + "\n" +
                 "Animation Index: " + this.index + "\n" +
                 "Current System Time: " + System.currentTimeMillis() + "\n";
     }
