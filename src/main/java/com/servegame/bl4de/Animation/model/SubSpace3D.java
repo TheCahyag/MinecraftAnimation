@@ -1,11 +1,10 @@
 package com.servegame.bl4de.Animation.model;
 
-import com.servegame.bl4de.Animation.exception.UninitializedException;
-import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.world.Location;
@@ -13,7 +12,6 @@ import org.spongepowered.api.world.World;
 
 import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
-import java.lang.reflect.Array;
 import java.util.Optional;
 
 /**
@@ -140,13 +138,21 @@ public class SubSpace3D implements DataSerializable {
     }
 
     @Override
+    public String toString() {
+        return "*******************************   SUBSPACE INFO    ******************************\n" +
+                this.getCornerOne().map(Location::toString).orElse("nil") +
+                this.getCornerTwo().map(Location::toString).orElse("nil") +
+                this.getContents().toString();
+    }
+
+    @Override
     public int getContentVersion() {
         return 0;
     }
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = DataContainer.createNew()
+        DataContainer container = new MemoryDataContainer()
                 .set(SUBSPACE_CORNER_ONE, getCornerOne())
                 .set(SUBSPACE_CORNER_TWO, getCornerTwo())
                 .set(SUBSPACE_CONTENTS, getContents());
