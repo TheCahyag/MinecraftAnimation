@@ -1,10 +1,11 @@
 package com.servegame.bl4de.Animation.model;
 
-import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.util.Util;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
@@ -92,7 +93,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = DataContainer.createNew()
+        DataContainer container = new MemoryDataContainer()
                 .set(FRAME_CREATOR, getCreator())
                 .set(FRAME_NAME, getName())
                 .set(FRAME_SUBSPACE, getSubspace());
@@ -112,6 +113,16 @@ public class Frame extends SubSpace3D implements DataSerializable {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        String message = "********************************  FRAME    INFO   *******************************\n" +
+                "Frame Name: " + this.getName() + "\n" +
+                "Frame Creator (UUID): " + this.getCreator() + "\n" +
+                "Frame Creator (Player Name): " + Util.getOfflinePlayer(this.getCreator(), null);
+        message += super.toString();
+        return message;
     }
 
     public static class Builder extends AbstractDataBuilder<Frame> {
