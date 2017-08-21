@@ -3,6 +3,7 @@ package com.servegame.bl4de.Animation.util;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.CommandGateKeeper;
+import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
 import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
@@ -229,6 +230,13 @@ public class Util {
                 .executor(new StatisticAnimation())
                 .build();
 
+        // /animate debug
+        CommandSpec debugAnimation = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Toggle the debug flag"))
+                .permission(Permissions.TOGGLE_DEBUG)
+                .executor(new DebugToggle())
+                .build();
+
         // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Base animation command"))
@@ -240,6 +248,7 @@ public class Util {
                 .child(stopAnimation, "stop")
                 .child(pauseAnimation, "pause")
                 .child(statsAnimation, "stats", "statistics")
+                .child(debugAnimation, "debug")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
