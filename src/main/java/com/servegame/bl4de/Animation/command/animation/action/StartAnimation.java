@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation.action;
 
+import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -52,10 +53,14 @@ public class StartAnimation implements CommandExecutor {
         tickDelayOptional.ifPresent(animation::setTickDelay);
         cyclesOptional.ifPresent(animation::setCycles);
 
-        if (frameToStartOnOptional.isPresent()){
-            animation.start(frameToStartOnOptional.get());
-        } else {
-            animation.start();
+        try {
+            if (frameToStartOnOptional.isPresent()) {
+                animation.start(frameToStartOnOptional.get());
+            } else {
+                animation.start();
+            }
+        } catch (UninitializedException ue){
+            player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
         }
         return CommandResult.success();
 
