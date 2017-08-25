@@ -36,7 +36,8 @@ public class ListAnimation implements CommandExecutor {
             Text message = Text.builder()
                     .append(Text.of(PRIMARY_COLOR, "Animations:\n"))
                     .build();
-            for (int i = 0; i < animationsByOwner.size(); i++) {
+            int animationsToList = animationsByOwner.size() > 10 ? 10 : animationsByOwner.size();
+            for (int i = 0; i < animationsToList; i++) {
                 // Add all animations that are owned into a Text object
                 Animation animation = AnimationUtil.getAnimation(animationsByOwner.get(i), player.getUniqueId()).get();
                 Text animationNameLink = Text.builder()
@@ -48,6 +49,13 @@ public class ListAnimation implements CommandExecutor {
                                 animationNameLink, "\n"))
                         .build();
             }
+            message = message.toBuilder()
+                    .append(Text.of(PRIMARY_COLOR, "Showing ",
+                            ACTION_COLOR, animationsToList,
+                            PRIMARY_COLOR, " out of ",
+                            ACTION_COLOR, animationsByOwner.size(),
+                            PRIMARY_COLOR, " animations."))
+                    .build();
             message = message.toBuilder()
                     .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n",
                             AnimationUtil.getButtonsForList(), "\n",
