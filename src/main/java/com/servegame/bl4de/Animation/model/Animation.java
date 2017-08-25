@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation.model;
 
 import com.google.common.reflect.TypeToken;
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
@@ -8,9 +9,11 @@ import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
@@ -147,20 +150,20 @@ public class Animation implements DataSerializable {
      * TODO
      * @param frame
      */
-    public void start(int frame){
+    public void start(int frame) throws UninitializedException {
         this.frameIndex = frame;
         setStatus(Status.RUNNING);
         if (AnimationUtil.saveAnimation(this)){
-
+            AnimationPlugin.taskManager.createBatch(this);
         } else {
-
+            AnimationPlugin.logger.info("Failed to save animation");
         }
     }
 
     /**
      * TODO
      */
-    public void start(){
+    public void start() throws UninitializedException {
         start(0);
     }
 
@@ -170,9 +173,9 @@ public class Animation implements DataSerializable {
     public void stop(){
         setStatus(Status.STOPPED);
         if (AnimationUtil.saveAnimation(this)){
-
+            AnimationPlugin.taskManager.stopAnimation(this);
         } else {
-
+            AnimationPlugin.logger.info("Failed to save animation");
         }
     }
 
@@ -182,9 +185,9 @@ public class Animation implements DataSerializable {
     public void pause(){
         setStatus(Status.PAUSED);
         if (AnimationUtil.saveAnimation(this)){
-
+            // No functionality right now, need to add some things for this to work
         } else {
-
+            AnimationPlugin.logger.info("Failed to save animation");
         }
     }
 
@@ -258,7 +261,7 @@ public class Animation implements DataSerializable {
 
     /**
      * Setter for the master subspace
-     * @param subSpace
+     * @param subSpace the {@link SubSpace3D}
      */
     private void setSubSpace(SubSpace3D subSpace){
         this.masterSubSpace = subSpace;
@@ -274,7 +277,7 @@ public class Animation implements DataSerializable {
 
     /**
      * Setter for the frames
-     * @param frames
+     * @param frames the {@link Frame}
      */
     private void setFrames(List<Frame> frames){
         this.frames = frames;
@@ -377,7 +380,7 @@ public class Animation implements DataSerializable {
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = DataContainer.createNew()
+        DataContainer container = new MemoryDataContainer()
                 .set(ANIMATION_STATUS, getStatus().name())
                 .set(ANIMATION_OWNER, getOwner())
                 .set(ANIMATION_NAME, getAnimationName())
@@ -439,6 +442,11 @@ public class Animation implements DataSerializable {
         }
     }
 
+    /**
+     * TODO
+     * @param animation
+     * @return
+     */
     public static String serialize(Animation animation) {
         try {
             StringWriter sink = new StringWriter();
@@ -453,6 +461,11 @@ public class Animation implements DataSerializable {
         }
     }
 
+    /**
+     * TODO
+     * @param item
+     * @return
+     */
     public static Animation deserialize(String item) {
         try {
             StringReader source = new StringReader(item);
