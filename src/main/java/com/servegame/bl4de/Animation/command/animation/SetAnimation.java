@@ -11,6 +11,10 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 import java.util.Optional;
 
@@ -46,24 +50,39 @@ public class SetAnimation implements CommandExecutor {
         }
 
         if (setPos1){
-            this.animation.getSubSpace().setCornerOne(player.getLocation());
+            // Get location
+            Location<World> newLocation = player.getLocation();
+            if (!this.checkVolume(src, newLocation, this.animation.getSubSpace().getCornerTwo().get())){
+                // The max volume has been exceeded
+                return CommandResult.success();
+            }
+            // Set the first position for the subspace
+            this.animation.getSubSpace().setCornerOne(newLocation);
             if (AnimationUtil.saveAnimation(this.animation)){
-                player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Position 1 set."));
+                player.sendMessage(Text.of(PRIMARY_COLOR, "Position 1 set."));
                 return CommandResult.success();
             } else {
                 player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 return CommandResult.empty();
             }
         } else if (setPos2){
-            this.animation.getSubSpace().setCornerTwo(player.getLocation());
+            // Get location
+            Location<World> newLocation = player.getLocation();
+            if (!this.checkVolume(src, newLocation, this.animation.getSubSpace().getCornerTwo().get())){
+                // The max volume has been exceeded
+                return CommandResult.success();
+            }
+            // Set the second position for the subspace
+            this.animation.getSubSpace().setCornerTwo(newLocation);
             if (AnimationUtil.saveAnimation(this.animation)){
-                player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Position 2 set."));
+                player.sendMessage(Text.of(PRIMARY_COLOR, "Position 2 set."));
                 return CommandResult.success();
             } else {
                 player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 return CommandResult.empty();
             }
         } else if (setName){
+            // Set the name of the animation
             Optional<String> newNameOptional = args.getOne("new_name");
             if (!newNameOptional.isPresent()){
                 // No name was found in the arguments
@@ -98,5 +117,27 @@ public class SetAnimation implements CommandExecutor {
             }
         }
         return CommandResult.success();
+    }
+
+    /**
+     * Checks the volume of a 3d subspace indicated by two opposite corners of the subspace.
+     * If the volume exceeds the {@link Util#WARNING_VOLUME} it will tell the user that their
+     * subspace is large, but will return true indicating the subspace is considered valid. If
+     * the volume exceeds the {@link Util#MAX_VOLUME} if will tell the user their subspace is
+     * too big and will return false indicating to not alter the animation.
+     * @param src {@link Player} calling the command
+     * @param location1 {@link Location}1
+     * @param location2 {@link Location}2
+     * @return true if the given subspace is valid, false if the given subspace is invalid
+     */
+    private boolean checkVolume(CommandSource src, Location location1, Location location2){
+        if (calculateVolume(location1, location2) >= WARNING_VOLUME){
+            if (calculateVolume(location1, location2) >= MAX_VOLUME){
+                src.sendMessage(TextResponses.EXCEED_MAX_VOLUME);
+                return false;
+            }
+            src.sendMessage(TextResponses.LARGE_VOLUME_WARNING);
+        }
+        return true;
     }
 }
