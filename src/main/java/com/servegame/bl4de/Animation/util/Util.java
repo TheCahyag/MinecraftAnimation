@@ -7,7 +7,9 @@ import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
 import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
+import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
+import com.servegame.bl4de.Animation.model.SubSpace3D;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandManager;
@@ -15,6 +17,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.HoverAction;
@@ -47,6 +50,8 @@ public class Util {
     public static final TextColor WARNING_COLOR     = TextColors.YELLOW;
     public static final TextStyle COMMAND_STYLE     = TextStyles.ITALIC;
     public static final HoverAction.ShowText COMMAND_HOVER = TextActions.showText(Text.of("Click here to suggest this command."));
+    public static final long MAX_VOLUME             = 10000L;
+    public static final long WARNING_VOLUME         = 2500L;
 
     /**
      * copyWorldToSubSpace will get a {@link BlockSnapshot} of each
@@ -59,6 +64,7 @@ public class Util {
         // Make sure two corners have the same Extent
 //        if (!corner1.getExtent().getDimension().equals(corner2.getExtent().getDimension())){
 //            // todo instead of checking here, the location should be checked by one of the command classes
+                // todo should be checked in the /animate <name> set pos1|pos2
 //        }
 
         // Get absolute length of sub space dimensions
@@ -87,6 +93,45 @@ public class Util {
             }
         }
         return subSpace;
+    }
+
+    /**
+     * TODO
+     * @param subSpace
+     * @throws UninitializedException
+     */
+    public static void copySubSpaceToWorld(SubSpace3D subSpace) throws UninitializedException {
+        if (!subSpace.isInitialized()){
+            throw new UninitializedException("Subspace is not fully initialized.");
+        }
+        Location<World> corner1 = subSpace.getCornerOne().get();
+        Location<World> corner2 = subSpace.getCornerTwo().get();
+        BlockSnapshot[][][] subSpaceSnapShot = subSpace.getContents();
+
+        // Get absolute length of sub space dimensions
+        int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
+        int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
+        int zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
+
+        /* Get corner to start the copy at by getting the coordinates of the
+         numerically lowest coordinates of the two corners
+         (may result in a corner different from the parameters)*/
+        int xLow = corner1.getBlockX() <= corner2.getBlockX() ? corner1.getBlockX() : corner2.getBlockX();
+        int yLow = corner1.getBlockY() <= corner2.getBlockY() ? corner1.getBlockY() : corner2.getBlockY();
+        int zLow = corner1.getBlockZ() <= corner2.getBlockZ() ? corner1.getBlockZ() : corner2.getBlockZ();
+
+        // Y
+        for (int y = 0; y < yLen; y++) {
+            // Z
+            for (int z = 0; z < zLen; z++) {
+                // X
+                for (int x = 0; x < xLen; x++) {
+                    BlockSnapshot snapshot = subSpace.getContents()[x + xLow][y + yLow][z + zLow];
+                    new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow)
+                            .setBlock(snapshot.getState(), Cause.source(AnimationPlugin.instance).build());
+                }
+            }
+        }
     }
 
     public static Text getAnimationButtons(Animation animation){
@@ -150,6 +195,20 @@ public class Util {
      */
     public static Optional<Location> deserializeLocation(DataView container){
         return Sponge.getDataManager().deserialize(Location.class, container);
+    }
+
+    /**
+     * Calculate the volume of a 3D subspace represented by two {@link Location}s
+     * @param corner1 First {@link Location}
+     * @param corner2 Second {@link Location}
+     * @return long - the number of blocks that are within the two locations
+     */
+    public static long calculateVolume(Location corner1, Location corner2){
+        // Get absolute length of sub space dimensions
+        long xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
+        long yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
+        long zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
+        return xLen * yLen * zLen;
     }
 
     /**
