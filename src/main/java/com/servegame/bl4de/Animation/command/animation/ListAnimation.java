@@ -15,6 +15,7 @@ import org.spongepowered.api.text.action.TextActions;
 import static com.servegame.bl4de.Animation.util.Util.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * File: ListAnimation.java
@@ -31,7 +32,6 @@ public class ListAnimation implements CommandExecutor {
         }
         Player player = (Player) src;
         ArrayList<String> animationsByOwner = AnimationUtil.getAnimationsByOwner(player.getUniqueId());
-
         if (animationsByOwner.size() != 0){
             Text message = Text.builder()
                     .append(Text.of(PRIMARY_COLOR, "Animations:\n"))
@@ -39,7 +39,13 @@ public class ListAnimation implements CommandExecutor {
             int animationsToList = animationsByOwner.size() > 10 ? 10 : animationsByOwner.size();
             for (int i = 0; i < animationsToList; i++) {
                 // Add all animations that are owned into a Text object
-                Animation animation = AnimationUtil.getAnimation(animationsByOwner.get(i), player.getUniqueId()).get();
+                Optional<Animation> optionalAnimation = AnimationUtil.getAnimation(animationsByOwner.get(i), player.getUniqueId());
+                if (!optionalAnimation.isPresent()){
+                    // There are no animations to display
+                    player.sendMessage(Text.of(PRIMARY_COLOR, "There are no animations to display."));
+                    return CommandResult.success();
+                }
+                Animation animation = optionalAnimation.get();
                 Text animationNameLink = Text.builder()
                         .append(Text.of(COMMAND_STYLE, NAME_COLOR, animationsByOwner.get(i)))
                         .onClick(TextActions.runCommand("/animate " + animationsByOwner.get(i) + " info"))
