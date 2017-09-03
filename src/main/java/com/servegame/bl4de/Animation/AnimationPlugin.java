@@ -1,10 +1,18 @@
 package com.servegame.bl4de.Animation;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import com.servegame.bl4de.Animation.data.SQLManager;
+import com.servegame.bl4de.Animation.data.typeserializer.AnimationSerializer;
+import com.servegame.bl4de.Animation.data.typeserializer.FrameSerializer;
+import com.servegame.bl4de.Animation.data.typeserializer.SubSpace3DSerializer;
+import com.servegame.bl4de.Animation.model.Animation;
+import com.servegame.bl4de.Animation.model.Frame;
+import com.servegame.bl4de.Animation.model.SubSpace3D;
 import com.servegame.bl4de.Animation.task.TaskManager;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.Resource;
 import com.servegame.bl4de.Animation.util.Util;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -29,6 +37,7 @@ public class AnimationPlugin {
     public static AnimationPlugin instance;
     public static PluginContainer plugin;
     public static TaskManager taskManager;
+    public static SQLManager sqlManager;
 
     @Inject
     private Game game;
@@ -60,6 +69,12 @@ public class AnimationPlugin {
         this.debug = false;
         Util.registerCommands(this);
         taskManager.stopAllAnimations();
+        sqlManager = SQLManager.get(plugin);
+
+        // Register TypeSerializers
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Animation.class), new AnimationSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Frame.class), new FrameSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(SubSpace3D.class), new SubSpace3DSerializer());
     }
 
     @Listener
@@ -68,8 +83,9 @@ public class AnimationPlugin {
 
     @Listener
     public void onStop(GameStoppingEvent event){
-        logger.info("Stopping animations...");
-        AnimationUtil.stopAllAnimations();
+        //logger.info("Stopping animations...");
+        System.out.println("Stopping animations...");
+        //AnimationUtil.stopAllAnimations();
     }
 
     /**
