@@ -11,7 +11,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
 import static org.spongepowered.api.text.format.TextColors.*;
@@ -45,7 +45,7 @@ public class ListFrames implements CommandExecutor {
                 .build();
 
         // List all the frames
-        ArrayList<Frame> frames = this.animation.getFrames();
+        List<Frame> frames = this.animation.getFrames();
         for (int i = 0; i < this.animation.getNumOfFrames(); i++) {
             message = Text.builder()
                     .append(Text.of(PRIMARY_COLOR, i,
