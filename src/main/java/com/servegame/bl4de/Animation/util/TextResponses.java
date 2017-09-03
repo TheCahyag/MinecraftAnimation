@@ -48,5 +48,5 @@ public class TextResponses {
 
 
     // Other Error Responses
-    public static final Text SUBSPACE_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The subspace is not fully initialized. (Set the animation corners)");
+    public static final Text SUBSPACE_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The subspace is not fully initialized. (Set the animation corners with /animate <name> set <pos1|pos2>)");
 }
