@@ -1,20 +1,22 @@
 package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
+import com.servegame.bl4de.Animation.data.SQLManager;
 import com.servegame.bl4de.Animation.model.Animation;
-import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.persistence.DataTranslator;
-import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.world.Location;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.util.*;
 
 /**
  * File: AnimationUtil.java
@@ -35,31 +37,20 @@ public class AnimationUtil {
     public static Optional<Animation> getAnimation(String name, UUID owner){
         ArrayList<String> animations = getAnimationsByOwner(owner);
         Animation newAnimation = null;
-        try {
+        try (Connection connection = SQLManager.getConnection()){
             if (animations.contains(name)){
-                File f = new File(ANIMATION_DATA_DIR + "/" + owner.toString() + "." + name);
-                InputStream in = Files.newInputStream(f.toPath()); // TODO Refactor
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-                String line, toDeserialize = null;
-                while ((line = bufferedReader.readLine()) != null){
-                    toDeserialize = toDeserialize + line;
-                }
-                newAnimation = Animation.deserialize(toDeserialize);
+                PreparedStatement statement = connection.prepareStatement("SELECT FROM Animations WHERE name = ? AND owner = ?");
+                statement.setString(1, name);
+                statement.setString(2, owner.toString());
+                ResultSet rs = statement.executeQuery();
+                newAnimation = Animation.deserialize(rs.getString("data"));
                 return Optional.ofNullable(newAnimation);
             } else {
                 return Optional.empty();
             }
-            // There's a lot of exception here, possible point of refactor TODO
-        } catch (NullPointerException npe){
-            // If the fileList is of size zero
-            npe.printStackTrace();
-            AnimationPlugin.logger.info("NPE: Failed to get the files listed in dir: " + CONFIG_DIR);
-        } catch (FileNotFoundException fnfe){
-            fnfe.printStackTrace();
-            AnimationPlugin.logger.info("FNFE: Failed to find file.");
-        } catch (IOException ioe){
-            ioe.printStackTrace();
-            AnimationPlugin.logger.info("IOE: IOException with ObjectInputStream.");
+        } catch (SQLException e){
+            e.printStackTrace();
+            AnimationPlugin.logger.info("SQLException: Failed to retrieve animation '" + name + "'.");
         }
         return Optional.empty();
     }
@@ -70,28 +61,25 @@ public class AnimationUtil {
      * all the names of the Animations he owns
      */
     private static Map<UUID, ArrayList<String>> getAnimations(){
-        Map<UUID, ArrayList<String>> animationOwnerNamePair = new HashMap<>();
-        File[] fileList = new File(ANIMATION_DATA_DIR).listFiles();
-        try {
-            for (File f :
-                    fileList) {
-                String[] tokens = f.getName().split("\\.");
-                if (tokens.length == 2){
-                    UUID owner = UUID.fromString(tokens[0]);
-                    if (animationOwnerNamePair.containsKey(owner)){
-                        ArrayList<String> tmp = animationOwnerNamePair.get(owner);
-                        tmp.add(tokens[1]);
-                        animationOwnerNamePair.put(owner, tmp);
-                    } else {
-                        ArrayList<String> tmp = new ArrayList<>();
-                        tmp.add(tokens[1]);
-                        animationOwnerNamePair.put(owner, tmp);
-                    }
+        Map<UUID, ArrayList<String>> animationOwnerNamePair = new ConcurrentHashMap<>();
+        try (Connection connection = SQLManager.getConnection()) {
+            ResultSet rs = connection.prepareStatement("SELECT * FROM Animations").executeQuery();
+            while (rs.next()){
+                String name = rs.getString("name");
+                UUID uuid = UUID.fromString(rs.getString("owner"));
+                if (animationOwnerNamePair.containsKey(uuid)){
+                    ArrayList<String> values = animationOwnerNamePair.get(uuid);
+                    values.add(name);
+                    animationOwnerNamePair.put(uuid, values);
+                } else {
+                    ArrayList<String> values = new ArrayList<>();
+                    values.add(name);
+                    animationOwnerNamePair.put(uuid, values);
                 }
             }
-        } catch (NullPointerException npe){
-            npe.printStackTrace();
-            AnimationPlugin.logger.info("NPE while going through the list of files that represent Animations.");
+        } catch (SQLException e){
+            e.printStackTrace();
+            AnimationPlugin.logger.info("SQLException while going through the rows that represent Animations.");
         }
         return animationOwnerNamePair;
     }
@@ -122,18 +110,41 @@ public class AnimationUtil {
     }
 
     /**
-     * Create or overwrite an existing file that will contain the serialized data from the Animation plugin
+     * With the given {@link Animation} create an entry in the DB
+     * @param animation given {@link Animation}
+     * @return Success status: true=success, false=failed
+     */
+    public static boolean createAnimation(Animation animation){
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO ANIMATIONS (name, owner, data) VALUES (?, ?, ?)");
+            statement.setString(1, animation.getAnimationName());
+            statement.setString(2, animation.getOwner().toString());
+            statement.setString(3, Animation.serialize(animation));
+            statement.executeUpdate();
+            connection.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Update the given {@link Animation} in the DB
      * @param animation given {@link Animation}
      * @return Success status: true=success, false=failed
      */
     public static boolean saveAnimation(Animation animation){
-        try {
-            File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
-            String serializedAnimation = Animation.serialize(animation);
-            PrintWriter printWriter = new PrintWriter(animationFile);
-            printWriter.write(serializedAnimation);
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement("UPDATE ANIMATIONS SET data = ? WHERE name = ? AND owner = ?");
+            statement.setString(1, Animation.serialize(animation));
+            statement.setString(2, animation.getAnimationName());
+            statement.setString(3, animation.getOwner().toString());
+            statement.executeUpdate();
+
+            connection.close();
             return true;
-        } catch (IOException e){
+        } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
@@ -145,8 +156,18 @@ public class AnimationUtil {
      * @return boolean of whether or not the file was deleted
      */
     public static boolean deleteAnimation(Animation animation){
-        File animationFile = new File(ANIMATION_DATA_DIR + "/" + animation.getOwner() + "." + animation.getAnimationName());
-        return animationFile.delete();
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM ANIMATIONS WHERE name = ? AND owner = ?");
+            statement.setString(1, animation.getAnimationName());
+            statement.setString(2, animation.getOwner().toString());
+            statement.executeUpdate();
+
+            connection.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
