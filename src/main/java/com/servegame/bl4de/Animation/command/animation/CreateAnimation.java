@@ -51,7 +51,7 @@ public class CreateAnimation implements CommandExecutor {
 
         // Make the new animation
         Animation animation = new Animation(owner, animationName);
-        if (AnimationUtil.saveAnimation(animation)){
+        if (AnimationUtil.createAnimation(animation)){
             // Animation was created and saved successfully
             player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Animation ",
                     Util.PRIMARY_COLOR, "'",
