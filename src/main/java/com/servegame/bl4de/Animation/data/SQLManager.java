@@ -37,16 +37,15 @@ public class SQLManager {
 
     private void initSettings(){
         // In the future this would get data from a config file
-        this.database = "animation";
-        try {
-            getDataSource()
-                    .getConnection()
-                    .prepareStatement("CREATE TABLE IF NOT EXISTS " + this.database + " (name VARCHAR(255) PRIMARY KEY, data VARCHAR2(25000))")
+        this.database = "ANIMATIONS";
+        try (Connection connection = getDataSource().getConnection()){
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS ANIMATION_TABLE (name VARCHAR(255), owner UUID, data VARCHAR2(25000))")
                     .executeUpdate();
+            connection.commit();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -69,7 +68,7 @@ public class SQLManager {
      * @throws SQLException
      */
     public static Connection getConnection() throws SQLException {
-        return AnimationPlugin.sqlManager.getDataSource().getConnection();
+        return get(AnimationPlugin.plugin).getDataSource().getConnection();
     }
 
     /**
@@ -79,6 +78,6 @@ public class SQLManager {
      */
     public DataSource getDataSource() throws SQLException {
         SqlService sqlService = Sponge.getServiceManager().provide(SqlService.class).get();
-        return sqlService.getDataSource("jdbc:h2:./config/" + this.plugin.getId() + "/" + this.database);
+        return sqlService.getDataSource("jdbc:h2:./config/" + this.plugin.getId() + "/animation/" + this.database);
     }
 }
