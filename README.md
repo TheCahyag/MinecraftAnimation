@@ -76,6 +76,9 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Local server
 * Public server on the box
 
+## Bug List
+* Sometimes when running a command the server will stop for 40.7 seconds (1.11.2|6.1.0)
+
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
