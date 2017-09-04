@@ -9,12 +9,13 @@ import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
+import org.spongepowered.api.data.persistence.DataTranslator;
+import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
 import static com.servegame.bl4de.Animation.data.DataQueries.*;
@@ -231,7 +232,7 @@ public class Animation implements DataSerializable {
      * Setter for the status of the {@link Animation}
      * @param status {@link Status}
      */
-    private void setStatus(Status status){
+    public void setStatus(Status status){
         this.status = status;
     }
 
@@ -241,6 +242,38 @@ public class Animation implements DataSerializable {
      */
     public Status getStatus(){
         return (status == null) ? DEFAULT_STATUS : this.status;
+    }
+
+    public void setStatusAsInt(int status){
+        switch (status){
+            case 0:
+                this.status = Status.STOPPED;
+                break;
+            case 1:
+                this.status = Status.RUNNING;
+                break;
+            case 2:
+                this.status = Status.PAUSED;
+                break;
+            default:
+                this.status = Status.STOPPED;
+        }
+    }
+
+    public int getStatusAsInt(){
+        if (status == null){
+            return 0;
+        }
+        switch (this.status){
+            case STOPPED:
+                return 0;
+            case RUNNING:
+                return 1;
+            case PAUSED:
+                return 2;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -263,7 +296,7 @@ public class Animation implements DataSerializable {
      * Setter for the master subspace
      * @param subSpace the {@link SubSpace3D}
      */
-    private void setSubSpace(SubSpace3D subSpace){
+    public void setSubSpace(SubSpace3D subSpace){
         this.masterSubSpace = subSpace;
     }
 
@@ -279,7 +312,7 @@ public class Animation implements DataSerializable {
      * Setter for the frames
      * @param frames the {@link Frame}
      */
-    private void setFrames(List<Frame> frames){
+    public void setFrames(List<Frame> frames){
         this.frames = frames;
     }
 
@@ -444,6 +477,17 @@ public class Animation implements DataSerializable {
 
     /**
      * TODO
+     * @return
+     */
+    public ConfigurationNode translateToConfig(){
+        final DataTranslator<ConfigurationNode> translator = DataTranslators.CONFIGURATION_NODE;
+        final DataView container = toContainer();
+        System.out.println("translate: " + translator.translate(container));
+        return translator.translate(container);
+    }
+
+    /**
+     * TODO
      * @param animation
      * @return
      */
@@ -451,9 +495,9 @@ public class Animation implements DataSerializable {
         try {
             StringWriter sink = new StringWriter();
             HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSink(() -> new BufferedWriter(sink)).build();
-            ConfigurationNode node = loader.createEmptyNode();
-            node.setValue(TypeToken.of(Animation.class), animation);
-            loader.save(node);
+            ConfigurationNode node = animation.translateToConfig();
+
+            System.out.println("sink: " + sink.toString());
             return sink.toString();
         } catch (Exception e) {
             e.printStackTrace();
