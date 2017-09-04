@@ -61,6 +61,8 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Add condition for pausing and playing an animation
     * An animation can only be played if it's initialized and has more than one frame
     * An animation can only be paused if the current status is a played status
+* Add a message in the bottom middle of the users screen showing what frame the animation is on
+* Fix NPE from logger
 
 
 ## Random Notes for me
