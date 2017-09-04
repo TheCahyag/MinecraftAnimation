@@ -52,9 +52,12 @@ public class SetAnimation implements CommandExecutor {
         if (setPos1){
             // Get location
             Location<World> newLocation = player.getLocation();
-            if (!this.checkVolume(src, newLocation, this.animation.getSubSpace().getCornerTwo().get())){
-                // The max volume has been exceeded
-                return CommandResult.success();
+            Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerTwo();
+            if (optionalOtherLocation.isPresent()){
+                if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())){
+                    // The max volume has been exceeded
+                    return CommandResult.success();
+                }
             }
             // Set the first position for the subspace
             this.animation.getSubSpace().setCornerOne(newLocation);
@@ -68,9 +71,12 @@ public class SetAnimation implements CommandExecutor {
         } else if (setPos2){
             // Get location
             Location<World> newLocation = player.getLocation();
-            if (!this.checkVolume(src, newLocation, this.animation.getSubSpace().getCornerTwo().get())){
-                // The max volume has been exceeded
-                return CommandResult.success();
+            Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerOne();
+            if (optionalOtherLocation.isPresent()){
+                if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())){
+                    // The max volume has been exceeded
+                    return CommandResult.success();
+                }
             }
             // Set the second position for the subspace
             this.animation.getSubSpace().setCornerTwo(newLocation);
