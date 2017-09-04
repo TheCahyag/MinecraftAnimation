@@ -1,18 +1,10 @@
 package com.servegame.bl4de.Animation;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.servegame.bl4de.Animation.data.SQLManager;
-import com.servegame.bl4de.Animation.data.typeserializer.AnimationSerializer;
-import com.servegame.bl4de.Animation.data.typeserializer.FrameSerializer;
-import com.servegame.bl4de.Animation.data.typeserializer.SubSpace3DSerializer;
-import com.servegame.bl4de.Animation.model.Animation;
-import com.servegame.bl4de.Animation.model.Frame;
-import com.servegame.bl4de.Animation.model.SubSpace3D;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.Resource;
 import com.servegame.bl4de.Animation.util.Util;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -55,26 +47,23 @@ public class AnimationPlugin {
     }
 
     @Listener
+    public void onPreInit(GamePreInitializationEvent event){
+
+    }
+
+    @Listener
     public void onInit(GameInitializationEvent event){
         // Check for config directory
         if (!new File(CONFIG_DIR).exists()){
             //noinspection ResultOfMethodCallIgnored
             new File(CONFIG_DIR).mkdir();
         }
-        // Check for the directory that will store the animation files
-        if (!new File(ANIMATION_DATA_DIR).exists()){
-            //noinspection ResultOfMethodCallIgnored
-            new File(ANIMATION_DATA_DIR).mkdir();
-        }
-        this.debug = false;
+
+        this.debug = true;
         Util.registerCommands(this);
         taskManager.stopAllAnimations();
         sqlManager = SQLManager.get(plugin);
 
-        // Register TypeSerializers
-        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Animation.class), new AnimationSerializer());
-        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Frame.class), new FrameSerializer());
-        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(SubSpace3D.class), new SubSpace3DSerializer());
     }
 
     @Listener
