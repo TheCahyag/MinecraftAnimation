@@ -22,6 +22,10 @@ public class TextResponses {
     public static final Text GENERAL_PROBLEM_RUNNING_COMMAND_ERROR = Text.of(ERROR_COLOR, "There was a problem running this command... check console for stacktrace.");
     public static final Text EXCEED_MAX_VOLUME = Text.of(ERROR_COLOR, "The maximum volume for an animation has been exceeded");
 
+    // Debug Change Responses
+    public static final Text DEBUG_SET_TRUE = Text.of(PRIMARY_COLOR, "Debug has been ", ACTION_COLOR, "set ", PRIMARY_COLOR, "to ", SECONDARY_COLOR, "true.");
+    public static final Text DEBUG_SET_FALSE = Text.of(PRIMARY_COLOR, "Debug has been ", ACTION_COLOR, "set ", PRIMARY_COLOR, "to ", SECONDARY_COLOR, "false.");
+
     // Animation Responses
     public static final Text ANIMATION_SUCCESSFULLY_ALTERED = Text.of(PRIMARY_COLOR, "Animation successfully altered.");
     // Animation Warning Responses
