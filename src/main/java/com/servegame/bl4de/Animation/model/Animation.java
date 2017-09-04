@@ -1,30 +1,25 @@
 package com.servegame.bl4de.Animation.model;
 
-import com.google.common.reflect.TypeToken;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
-import org.spongepowered.api.data.persistence.DataTranslator;
-import org.spongepowered.api.data.persistence.DataTranslators;
+import org.spongepowered.api.data.persistence.DataFormats;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import static com.servegame.bl4de.Animation.data.DataQueries.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.*;
+import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
 /**
  * File: AnimationPlugin.java
@@ -55,10 +50,11 @@ public class Animation implements DataSerializable {
      * @param name name of animation
      */
     public Animation(UUID owner, String name){
-        this.owner = owner;
-        this.animationName = name;
-        this.masterSubSpace = new SubSpace3D();
-        this.frames = new ArrayList<>();
+        setOwner(owner);
+        setAnimationName(name);
+        setStatus(DEFAULT_STATUS);
+        setSubSpace(new SubSpace3D());
+        setFrames(new ArrayList<>());
     }
 
     /**
@@ -404,6 +400,22 @@ public class Animation implements DataSerializable {
 
     /* END GETTERS AND SETTERS */
 
+    @Override
+    public String toString() {
+        return "\n*******************************   ANIMATION INFO    ******************************\n" +
+                "Animation{" +
+                "\nDEFAULT_STATUS=" + DEFAULT_STATUS +
+                ", \nstatus=" + status +
+                ", \nowner=" + owner +
+                ", \nanimationName='" + animationName + '\'' +
+                ", \nframes=" + frames +
+                ", \nmasterSubSpace=\n" + masterSubSpace +
+                ", \nframeIndex=" + frameIndex +
+                ", \ntickDelay=" + tickDelay +
+                ", \ncycles=" + cycles +
+                "\n}";
+    }
+
     /* START DATA SERIALIZATION METHODS */
 
     @Override
@@ -413,15 +425,23 @@ public class Animation implements DataSerializable {
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = new MemoryDataContainer()
+        if (AnimationPlugin.instance.isDebug()){
+            System.out.println("Hello from Animation.toContainer");
+            System.out.println(this);
+        }
+        DataContainer container = DataContainer.createNew()
                 .set(ANIMATION_STATUS, getStatus().name())
-                .set(ANIMATION_OWNER, getOwner())
+                .set(ANIMATION_OWNER, getOwner().toString())
                 .set(ANIMATION_NAME, getAnimationName())
                 .set(ANIMATION_FRAMES, getFrames())
                 .set(ANIMATION_SUBSPACE, getSubSpace())
                 .set(ANIMATION_FRAME_INDEX, getFrameIndex())
                 .set(ANIMATION_TICK_DELAY, getTickDelay())
                 .set(ANIMATION_CYCLES, getCycles());
+
+        if (AnimationPlugin.instance.isDebug()){
+            System.out.println("Container: " + container.toString());
+        }
         return container;
     }
 
@@ -441,15 +461,26 @@ public class Animation implements DataSerializable {
 
         @Override
         protected Optional<Animation> buildContent(DataView container) throws InvalidDataException {
+            if (AnimationPlugin.instance.isDebug()){
+                System.out.println("Hello from Animation.Builder.buildContent");
+                System.out.println("Container: " + container.toString());
+                System.out.println(this);
+            }
             Animation animation = null;
             if (container.contains(ANIMATION_STATUS, ANIMATION_OWNER, ANIMATION_NAME,
                     ANIMATION_FRAMES, ANIMATION_FRAME_INDEX,
                     ANIMATION_TICK_DELAY, ANIMATION_CYCLES)){
                 // Get data from the container
                 Status status = Status.valueOf(container.getString(ANIMATION_STATUS).get());
-                UUID owner = container.getObject(ANIMATION_OWNER, UUID.class).get();
+
+                Optional<String> optionalString = container.getObject(ANIMATION_OWNER, String.class);
+                String uuidString = optionalString.orElse("6b5cb4d8-67f8-4df7-8a41-c1bc3f720226"); // pokemonmaster81 UUID (my other account)
+                if (AnimationPlugin.instance.isDebug()){
+                    System.out.println(uuidString);
+                }
+                UUID owner = UUID.fromString(uuidString);
                 String name = container.getString(ANIMATION_NAME).get();
-                List<Frame> frames = container.getObjectList(ANIMATION_FRAMES, Frame.class).get();
+                List<Frame> frames = container.getObjectList(ANIMATION_FRAMES, Frame.class).orElse(new ArrayList<>());
                 int frameIndex = container.getInt(ANIMATION_FRAME_INDEX).get();
                 int tickDelay = container.getInt(ANIMATION_TICK_DELAY).get();
                 int cycles = container.getInt(ANIMATION_CYCLES).get();
@@ -467,6 +498,8 @@ public class Animation implements DataSerializable {
                     // SubSpace is available
                     SubSpace3D subSpace = container.getObject(ANIMATION_SUBSPACE, SubSpace3D.class).get();
                     animation.setSubSpace(subSpace);
+                } else {
+                    animation.setSubSpace(new SubSpace3D());
                 }
             } else {
                 System.out.println("Didn't have all the animation criteria");
@@ -477,28 +510,18 @@ public class Animation implements DataSerializable {
 
     /**
      * TODO
-     * @return
-     */
-    public ConfigurationNode translateToConfig(){
-        final DataTranslator<ConfigurationNode> translator = DataTranslators.CONFIGURATION_NODE;
-        final DataView container = toContainer();
-        System.out.println("translate: " + translator.translate(container));
-        return translator.translate(container);
-    }
-
-    /**
-     * TODO
      * @param animation
      * @return
      */
     public static String serialize(Animation animation) {
         try {
-            StringWriter sink = new StringWriter();
-            HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSink(() -> new BufferedWriter(sink)).build();
-            ConfigurationNode node = animation.translateToConfig();
-
-            System.out.println("sink: " + sink.toString());
-            return sink.toString();
+            if (AnimationPlugin.instance.isDebug()){
+                System.out.println("Hello from Animation.serialize");
+                System.out.println("Container: " + animation.toContainer().toString());
+                System.out.println(DataFormats.JSON.write(animation.toContainer()));
+                System.out.println(animation);
+            }
+            return DataFormats.JSON.write(animation.toContainer());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -512,13 +535,16 @@ public class Animation implements DataSerializable {
      */
     public static Animation deserialize(String item) {
         try {
-            StringReader source = new StringReader(item);
-            HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(source)).build();
-            ConfigurationNode node = loader.load();
-            return node.getValue(TypeToken.of(Animation.class));
-        } catch (Exception e) {
+            if (AnimationPlugin.instance.isDebug()) {
+                System.out.println("Hello from Animation.deserialize");
+                System.out.println("Item: " + item);
+            }
+            DataContainer dataContainer = DataFormats.JSON.read(item);
+            Optional<Animation> optionalAnimation = new Animation.Builder().build(dataContainer);
+            return optionalAnimation.orElse(null);
+        } catch (IOException e){
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 }
