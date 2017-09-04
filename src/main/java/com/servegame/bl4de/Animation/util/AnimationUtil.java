@@ -39,19 +39,25 @@ public class AnimationUtil {
         Animation newAnimation = null;
         try (Connection connection = SQLManager.getConnection()){
             if (animations.contains(name)){
-                PreparedStatement statement = connection.prepareStatement("SELECT FROM Animations WHERE name = ? AND owner = ?");
+                PreparedStatement statement = connection.prepareStatement("SELECT name, owner, data FROM `ANIMATION_TABLE` WHERE name = ? AND owner = ?");
                 statement.setString(1, name);
                 statement.setString(2, owner.toString());
                 ResultSet rs = statement.executeQuery();
-                newAnimation = Animation.deserialize(rs.getString("data"));
-                return Optional.ofNullable(newAnimation);
-            } else {
-                return Optional.empty();
+                if (AnimationPlugin.instance.isDebug()){
+                    System.out.println(rs.toString());
+                }
+                if (rs.next()){
+                    // The data exists
+                    newAnimation = Animation.deserialize(rs.getString("data"));
+                    return Optional.ofNullable(newAnimation);
+                }
             }
         } catch (SQLException e){
             e.printStackTrace();
-            AnimationPlugin.logger.info("SQLException: Failed to retrieve animation '" + name + "'.");
+            //AnimationPlugin.logger.info("SQLException: Failed to retrieve animations.");
         }
+        // The animation we are looking for doesn't appear in the call find all animations by name
+        // and or the data didn't exist/couldn't get pulled from the DB
         return Optional.empty();
     }
 
@@ -63,7 +69,10 @@ public class AnimationUtil {
     private static Map<UUID, ArrayList<String>> getAnimations(){
         Map<UUID, ArrayList<String>> animationOwnerNamePair = new ConcurrentHashMap<>();
         try (Connection connection = SQLManager.getConnection()) {
-            ResultSet rs = connection.prepareStatement("SELECT * FROM Animations").executeQuery();
+            ResultSet rs = connection.prepareStatement("SELECT * FROM `ANIMATION_TABLE`").executeQuery();
+            if (AnimationPlugin.instance.isDebug()){
+                System.out.println(rs.toString());
+            }
             while (rs.next()){
                 String name = rs.getString("name");
                 UUID uuid = UUID.fromString(rs.getString("owner"));
@@ -91,6 +100,12 @@ public class AnimationUtil {
      */
     public static ArrayList<String> getAnimationsByOwner(UUID owner) {
         Map<UUID, ArrayList<String>> animations = getAnimations();
+        if (AnimationPlugin.instance.isDebug()){
+            for (String s :
+                    animations.getOrDefault(owner, new ArrayList<>())) {
+                System.out.println("animation name: " + s);
+            }
+        }
         return animations.getOrDefault(owner, new ArrayList<>());
     }
 
@@ -116,7 +131,7 @@ public class AnimationUtil {
      */
     public static boolean createAnimation(Animation animation){
         try (Connection connection = SQLManager.getConnection()){
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO ANIMATIONS (name, owner, data) VALUES (?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO `ANIMATION_TABLE` (name, owner, data) VALUES (?, ?, ?)");
             statement.setString(1, animation.getAnimationName());
             statement.setString(2, animation.getOwner().toString());
             statement.setString(3, Animation.serialize(animation));
@@ -136,7 +151,7 @@ public class AnimationUtil {
      */
     public static boolean saveAnimation(Animation animation){
         try (Connection connection = SQLManager.getConnection()){
-            PreparedStatement statement = connection.prepareStatement("UPDATE ANIMATIONS SET data = ? WHERE name = ? AND owner = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE `ANIMATION_TABLE` SET data = ? WHERE name = ? AND owner = ?");
             statement.setString(1, Animation.serialize(animation));
             statement.setString(2, animation.getAnimationName());
             statement.setString(3, animation.getOwner().toString());
@@ -157,7 +172,7 @@ public class AnimationUtil {
      */
     public static boolean deleteAnimation(Animation animation){
         try (Connection connection = SQLManager.getConnection()){
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM ANIMATIONS WHERE name = ? AND owner = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM `ANIMATION_TABLE` WHERE name = ? AND owner = ?");
             statement.setString(1, animation.getAnimationName());
             statement.setString(2, animation.getOwner().toString());
             statement.executeUpdate();
