@@ -64,6 +64,18 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Add a message in the bottom middle of the users screen showing what frame the animation is on
 * Fix NPE from logger
 
+## Animations to show off
+* Door opening
+* Bridge extending
+* Running horse
+* Fan spinning
+* Grandfather clock with the pendulum ticking and tocking
+* Big tree that sways in the breeze
+
+### Testing / Stress testing
+* Local server
+* Public server on the box
+
 
 ## Random Notes for me
 If Sponge changes the blocks at a chunk that isn't loaded and there's no one to see the changes, 
