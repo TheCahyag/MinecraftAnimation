@@ -4,15 +4,15 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import static com.servegame.bl4de.Animation.data.DataQueries.*;
-
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.data.DataQueries.SUBSPACE_CORNER_ONE;
+import static com.servegame.bl4de.Animation.data.DataQueries.SUBSPACE_CORNER_TWO;
 
 /**
  * File: SubSpace3D.java
@@ -21,8 +21,8 @@ import java.util.Optional;
  */
 public class SubSpace3D implements DataSerializable {
 
-    private Location<World> cornerOne;
-    private Location<World> cornerTwo;
+    private Location<World> cornerOne = null;
+    private Location<World> cornerTwo = null;
 
     private BlockSnapshot[][][] contents;
 
@@ -37,8 +37,8 @@ public class SubSpace3D implements DataSerializable {
      * @param bound2 {@link Location}
      */
     public SubSpace3D(Location<World> bound1, Location<World> bound2){
-//        this.cornerOne = bound1.toContainer();
-//        this.cornerTwo = bound2.toContainer();
+        this.cornerOne = bound1;
+        this.cornerTwo = bound2;
         this.set3DArray();
     }
 
@@ -139,10 +139,16 @@ public class SubSpace3D implements DataSerializable {
 
     @Override
     public String toString() {
-        return "*******************************   SUBSPACE INFO    ******************************\n" +
-                this.getCornerOne().map(Location::toString).orElse("nil") +
-                this.getCornerTwo().map(Location::toString).orElse("nil") +
-                this.getContents().toString();
+        String result =  "*******************************   SUBSPACE INFO    ******************************\n" +
+                "Corner one: " + this.getCornerOne().map(Location::toString).orElse("nil") + "\n" +
+                "Corner two: " + this.getCornerTwo().map(Location::toString).orElse("nil") + "\n";
+        if (this.contents == null){
+            // No contents to show
+            result += "Contents: nil\n";
+        } else {
+            result += "Contents: " + this.contents.toString() + "\n";
+        }
+        return result;
     }
 
     @Override
@@ -152,10 +158,12 @@ public class SubSpace3D implements DataSerializable {
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = new MemoryDataContainer()
-                .set(SUBSPACE_CORNER_ONE, getCornerOne())
-                .set(SUBSPACE_CORNER_TWO, getCornerTwo())
-                .set(SUBSPACE_CONTENTS, getContents());
+        Optional<Location<World>> optionalLocation1 = getCornerOne();
+        Optional<Location<World>> optionalLocation2 = getCornerTwo();
+        DataContainer container = DataContainer.createNew();
+        optionalLocation1.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_ONE, worldLocation));
+        optionalLocation2.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_TWO, worldLocation));
+                //.set(SUBSPACE_CONTENTS, getContents());
         return container;
     }
 
