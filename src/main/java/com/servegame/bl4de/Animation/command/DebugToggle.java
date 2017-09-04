@@ -1,13 +1,12 @@
 package com.servegame.bl4de.Animation.command;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
-import com.servegame.bl4de.Animation.util.Util;
+import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.text.Text;
 
 /**
  * File: DebugToggle.java
@@ -22,10 +21,10 @@ public class DebugToggle implements CommandExecutor {
         boolean currentDebug = !oldDebug;
         if (currentDebug){
             // Debug was set to true
-            src.sendMessage(Text.of(Util.PRIMARY_COLOR, "Debug has been ", Util.ACTION_COLOR, "set ", Util.SECONDARY_COLOR, "true."));
+            src.sendMessage(TextResponses.DEBUG_SET_TRUE);
         } else {
             // Debug was set to false
-            src.sendMessage(Text.of(Util.PRIMARY_COLOR, "Debug has been ", Util.ACTION_COLOR, "set ", Util.SECONDARY_COLOR, "false."));
+            src.sendMessage(TextResponses.DEBUG_SET_FALSE);
         }
         return CommandResult.success();
     }
