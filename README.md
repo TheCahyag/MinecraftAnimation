@@ -78,6 +78,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 
 ## Bug List
 * Sometimes when running a command the server will stop for 40.7 seconds (1.11.2|6.1.0)
+* If the animation database file is being used an error is thrown to console, this needs to be accounted for so that when the database file can't be used the plugin is disabled
 
 
 ## Random Notes for me
