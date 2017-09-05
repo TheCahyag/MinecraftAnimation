@@ -56,18 +56,10 @@ public class FrameUtil {
     }
 
     /**
-     * TODO
-     * @param frame
-     */
-    public static void displayFrame(Frame frame){
-        // This should be moved to either the Frame or Animation Class
-    }
-
-    /**
-     * TODO
-     * @param frame
-     * @param animation
-     * @return
+     * Create {@link Text} that, when clicked, will run the frame info command on a specific frame
+     * @param frame the given {@link Frame}
+     * @param animation the {@link Animation} that the {@link Frame} is associated with
+     * @return the resulting {@link Text}
      */
     public static Text linkToFrameInfo(Frame frame, Animation animation){
         return Text.builder()
