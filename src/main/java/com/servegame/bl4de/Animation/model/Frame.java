@@ -5,14 +5,13 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import static com.servegame.bl4de.Animation.data.DataQueries.*;
-
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
 /**
  * File: Frame.java
@@ -45,6 +44,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
     /**
      * Ensure that the Frame's variables have been set
      * @return boolean indicating complete initialization
+     * TODO I believe this can be deleted, since frames can't be created without an animation with a valid subspace
      */
     public boolean isInitialized(){
         if (!super.isInitialized()){
@@ -93,7 +93,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = new MemoryDataContainer()
+        DataContainer container = DataContainer.createNew()
                 .set(FRAME_CREATOR, getCreator())
                 .set(FRAME_NAME, getName())
                 .set(FRAME_SUBSPACE, getSubspace());
@@ -120,7 +120,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
         String message = "********************************  FRAME    INFO   *******************************\n" +
                 "Frame Name: " + this.getName() + "\n" +
                 "Frame Creator (UUID): " + this.getCreator() + "\n" +
-                "Frame Creator (Player Name): " + Util.getOfflinePlayer(this.getCreator(), null);
+                "Frame Creator (Player Name): " + Util.getOfflinePlayer(this.getCreator(), null).get() + "\n";
         message += super.toString();
         return message;
     }
@@ -140,7 +140,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
             if (container.contains(FRAME_CREATOR, FRAME_NAME, FRAME_SUBSPACE)){
                 UUID creator = container.getObject(FRAME_CREATOR, UUID.class).get();
                 String name = container.getString(FRAME_NAME).get();
-                SubSpace3D subSpace3D = container.getObject(FRAME_SUBSPACE, SubSpace3D.class).get();
+                SubSpace3D subSpace3D = new SubSpace3D.Builder().buildContent((DataView) container.get(FRAME_SUBSPACE).get()).get();
                 frame = new Frame(creator, name, subSpace3D);
             }
             return Optional.ofNullable(frame);
