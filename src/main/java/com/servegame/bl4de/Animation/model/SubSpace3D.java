@@ -1,7 +1,9 @@
 package com.servegame.bl4de.Animation.model;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
@@ -161,8 +163,8 @@ public class SubSpace3D implements DataSerializable {
         Optional<Location<World>> optionalLocation1 = getCornerOne();
         Optional<Location<World>> optionalLocation2 = getCornerTwo();
         DataContainer container = DataContainer.createNew();
-        optionalLocation1.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_ONE, worldLocation));
-        optionalLocation2.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_TWO, worldLocation));
+        optionalLocation1.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_ONE, worldLocation.createSnapshot()));
+        optionalLocation2.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_TWO, worldLocation.createSnapshot()));
                 //.set(SUBSPACE_CONTENTS, getContents());
         return container;
     }
@@ -176,11 +178,36 @@ public class SubSpace3D implements DataSerializable {
         @Override
         protected Optional<SubSpace3D> buildContent(DataView container) throws InvalidDataException {
             SubSpace3D subSpace3D = new SubSpace3D();
+            if (AnimationPlugin.instance.isDebug()){
+                for (DataQuery query :
+                     container.getKeys(true)) {
+                    System.out.println("Subspace Queries: " + query.toString());
+                }
+                System.out.println(container);
+            }
             if (container.contains(SUBSPACE_CORNER_ONE)){
-                subSpace3D.setCornerOne(container.getObject(SUBSPACE_CORNER_ONE, Location.class).get()); // Not sure if I can ignore this warning
+                Optional<BlockSnapshot> optionalBlockSnapshot = BlockSnapshot.builder().build((DataView) container.get(SUBSPACE_CORNER_ONE).get());
+                if (!optionalBlockSnapshot.isPresent()){
+                    System.out.println("NO BLOCKSNAPSHOT");
+                }
+                Optional<Location<World>> optionalLocation = optionalBlockSnapshot.get().getLocation();
+                if (!optionalLocation.isPresent()){
+                    System.out.println("NO LOCATION");
+                }
+                Location<World> location = optionalLocation.get();
+                subSpace3D.setCornerOne(location); // TODO Clean?
             }
             if (container.contains(SUBSPACE_CORNER_TWO)){
-                subSpace3D.setCornerTwo(container.getObject(SUBSPACE_CORNER_TWO, Location.class).get());
+                Optional<BlockSnapshot> optionalBlockSnapshot = BlockSnapshot.builder().build((DataView) container.get(SUBSPACE_CORNER_TWO).get());
+                if (!optionalBlockSnapshot.isPresent()){
+                    System.out.println("NO BLOCKSNAPSHOT");
+                }
+                Optional<Location<World>> optionalLocation = optionalBlockSnapshot.get().getLocation();
+                if (!optionalLocation.isPresent()){
+                    System.out.println("NO LOCATION");
+                }
+                Location<World> location = optionalLocation.get();
+                subSpace3D.setCornerTwo(location); // TODO Clean?
             }
             // I may need to find a different way to save contents here TODO
             return Optional.of(subSpace3D);
