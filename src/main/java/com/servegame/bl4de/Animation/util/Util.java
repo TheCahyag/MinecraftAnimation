@@ -15,7 +15,6 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
-import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.user.UserStorageService;
@@ -181,20 +180,17 @@ public class Util {
         // Get offline user
         Optional<UserStorageService> userStorageServiceOptional = Sponge.getServiceManager().provide(UserStorageService.class);
         if (!userStorageServiceOptional.isPresent()){
-            src.sendMessage(Text.of(ERROR_COLOR, "Uh oh, the UserStorageService.class couldn't be obtained..."));
+            if (src == null){
+                // Send a message to console
+                Sponge.getServer().getConsole().sendMessage(Text.of(ERROR_COLOR, "Uh oh, the UserStorageService.class couldn't be obtained..."));
+            } else {
+                // Send a message to the player
+                src.sendMessage(Text.of(ERROR_COLOR, "Uh oh, the UserStorageService.class couldn't be obtained..."));
+            }
             return Optional.empty();
         }
         UserStorageService userStorageService = userStorageServiceOptional.get();
         return userStorageService.get(uuid);
-    }
-
-    /**
-     *
-     * @param container
-     * @return
-     */
-    public static Optional<Location> deserializeLocation(DataView container){
-        return Sponge.getDataManager().deserialize(Location.class, container);
     }
 
     /**
@@ -209,6 +205,22 @@ public class Util {
         long yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
         long zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
         return xLen * yLen * zLen;
+    }
+
+    /**
+     * Converts a {@link Location} into a clean string.
+     * @param location the {@link Location}
+     * @return a String representation of the Location following this format:
+     *         (X, Y, Z) in worldName[dimensionNumber]
+     */
+    public static String locationToString(Location location){
+        UUID world = location.getExtent().getUniqueId();
+        World theWorld = Sponge.getServer().getWorld(world).get();
+        return "(" + location.getBlockX() + ", " +
+                location.getBlockY() + ", " +
+                location.getBlockZ() + ") in " +
+                theWorld.getName() + " (" +
+                theWorld.getDimension().getType().getId() + ")";
     }
 
     /**
