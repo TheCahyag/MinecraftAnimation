@@ -63,6 +63,8 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
     * An animation can only be paused if the current status is a played status
 * Add a message in the bottom middle of the users screen showing what frame the animation is on
 * Fix NPE from logger
+* In the animation info view add a line for the volume of the master subspace
+* In the frame info view if there are contents show the number of not air blocks
 
 ## Animations to show off
 * Door opening
