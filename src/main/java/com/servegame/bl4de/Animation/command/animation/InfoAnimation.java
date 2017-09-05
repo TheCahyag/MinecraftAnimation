@@ -1,7 +1,9 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.TextResponses;
+import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -14,11 +16,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import static com.servegame.bl4de.Animation.util.Util.*;
-import static org.spongepowered.api.text.format.TextColors.*;
-
 import javax.annotation.Nullable;
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
+import static org.spongepowered.api.text.format.TextColors.WHITE;
 
 /**
  * File: InfoAnimation.java
@@ -40,6 +42,10 @@ public class InfoAnimation implements CommandExecutor {
             return CommandResult.success();
         }
 
+        if (AnimationPlugin.instance.isDebug()){
+            System.out.println(this.animation.toString());
+        }
+
         // Get offline player
         Optional<UserStorageService> userStorageServiceOptional = Sponge.getServiceManager().provide(UserStorageService.class);
         if (!userStorageServiceOptional.isPresent()){
@@ -52,8 +58,8 @@ public class InfoAnimation implements CommandExecutor {
 
         // Get corner strings
         String cornerOne, cornerTwo;
-        cornerOne = cornerOneOptional.map(Location::toString).orElse("nil");
-        cornerTwo = cornerTwoOptional.map(Location::toString).orElse("nil");
+        cornerOne = cornerOneOptional.map(Util::locationToString).orElse("nil");
+        cornerTwo = cornerTwoOptional.map(Util::locationToString).orElse("nil");
 
         Text message = Text.builder()
                 .append(Text.of(PRIMARY_COLOR, "Name",
