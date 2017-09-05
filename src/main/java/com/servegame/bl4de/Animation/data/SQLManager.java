@@ -39,7 +39,7 @@ public class SQLManager {
         // In the future this would get data from a config file
         this.database = "ANIMATIONS";
         try (Connection connection = getDataSource().getConnection()){
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS ANIMATION_TABLE (name VARCHAR(255), owner UUID, data VARCHAR2(25000))")
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS ANIMATION_TABLE (name VARCHAR2(255), owner UUID, data VARCHAR2(25000))")
                     .executeUpdate();
             connection.commit();
             connection.close();
