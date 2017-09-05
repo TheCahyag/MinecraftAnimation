@@ -7,6 +7,7 @@ import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
@@ -14,10 +15,7 @@ import org.spongepowered.api.data.persistence.DataFormats;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
@@ -431,7 +429,7 @@ public class Animation implements DataSerializable {
         }
         DataContainer container = DataContainer.createNew()
                 .set(ANIMATION_STATUS, getStatus().name())
-                .set(ANIMATION_OWNER, getOwner().toString())
+                .set(ANIMATION_OWNER, getOwner())
                 .set(ANIMATION_NAME, getAnimationName())
                 .set(ANIMATION_FRAMES, getFrames())
                 .set(ANIMATION_SUBSPACE, getSubSpace())
@@ -464,23 +462,23 @@ public class Animation implements DataSerializable {
             if (AnimationPlugin.instance.isDebug()){
                 System.out.println("Hello from Animation.Builder.buildContent");
                 System.out.println("Container: " + container.toString());
-                System.out.println(this);
+
+                Set<DataQuery> queries = container.getKeys(true);
+                for (DataQuery q :
+                        queries) {
+                    System.out.println(q.toString());
+                }
+                System.out.println("Path: " + container.getCurrentPath());
+                System.out.println(container.getObject(ANIMATION_OWNER, UUID.class));
             }
             Animation animation = null;
+
             if (container.contains(ANIMATION_STATUS, ANIMATION_OWNER, ANIMATION_NAME,
-                    ANIMATION_FRAMES, ANIMATION_FRAME_INDEX,
-                    ANIMATION_TICK_DELAY, ANIMATION_CYCLES)){
+                    ANIMATION_FRAME_INDEX, ANIMATION_TICK_DELAY, ANIMATION_CYCLES)){
                 // Get data from the container
                 Status status = Status.valueOf(container.getString(ANIMATION_STATUS).get());
-
-                Optional<String> optionalString = container.getObject(ANIMATION_OWNER, String.class);
-                String uuidString = optionalString.orElse("6b5cb4d8-67f8-4df7-8a41-c1bc3f720226"); // pokemonmaster81 UUID (my other account)
-                if (AnimationPlugin.instance.isDebug()){
-                    System.out.println(uuidString);
-                }
-                UUID owner = UUID.fromString(uuidString);
+                UUID owner = container.getObject(ANIMATION_OWNER, UUID.class).get();
                 String name = container.getString(ANIMATION_NAME).get();
-                List<Frame> frames = container.getObjectList(ANIMATION_FRAMES, Frame.class).orElse(new ArrayList<>());
                 int frameIndex = container.getInt(ANIMATION_FRAME_INDEX).get();
                 int tickDelay = container.getInt(ANIMATION_TICK_DELAY).get();
                 int cycles = container.getInt(ANIMATION_CYCLES).get();
@@ -488,17 +486,42 @@ public class Animation implements DataSerializable {
                 // Create animation and set information
                 animation = new Animation(owner, name);
                 animation.setStatus(status);
-                animation.setFrames(frames);
                 animation.setFrameIndex(frameIndex);
                 animation.setTickDelay(tickDelay);
                 animation.setCycles(cycles);
 
                 // Check for objects that may be there
+                if (container.contains(ANIMATION_FRAMES)){
+                    System.out.println("Hello from frames");
+                    List<DataView> dataViews = (List<DataView>) container.get(ANIMATION_FRAMES).get();
+                    List<Frame> frames = new ArrayList<>();
+                    System.out.println(dataViews.size());
+                    for (DataView dataView :
+                            dataViews) {
+                        Frame frame = new Frame.Builder().buildContent(dataView).get();
+                        frames.add(frame);
+                    }
+                    animation.setFrames(frames);
+                }
                 if (container.contains(ANIMATION_SUBSPACE)){
                     // SubSpace is available
-                    SubSpace3D subSpace = container.getObject(ANIMATION_SUBSPACE, SubSpace3D.class).get();
+                    if (AnimationPlugin.instance.isDebug()){
+                        System.out.println("IT HAS THE SUBSPACE");
+                    }
+                    Optional<SubSpace3D> optionalSubspace = new SubSpace3D.Builder()
+                                    .buildContent((DataView) container.get(ANIMATION_SUBSPACE).get());
+                    SubSpace3D subSpace;
+                    if (optionalSubspace.isPresent()){
+                        subSpace = optionalSubspace.get();
+                    } else {
+                        System.err.println("Failed to retrieve SubSpace. Defaulting to a empty subspace...");
+                        subSpace = new SubSpace3D();
+                    }
                     animation.setSubSpace(subSpace);
                 } else {
+                    if (AnimationPlugin.instance.isDebug()){
+                        System.out.println("IT DOESN'T HAVE THE SUBSPACE");
+                    }
                     animation.setSubSpace(new SubSpace3D());
                 }
             } else {
@@ -518,10 +541,10 @@ public class Animation implements DataSerializable {
             if (AnimationPlugin.instance.isDebug()){
                 System.out.println("Hello from Animation.serialize");
                 System.out.println("Container: " + animation.toContainer().toString());
-                System.out.println(DataFormats.JSON.write(animation.toContainer()));
+                System.out.println(DataFormats.HOCON.write(animation.toContainer()));
                 System.out.println(animation);
             }
-            return DataFormats.JSON.write(animation.toContainer());
+            return DataFormats.HOCON.write(animation.toContainer());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -539,7 +562,7 @@ public class Animation implements DataSerializable {
                 System.out.println("Hello from Animation.deserialize");
                 System.out.println("Item: " + item);
             }
-            DataContainer dataContainer = DataFormats.JSON.read(item);
+            DataContainer dataContainer = DataFormats.HOCON.read(item);
             Optional<Animation> optionalAnimation = new Animation.Builder().build(dataContainer);
             return optionalAnimation.orElse(null);
         } catch (IOException e){
