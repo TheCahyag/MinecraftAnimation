@@ -120,7 +120,7 @@ public class Frame extends SubSpace3D implements DataSerializable {
         String message = "********************************  FRAME    INFO   *******************************\n" +
                 "Frame Name: " + this.getName() + "\n" +
                 "Frame Creator (UUID): " + this.getCreator() + "\n" +
-                "Frame Creator (Player Name): " + Util.getOfflinePlayer(this.getCreator(), null).get() + "\n";
+                "Frame Creator (Player Name): " + Util.getOfflinePlayer(this.getCreator(), null).get().getName() + "\n";
         message += super.toString();
         return message;
     }
