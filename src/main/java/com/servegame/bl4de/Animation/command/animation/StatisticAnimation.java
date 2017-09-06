@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -18,7 +19,7 @@ public class StatisticAnimation implements CommandExecutor {
         int numOfAnimation, animationsPlaying;
 
 
-
+        src.sendMessage(Text.of(Util.ERROR_COLOR, "This feature is currently not implemented."));
         Text message = Text.builder()
                 .build();
 
