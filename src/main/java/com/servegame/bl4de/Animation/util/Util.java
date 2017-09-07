@@ -321,71 +321,75 @@ public class Util {
                 .child(statsAnimation, "stats", "statistics")
                 .child(debugAnimation, "debug")
                 .arguments(
-                        string(Text.of("animation_name")),
-                        firstParsing(
-                                // /animate <name> info
-                                literal(Text.of("animation_info"), "info"),
-                                // /animate <name> set...
-                                literal(Text.of("animation_set"), "set"),
-                                // /animate <name> frame...
-                                literal(Text.of("frame"), "frame")
-                        ),
                         optional(
                                 firstParsing(
-                                        // /animate <name> set pos1
-                                        seq(
-                                                literal(Text.of("pos1"), "pos1")
+                                        string(Text.of("animation_name")),
+                                        firstParsing(
+                                                // /animate <name> info
+                                                literal(Text.of("animation_info"), "info"),
+                                                // /animate <name> set...
+                                                literal(Text.of("animation_set"), "set"),
+                                                // /animate <name> frame...
+                                                literal(Text.of("frame"), "frame")
                                         ),
-                                        // /animate <name> set pos2
-                                        seq(
-                                                literal(Text.of("pos2"), "pos2")
+                                        optional(
+                                                firstParsing(
+                                                        // /animate <name> set pos1
+                                                        seq(
+                                                                literal(Text.of("pos1"), "pos1")
+                                                        ),
+                                                        // /animate <name> set pos2
+                                                        seq(
+                                                                literal(Text.of("pos2"), "pos2")
+                                                        ),
+                                                        // /animate <name> set name <new_name>
+                                                        seq(
+                                                                literal(Text.of("set_name"), "name"),
+                                                                string(Text.of("new_name"))
+                                                        )
+                                                )
                                         ),
-                                        // /animate <name> set name <new_name>
-                                        seq(
-                                                literal(Text.of("set_name"), "name"),
-                                                string(Text.of("new_name"))
-                                        )
-                                )
-                        ),
-                        optional(
-                                firstParsing(
-                                        // /animate <name> frame create <name>
-                                        seq(
-                                                literal(Text.of("create"), "create"),
-                                                optional(string(Text.of("frame_name")))
-                                        ),
-                                        // /animate <name> frame delete <name|num> -f
-                                        seq(
-                                                literal(Text.of("delete"), "delete"),
-                                                string(Text.of("frame_name_num")),
-                                                optional(flags().flag("f").buildWith(none()))
-                                        ),
-                                        // /animate <name> frame display <name|num>
-                                        seq(
-                                                literal(Text.of("display"), "display"),
-                                                string(Text.of("frame_name_num")),
-                                                optional(flags().flag("f").buildWith(none()))
-                                        ),
-                                        // /animate <name> frame duplicate <name|num> [num]
-                                        seq(
-                                                literal(Text.of("duplicate"), "duplicate"),
-                                                string(Text.of("frame_name_num")),
-                                                optional(integer(Text.of("num")))
-                                        ),
-                                        // /animate <name> frame update <name|num> -o
-                                        seq(
-                                                literal(Text.of("update"), "update"),
-                                                string(Text.of("frame_name_num")),
-                                                optional(flags().flag("o").buildWith(none()))
-                                        ),
-                                        // /animate <name> frame list
-                                        seq(
-                                                literal(Text.of("list"), "list")
-                                        ),
-                                        // /animate <name> frame <name|num> info, this NEEDS to be last
-                                        seq(
-                                                string(Text.of("frame_name_num")),
-                                                literal(Text.of("frame_info"), "info")
+                                        optional(
+                                                firstParsing(
+                                                        // /animate <name> frame create <name>
+                                                        seq(
+                                                                literal(Text.of("create"), "create"),
+                                                                optional(string(Text.of("frame_name")))
+                                                        ),
+                                                        // /animate <name> frame delete <name|num> -f
+                                                        seq(
+                                                                literal(Text.of("delete"), "delete"),
+                                                                string(Text.of("frame_name_num")),
+                                                                optional(flags().flag("f").buildWith(none()))
+                                                        ),
+                                                        // /animate <name> frame display <name|num>
+                                                        seq(
+                                                                literal(Text.of("display"), "display"),
+                                                                string(Text.of("frame_name_num")),
+                                                                optional(flags().flag("f").buildWith(none()))
+                                                        ),
+                                                        // /animate <name> frame duplicate <name|num> [num]
+                                                        seq(
+                                                                literal(Text.of("duplicate"), "duplicate"),
+                                                                string(Text.of("frame_name_num")),
+                                                                optional(integer(Text.of("num")))
+                                                        ),
+                                                        // /animate <name> frame update <name|num> -o
+                                                        seq(
+                                                                literal(Text.of("update"), "update"),
+                                                                string(Text.of("frame_name_num")),
+                                                                optional(flags().flag("o").buildWith(none()))
+                                                        ),
+                                                        // /animate <name> frame list
+                                                        seq(
+                                                                literal(Text.of("list"), "list")
+                                                        ),
+                                                        // /animate <name> frame <name|num> info, this NEEDS to be last
+                                                        seq(
+                                                                string(Text.of("frame_name_num")),
+                                                                literal(Text.of("frame_info"), "info")
+                                                        )
+                                                )
                                         )
                                 )
                         )
