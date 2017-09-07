@@ -1,7 +1,7 @@
 package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.model.Animation;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
@@ -61,7 +61,7 @@ public class SetAnimation implements CommandExecutor {
             }
             // Set the first position for the subspace
             this.animation.getSubSpace().setCornerOne(newLocation);
-            if (AnimationUtil.saveAnimation(this.animation)){
+            if (AnimationController.saveAnimation(this.animation)){
                 player.sendMessage(Text.of(PRIMARY_COLOR, "Position 1 set."));
                 return CommandResult.success();
             } else {
@@ -80,7 +80,7 @@ public class SetAnimation implements CommandExecutor {
             }
             // Set the second position for the subspace
             this.animation.getSubSpace().setCornerTwo(newLocation);
-            if (AnimationUtil.saveAnimation(this.animation)){
+            if (AnimationController.saveAnimation(this.animation)){
                 player.sendMessage(Text.of(PRIMARY_COLOR, "Position 2 set."));
                 return CommandResult.success();
             } else {
@@ -101,14 +101,14 @@ public class SetAnimation implements CommandExecutor {
                 player.sendMessage(TextResponses.GENERAL_INDIFFERENT_NAME_ERROR);
                 return CommandResult.success();
             }
-            if (AnimationUtil.getAnimationsByOwner(player.getUniqueId()).contains(newName)){
+            if (AnimationController.getAnimationsByOwner(player.getUniqueId()).contains(newName)){
                 // Name already exists
                 player.sendMessage(TextResponses.ANIMATION_ALREADY_EXISTS_ERROR);
                 return CommandResult.success();
             }
             // Make change and save animation
             this.animation.setAnimationName(newName);
-            if (AnimationUtil.saveAnimation(this.animation)){
+            if (AnimationController.saveAnimation(this.animation)){
                 // Animation changed and saved
                 player.sendMessage(TextResponses.ANIMATION_SUCCESSFULLY_ALTERED);
             } else {
@@ -116,7 +116,7 @@ public class SetAnimation implements CommandExecutor {
                 player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 return CommandResult.empty();
             }
-            if (!AnimationUtil.deleteAnimation(this.animation)){
+            if (!AnimationController.deleteAnimation(this.animation)){
                 // Couldn't delete the animation
                 player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 new Throwable().printStackTrace();

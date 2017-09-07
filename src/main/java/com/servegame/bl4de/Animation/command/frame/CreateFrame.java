@@ -3,7 +3,7 @@ package com.servegame.bl4de.Animation.command.frame;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -59,7 +59,7 @@ public class CreateFrame implements CommandExecutor {
             player.sendMessage(Text.of("    ", uie.getDetailText()));
             return CommandResult.success();
         }
-        if (AnimationUtil.saveAnimation(this.animation)){
+        if (AnimationController.saveAnimation(this.animation)){
             // Animation was updated and saved
             player.sendMessage(Text.of(PRIMARY_COLOR, "Frame ",
                     PRIMARY_COLOR, "'",

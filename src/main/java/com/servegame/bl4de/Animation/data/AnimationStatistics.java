@@ -1,7 +1,5 @@
 package com.servegame.bl4de.Animation.data;
 
-import com.servegame.bl4de.Animation.util.AnimationUtil;
-
 /**
  * File: AnimationStatistics.java
  *
@@ -13,7 +11,7 @@ public class AnimationStatistics {
 
 
 //    public static int getAnimationsTotal(){
-//        AnimationUtil.getAnimations()
+//        AnimationController.getAnimations()
 //    }
 
 

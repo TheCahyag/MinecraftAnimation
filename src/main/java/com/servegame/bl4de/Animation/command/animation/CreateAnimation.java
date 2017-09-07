@@ -1,7 +1,7 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
@@ -42,7 +42,7 @@ public class CreateAnimation implements CommandExecutor {
         String animationName = animationNameOptional.get();
 
         // See if the animation exists already
-        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationName, owner);
+        Optional<Animation> animationOptional = AnimationController.getAnimation(animationName, owner);
         if (animationOptional.isPresent()){
             // The animation already exists
             player.sendMessage(TextResponses.ANIMATION_ALREADY_EXISTS_ERROR);
@@ -51,7 +51,7 @@ public class CreateAnimation implements CommandExecutor {
 
         // Make the new animation
         Animation animation = new Animation(owner, animationName);
-        if (AnimationUtil.createAnimation(animation)){
+        if (AnimationController.createAnimation(animation)){
             // Animation was created and saved successfully
             player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Animation ",
                     Util.PRIMARY_COLOR, "'",

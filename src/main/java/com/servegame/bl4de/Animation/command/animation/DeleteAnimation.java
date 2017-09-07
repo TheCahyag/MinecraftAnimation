@@ -1,9 +1,8 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
-import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -38,7 +37,7 @@ public class DeleteAnimation implements CommandExecutor {
             return CommandResult.empty();
         }
         String animationName = animationNameOptional.get();
-        Optional<Animation> animationOptional = AnimationUtil.getAnimation(animationName, owner);
+        Optional<Animation> animationOptional = AnimationController.getAnimation(animationName, owner);
         if (!animationOptional.isPresent()){
             // Couldn't find the given animation
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
@@ -64,7 +63,7 @@ public class DeleteAnimation implements CommandExecutor {
             return CommandResult.success();
         }
 
-        if (AnimationUtil.deleteAnimation(animation)){
+        if (AnimationController.deleteAnimation(animation)){
             // Animation was deleted successfully
             player.sendMessage(Text.of(PRIMARY_COLOR, "Animation ",
                     PRIMARY_COLOR, "'",
