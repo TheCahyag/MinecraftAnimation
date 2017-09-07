@@ -1,6 +1,7 @@
 # Minecraft Animations
 Author: TheCahyag  
 Start Date: 7/20/17  
+Objective: To create a intuitive tool that allows for the creation of frame based animations in Minecraft.
 Description: The plugin has been developed using the SpongeAPI and currently only 
 supports uses on SpongeVanilla (Although currently not in a working state). The plugin's
 purpose is to easily (hopefully) create frame based animations in Minecraft within a static 3D sub
@@ -73,6 +74,8 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
     * An item can be used for switching between frames. So while in edit mode you can use a stick (or something) to go forward a frame (left click) or go back a frame (right click)
     * Would we set a tool for saving changes? ~~So they would switch between a tool for changing frames and a tool for saving?~~ Or when they switch between frames it would save automatically
 * For the time inbetween frames, they shouldn't be able to give a number > 1. Should there be a ceiling?
+* Define characters that are illegal to have in a frame/animation name
+* After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation
 
 ## Animations to show off
 * Door opening
