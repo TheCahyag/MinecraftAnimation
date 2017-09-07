@@ -59,7 +59,7 @@ public class AnimationPlugin {
             new File(CONFIG_DIR).mkdir();
         }
 
-        this.debug = true;
+        this.debug = false;
         Util.registerCommands(this);
         taskManager.stopAllAnimations();
         sqlManager = SQLManager.get(plugin);
@@ -74,7 +74,7 @@ public class AnimationPlugin {
     public void onStop(GameStoppingEvent event){
         //logger.info("Stopping animations...");
         System.out.println("Stopping animations...");
-        //AnimationUtil.stopAllAnimations();
+        //AnimationController.stopAllAnimations();
     }
 
     /**

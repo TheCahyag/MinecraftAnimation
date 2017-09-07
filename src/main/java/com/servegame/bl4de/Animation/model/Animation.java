@@ -3,10 +3,10 @@ package com.servegame.bl4de.Animation.model;
 import com.google.common.collect.ImmutableList;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
+import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.task.TaskManager;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
-import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.data.DataContainer;
@@ -106,7 +106,7 @@ public class Animation implements DataSerializable {
         if (!this.masterSubSpace.isInitialized()){
             throw new UninitializedException(TextResponses.SUBSPACE_NOT_INITIALIZED_ERROR);
         }
-        return new Frame(owner, FrameUtil.generateFrameName(this), this.masterSubSpace);
+        return new Frame(owner, FrameController.generateFrameName(this), this.masterSubSpace);
     }
 
     /**
@@ -158,7 +158,7 @@ public class Animation implements DataSerializable {
     public void start(int frame) throws UninitializedException {
         this.frameIndex = frame;
         setStatus(Status.RUNNING);
-        if (AnimationUtil.saveAnimation(this)){
+        if (AnimationController.saveAnimation(this)){
             AnimationPlugin.taskManager.createBatch(this);
         } else {
             AnimationPlugin.logger.info("Failed to save animation");
@@ -183,7 +183,7 @@ public class Animation implements DataSerializable {
      */
     public void stop(){
         setStatus(Status.STOPPED);
-        if (AnimationUtil.saveAnimation(this)){
+        if (AnimationController.saveAnimation(this)){
             AnimationPlugin.taskManager.stopAnimation(this);
         } else {
             AnimationPlugin.logger.info("Failed to save animation");
@@ -198,7 +198,7 @@ public class Animation implements DataSerializable {
      */
     public void pause(){
         setStatus(Status.PAUSED);
-        if (AnimationUtil.saveAnimation(this)){
+        if (AnimationController.saveAnimation(this)){
             // No functionality right now, need to add some things for this to work
         } else {
             AnimationPlugin.logger.info("Failed to save animation");
