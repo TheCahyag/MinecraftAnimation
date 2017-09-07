@@ -1,9 +1,10 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
-import com.servegame.bl4de.Animation.util.FrameUtil;
+import com.servegame.bl4de.Animation.controller.FrameController;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -36,7 +37,7 @@ public class ListFrames implements CommandExecutor {
         Text message = Text.builder()
                 .append(Text.of(PRIMARY_COLOR, "Animation",
                         WHITE, ": "))
-                .append(AnimationUtil.linkToAnimationInfo(animation))
+                .append(AnimationController.linkToAnimationInfo(animation))
                 .append(Text.of(PRIMARY_COLOR, "\n# of frames",
                         WHITE, ": ",
                         SECONDARY_COLOR, this.animation.getNumOfFrames() + "\n",
@@ -46,11 +47,21 @@ public class ListFrames implements CommandExecutor {
 
         // List all the frames
         List<Frame> frames = this.animation.getFrames();
+
+        if (AnimationPlugin.instance.isDebug()){
+            System.out.println("Animation from frame: ---------------------");
+            System.out.println(this.animation);
+            for (Frame f :
+                    frames) {
+                System.out.println("Frame: " + f);
+            }
+        }
+
         for (int i = 0; i < this.animation.getNumOfFrames(); i++) {
-            message = Text.builder()
+            message = message.toBuilder()
                     .append(Text.of(PRIMARY_COLOR, i,
                             WHITE, ": "))
-                    .append(FrameUtil.linkToFrameInfo(frames.get(i), animation))
+                    .append(FrameController.linkToFrameInfo(frames.get(i), this.animation))
                     .append(Text.of("\n"))
                     .build();
         }
@@ -58,7 +69,7 @@ public class ListFrames implements CommandExecutor {
         // Add buttons for the display
         message = message.toBuilder()
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n"))
-                .append(FrameUtil.getButtonsForList(animation))
+                .append(FrameController.getButtonsForList(animation))
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
                 .build();
 
