@@ -28,7 +28,7 @@ public class HelpAnimation implements CommandExecutor {
             /animate list
             /animate <name> info
             /animate <name> frame create <name> -h
-            /animate <name> frame delete <name|num> -f
+            /animate <name> frame delete_frame <name|num> -f
             /animate <name> frame display <name|num>
             /animate <name> frame duplicate <name|num> [num]
             /animate <name> frame <name|num> info
@@ -96,7 +96,7 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
                         Util.PRIMARY_COLOR, " frame",
-                        Util.ACTION_COLOR, " delete",
+                        Util.ACTION_COLOR, " delete_frame",
                         Util.NAME_COLOR, " <name|num>",
                         Util.FLAG_COLOR, " -f\n"))
                 .append(Text.of(TextColors.WHITE, "/",

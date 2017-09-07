@@ -394,7 +394,7 @@ public class Util {
                                         ),
                                         // /animate <name> frame delete <name|num> -f
                                         seq(
-                                                literal(Text.of("delete"), "delete"),
+                                                literal(Text.of("delete_frame"), "delete_frame"),
                                                 string(Text.of("frame_name_num")),
                                                 optional(flags().flag("f").buildWith(none()))
                                         ),
