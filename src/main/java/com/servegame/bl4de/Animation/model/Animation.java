@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.model;
 
+import com.google.common.collect.ImmutableList;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -7,6 +8,7 @@ import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
+import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataSerializable;
@@ -509,11 +511,19 @@ public class Animation implements DataSerializable {
 
                 // Check for objects that may be there
                 if (container.contains(ANIMATION_FRAMES)){
-                    List<Frame> frames = (List<Frame>) container.get(ANIMATION_FRAMES).get();
-                    for (Object o :
-                            frames) {
-                        System.out.println("the frame as object: " + o.toString());
+                    Object soonToBeFrames = container.get(ANIMATION_FRAMES).get();
+                    ImmutableList list = ((ImmutableList) soonToBeFrames);
 
+                    List<Frame> frames = new ArrayList<>();
+                    Frame.Builder builder = new Frame.Builder();
+                    try {
+                        for (Object o :
+                                list) {
+                            DataView dataView = DataFormats.HOCON.read(Util.encapColons(o.toString()));
+                            frames.add(builder.buildContent(dataView).get());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     animation.setFrames(frames);
                 }
