@@ -65,6 +65,14 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Fix NPE from logger
 * In the animation info view add a line for the volume of the master subspace
 * In the frame info view if there are contents show the number of not air blocks
+* Add options to the way the animation loops
+    * Sequentially 
+    * Random order
+    * Sequentially then reverse (0, 1, ..., n, n, n-1, n-2, n-..., 0)
+* What if we have an edit mode? 
+    * An item can be used for switching between frames. So while in edit mode you can use a stick (or something) to go forward a frame (left click) or go back a frame (right click)
+    * Would we set a tool for saving changes? ~~So they would switch between a tool for changing frames and a tool for saving?~~ Or when they switch between frames it would save automatically
+* For the time inbetween frames, they shouldn't be able to give a number > 1. Should there be a ceiling?
 
 ## Animations to show off
 * Door opening
