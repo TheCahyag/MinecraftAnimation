@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.util;
+package com.servegame.bl4de.Animation.controller;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.data.SQLManager;
@@ -19,11 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
- * File: AnimationUtil.java
+ * File: AnimationController.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class AnimationUtil {
+public class AnimationController {
 
     private static final String CONFIG_DIR = "./config/animation";
     private static final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";

@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.util;
+package com.servegame.bl4de.Animation.controller;
 
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * File: FrameUtil.java
+ * File: FrameController.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class FrameUtil {
+public class FrameController {
     private static int lastNumberForName = 0;
 
     /**
@@ -49,6 +49,7 @@ public class FrameUtil {
                 return nameTrial;
             } else {
                 counter++;
+                valid = true;
             }
         }
         // This line should never execute
