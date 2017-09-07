@@ -3,6 +3,7 @@ package com.servegame.bl4de.Animation.model;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.AnimationUtil;
 import com.servegame.bl4de.Animation.util.FrameUtil;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -13,9 +14,13 @@ import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.DataFormats;
 import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.api.scheduler.Task;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
@@ -142,8 +147,11 @@ public class Animation implements DataSerializable {
     /* START ACTION METHODS */
 
     /**
-     * TODO
-     * @param frame
+     * Starts the {@link Animation} on a given frame.
+     *
+     * Starting the {@link Animation} requires calling the {@link TaskManager#createBatch(Animation)}
+     * method, which creates a {@link Task} for each {@link Frame}
+     * @param frame the starting {@link Frame}
      */
     public void start(int frame) throws UninitializedException {
         this.frameIndex = frame;
@@ -156,14 +164,20 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * TODO
+     * Starts the {@link Animation}
+     *
+     * Calls {@link Animation#start(int)} passing the start {@link Frame} as
+     * 0 (the first {@link Frame})
      */
     public void start() throws UninitializedException {
         start(0);
     }
 
     /**
-     * TODO
+     * Stops the {@link Animation}.
+     *
+     * The {@link TaskManager#stopAnimation(Animation)} is called to end all
+     * {@link Task}s associated with this {@link Animation}
      */
     public void stop(){
         setStatus(Status.STOPPED);
@@ -175,7 +189,10 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * TODO
+     * Pauses the {@link Animation}.
+     *
+     * There's no need to specifically save {@link Frame} it was on because
+     * that is always saved under the {@link Animation#frameIndex} state.
      */
     public void pause(){
         setStatus(Status.PAUSED);
@@ -446,12 +463,14 @@ public class Animation implements DataSerializable {
     /* END DATA SERIALIZATION METHODS */
 
     /**
-     * TODO?
+     * The Builder class is used to create a {@link Animation} object from a
+     * {@link DataContainer}. The {@link DataContainer} is created in the serialization
+     * process using the {@link Animation#toContainer()} method.
      */
     public static class Builder extends AbstractDataBuilder<Animation> {
 
         /**
-         * TODO
+         * Default constructor
          */
         public Builder(){
             super(Animation.class, 0);
@@ -462,10 +481,8 @@ public class Animation implements DataSerializable {
             if (AnimationPlugin.instance.isDebug()){
                 System.out.println("Hello from Animation.Builder.buildContent");
                 System.out.println("Container: " + container.toString());
-
-                Set<DataQuery> queries = container.getKeys(true);
                 for (DataQuery q :
-                        queries) {
+                        container.getKeys(false)) {
                     System.out.println(q.toString());
                 }
                 System.out.println("Path: " + container.getCurrentPath());
@@ -492,14 +509,11 @@ public class Animation implements DataSerializable {
 
                 // Check for objects that may be there
                 if (container.contains(ANIMATION_FRAMES)){
-                    System.out.println("Hello from frames");
-                    List<DataView> dataViews = (List<DataView>) container.get(ANIMATION_FRAMES).get();
-                    List<Frame> frames = new ArrayList<>();
-                    System.out.println(dataViews.size());
-                    for (DataView dataView :
-                            dataViews) {
-                        Frame frame = new Frame.Builder().buildContent(dataView).get();
-                        frames.add(frame);
+                    List<Frame> frames = (List<Frame>) container.get(ANIMATION_FRAMES).get();
+                    for (Object o :
+                            frames) {
+                        System.out.println("the frame as object: " + o.toString());
+
                     }
                     animation.setFrames(frames);
                 }
@@ -532,9 +546,18 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * TODO
-     * @param animation
-     * @return
+     * Serializes the {@link Animation}.
+     *
+     * The {@link Animation#toContainer()} method is used to obtain a
+     * {@link DataContainer} which is then converted to a string using the
+     * {@link DataFormats#HOCON} writer. The string that is returned is then
+     * later put in a H2 Database
+     *
+     * Note: The {@link DataFormats#HOCON} was used because the {@link DataFormats#JSON}
+     * was thought to be the source of a issue where the UUID couldn't be extracted in the
+     * {@link Animation#deserialize(String)} process.
+     * @param animation {@link Animation} to serialize
+     * @return Resulting {@link DataFormats#HOCON} string
      */
     public static String serialize(Animation animation) {
         try {
@@ -552,9 +575,15 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * TODO
-     * @param item
-     * @return
+     * Deserializes a {@link Animation} from a given String.
+     *
+     * The string (which was obtained from the database) is first converted to a
+     * {@link DataContainer} using the {@link DataFormats#HOCON} read method. The
+     * {@link DataContainer} is then built in the {@link Animation.Builder#buildContent(DataView)}
+     * builder.
+     * @param item String that should represent an {@link Animation}
+     * @return If the building process is successful a {@link Animation} is returned. In the cases where
+     * problems in the building process null is returned - Ideally this should never happen
      */
     public static Animation deserialize(String item) {
         try {
