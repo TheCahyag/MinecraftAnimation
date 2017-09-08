@@ -54,7 +54,7 @@ public class CommandGateKeeper implements CommandExecutor {
             return new SetAnimation(animation).execute(src, args);
         } else if (frame){
             boolean create      = (boolean) args.getOne("create").orElse(false);
-            boolean delete      = (boolean) args.getOne("delete").orElse(false);
+            boolean delete      = (boolean) args.getOne("delete_frame").orElse(false);
             boolean display     = (boolean) args.getOne("display").orElse(false);
             boolean duplicate   = (boolean) args.getOne("duplicate").orElse(false);
             boolean update      = (boolean) args.getOne("update").orElse(false);
