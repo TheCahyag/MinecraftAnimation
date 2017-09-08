@@ -2,13 +2,14 @@ package com.servegame.bl4de.Animation.controller;
 
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
+import org.apache.commons.lang3.CharUtils;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
-import static com.servegame.bl4de.Animation.util.Util.*;
-
 import java.util.List;
 import java.util.Random;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: FrameController.java
@@ -28,7 +29,7 @@ public class FrameController {
      * on to reduce redundant code execution
      * This might be fixed now, it won't persist after a restart, but if it 
      * does persist throughout the life of a server it will only be running 
-     * redundent code the first time it creates a frame name.
+     * redundant code the first time it creates a frame name.
      *
      * @param animation the {@link Animation} the {@link Frame} will belong to
      * @return String - name for the frame
@@ -52,9 +53,23 @@ public class FrameController {
                 valid = true;
             }
         }
-        // This line should never execute
-        return ((Integer) new Random().nextInt(999999)).toString();
+        // This line <i>should</i> never execute
+        return "frame" + ((Integer) new Random().nextInt(999999)).toString();
     }
+
+    /**
+     * TODO
+     * @param name
+     * @return
+     */
+    public static boolean isValidName(String name){
+        if (CharUtils.isAsciiNumeric(name.charAt(0))){
+            return false;
+        } //else if (name.("\\/\"'.,?:"))
+        return true;
+    }
+
+
 
     /**
      * Create {@link Text} that, when clicked, will run the frame info command on a specific frame
@@ -92,7 +107,31 @@ public class FrameController {
      * @return
      */
     public static Text getButtonsForFrameInfo(Frame frame, Animation animation){
-        // TODO
-        return null;
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "ANIMATION",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " info"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "DISPLAY",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame display " + frame.getName()))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "DUPLICATE",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame duplicate " + frame.getName()))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "UPDATE",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame update " + frame.getName()))
+                        .build())
+                .build();
     }
 }
