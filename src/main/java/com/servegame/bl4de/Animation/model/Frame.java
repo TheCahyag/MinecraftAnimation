@@ -104,8 +104,9 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        // TODO
-        return null;
+        // TODO this copy process will need to change (pretty sure)
+        super.clone(); // Don't know what this does
+        return new Frame(this.getCreator(), this.getName(), this.getSubspace());
     }
 
     @Override
