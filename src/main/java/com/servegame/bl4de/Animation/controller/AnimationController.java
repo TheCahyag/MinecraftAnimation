@@ -192,6 +192,15 @@ public class AnimationController {
 
     /**
      * TODO
+     * @param name
+     * @return
+     */
+    public static boolean isValidName(String name){
+        return true;
+    }
+
+    /**
+     * TODO
      * @param animation
      * @return
      */
