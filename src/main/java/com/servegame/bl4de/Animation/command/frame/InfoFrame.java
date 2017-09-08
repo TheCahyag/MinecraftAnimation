@@ -80,18 +80,4 @@ public class InfoFrame implements CommandExecutor {
         player.sendMessage(message);
         return CommandResult.success();
     }
-
-    /**
-     *
-     * @param str
-     * @return
-     */
-    public boolean isNumeric(String str) {
-        try {
-            double d = Double.parseDouble(str);
-        } catch(NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
 }
