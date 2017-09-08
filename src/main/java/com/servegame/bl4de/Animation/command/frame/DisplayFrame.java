@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -12,6 +13,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: DisplayFrame.java
@@ -33,16 +36,50 @@ public class DisplayFrame implements CommandExecutor {
             return CommandResult.success();
         }
         Player player = ((Player) src);
-        Optional<String> frameNameOptional = args.getOne("frame_name");
-        Frame frame;
-
         if (this.animation.isRunning()){
             player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
             return CommandResult.success();
         }
 
+        Optional<String> frameNameOptional = args.getOne("frame_name_num");
+        if (!frameNameOptional.isPresent()){
+            // Frame not specified
+            player.sendMessage(TextResponses.FRAME_NOT_SPECIFIED_ERROR);
+            return CommandResult.empty();
+        }
+        String frameName = frameNameOptional.get();
+        Optional<Frame> frameOptional;
 
-        src.sendMessage(Text.of("Hello from displayframe"));
+        if (isNumeric(frameName)){
+            // User specified a frame number 0, 1, ..., n
+            frameOptional = this.animation.getFrame(Integer.parseInt(frameName));
+        } else {
+            // User specified a frame name
+            frameOptional = this.animation.getFrame(frameName);
+        }
+
+        if (!frameOptional.isPresent()){
+            // Couldn't find a frame by the given name
+            player.sendMessage(TextResponses.FRAME_NOT_FOUND_ERROR);
+            return CommandResult.empty();
+        }
+
+
+        Frame frame = frameOptional.get();
+
+        if (FrameController.displayContents(frame)){
+            Text message = Text.of(
+                    PRIMARY_COLOR, "Frame '",
+                    NAME_COLOR, frame.getName(),
+                    PRIMARY_COLOR, "' has been ",
+                    ACTION_COLOR, "displayed",
+                    PRIMARY_COLOR, "."
+            );
+            player.sendMessage(message);
+        } else {
+            player.sendMessage(TextResponses.FRAME_NOT_DISPLAYED_ERROR);
+            return CommandResult.empty();
+        }
         return CommandResult.success();
     }
 }
