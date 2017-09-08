@@ -2,7 +2,7 @@ package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.model.Animation;
-import com.servegame.bl4de.Animation.util.AnimationUtil;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -32,7 +32,7 @@ public class ListAnimation implements CommandExecutor {
             return CommandResult.success();
         }
         Player player = (Player) src;
-        ArrayList<String> animationsByOwner = AnimationUtil.getAnimationsByOwner(player.getUniqueId());
+        ArrayList<String> animationsByOwner = AnimationController.getAnimationsByOwner(player.getUniqueId());
         boolean displayedAAnimation = false;
         if (animationsByOwner.size() != 0){
             Text message = Text.builder()
@@ -41,7 +41,7 @@ public class ListAnimation implements CommandExecutor {
             int animationsToList = animationsByOwner.size() > 10 ? 10 : animationsByOwner.size();
             for (int i = 0; i < animationsToList; i++) {
                 // Add all animations that are owned into a Text object
-                Optional<Animation> optionalAnimation = AnimationUtil.getAnimation(animationsByOwner.get(i), player.getUniqueId());
+                Optional<Animation> optionalAnimation = AnimationController.getAnimation(animationsByOwner.get(i), player.getUniqueId());
                 if (!optionalAnimation.isPresent()){
                     // There are no animations to display
                     if (AnimationPlugin.instance.isDebug()){
@@ -57,7 +57,7 @@ public class ListAnimation implements CommandExecutor {
                         .onHover(TextActions.showText(Text.of("Click here to see the animation's info.")))
                         .build();
                 message = message.toBuilder()
-                        .append(Text.of(AnimationUtil.getButtonsForAnimation(animation),
+                        .append(Text.of(AnimationController.getButtonsForAnimation(animation),
                                 animationNameLink, "\n"))
                         .build();
             }
@@ -70,7 +70,7 @@ public class ListAnimation implements CommandExecutor {
                     .build();
             message = message.toBuilder()
                     .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n",
-                            AnimationUtil.getButtonsForList(), "\n",
+                            AnimationController.getButtonsForList(), "\n",
                             Text.of(SECONDARY_COLOR, "----------------------------------------------------")))
                     .build();
             player.sendMessage(message);
@@ -79,7 +79,7 @@ public class ListAnimation implements CommandExecutor {
             player.sendMessage(Text.of(PRIMARY_COLOR, "There are no animations to display."));
             Text message = Text.builder()
                     .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n",
-                            AnimationUtil.getButtonsForList(), "\n",
+                            AnimationController.getButtonsForList(), "\n",
                             Text.of(SECONDARY_COLOR, "----------------------------------------------------")))
                     .build();
             player.sendMessage(message);
