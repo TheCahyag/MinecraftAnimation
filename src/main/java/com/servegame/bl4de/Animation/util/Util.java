@@ -208,6 +208,21 @@ public class Util {
     }
 
     /**
+     * Overloaded method for {@link #calculateVolume(Location, Location)}
+     * Get's the locations from the given {@link SubSpace3D}. If the {@link SubSpace3D}
+     * is not initialized then 0 is returned
+     *
+     * @param subSpace3D given {@link SubSpace3D}
+     * @return 0 if the {@link SubSpace3D} is not initialized, else will return the volume
+     */
+    public static long calculateVolume(SubSpace3D subSpace3D){
+        if (subSpace3D.isInitialized()){
+            return calculateVolume(subSpace3D.getCornerOne().get(), subSpace3D.getCornerTwo().get());
+        }
+        return 0;
+    }
+
+    /**
      * Converts a {@link Location} into a clean string.
      * @param location the {@link Location}
      * @return a String representation of the Location following this format:
