@@ -19,7 +19,7 @@ import static com.servegame.bl4de.Animation.data.DataQueries.*;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 @ConfigSerializable
-public class Frame extends SubSpace3D implements DataSerializable {
+public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
 
     private UUID creator;
     private String name;
@@ -39,6 +39,18 @@ public class Frame extends SubSpace3D implements DataSerializable {
         super(subSpace); // Init the subspace
         this.creator = creator;
         this.name = name;
+    }
+
+    /**
+     * Deep Copy constructor
+     * @param frame given {@link Frame}
+     * TODO need to remember how to do this and see if it is necessary
+     */
+    public Frame(Frame frame){
+        super(frame.getSubspace());
+        this.setContents(frame.getContents());
+        this.creator = frame.getCreator();
+        this.name = frame.getName();
     }
 
     /**
@@ -80,10 +92,20 @@ public class Frame extends SubSpace3D implements DataSerializable {
         this.name = name;
     }
 
+    /**
+     * TODO
+     * @return
+     */
     public SubSpace3D getSubspace(){
         SubSpace3D tmp = new SubSpace3D(getCornerOne().get(), getCornerTwo().get());
         tmp.setContents(getContents());
         return tmp;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        // TODO
+        return null;
     }
 
     @Override
@@ -93,11 +115,10 @@ public class Frame extends SubSpace3D implements DataSerializable {
 
     @Override
     public DataContainer toContainer() {
-        DataContainer container = DataContainer.createNew()
+        return DataContainer.createNew()
                 .set(FRAME_CREATOR, getCreator())
                 .set(FRAME_NAME, getName())
                 .set(FRAME_SUBSPACE, getSubspace());
-        return container;
     }
 
     @Override
@@ -125,6 +146,9 @@ public class Frame extends SubSpace3D implements DataSerializable {
         return message;
     }
 
+    /**
+     * TODO
+     */
     public static class Builder extends AbstractDataBuilder<Frame> {
 
         /**
