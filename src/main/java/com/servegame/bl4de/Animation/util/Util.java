@@ -449,6 +449,18 @@ public class Util {
                                         seq(
                                                 literal(Text.of("list"), "list")
                                         ),
+                                        // /animate <name> frame <name|num> set...
+                                        seq(
+                                                string(Text.of("frame_name_num")),
+                                                literal(Text.of("set"), "set"),
+                                                firstParsing(
+                                                        // /animate <name> frame <name|num> set name <new_name>
+                                                        seq(
+                                                                literal(Text.of("name"), "name"),
+                                                                string(Text.of("new_name"))
+                                                        )
+                                                )
+                                        ),
                                         // /animate <name> frame <name|num> info, this NEEDS to be last
                                         seq(
                                                 string(Text.of("frame_name_num")),

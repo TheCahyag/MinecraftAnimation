@@ -60,6 +60,7 @@ public class CommandGateKeeper implements CommandExecutor {
             boolean update      = (boolean) args.getOne("update").orElse(false);
             boolean list        = (boolean) args.getOne("list").orElse(false);
             boolean frameInfo   = (boolean) args.getOne("frame_info").orElse(false);
+            boolean setFrame    = (boolean) args.getOne("set").orElse(false);
 
             if (create)
                 return new CreateFrame(animation).execute(src, args);
@@ -75,6 +76,8 @@ public class CommandGateKeeper implements CommandExecutor {
                 return new ListFrames(animation).execute(src, args);
             else if (frameInfo)
                 return new InfoFrame(animation).execute(src, args);
+            else if (setFrame)
+                return new SetFrame(animation).execute(src, args);
         }
         return CommandResult.success();
     }
