@@ -110,17 +110,28 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * Add a frame to the animation
-     * @param frame the new {@link Frame}
-     * @throws UninitializedException frame is not initialized correctly/completely
+     * TODO
+     * @param frame
+     * @param index
+     * @throws UninitializedException
      */
-    public void addFrame(Frame frame) throws UninitializedException {
+    public void addFrame(Frame frame, int index) throws UninitializedException{
         if (frame.isInitialized()){
             this.frames.add(frame);
         } else {
             // Frame wasn't initialized correctly/completely, don't think this can happen but why not
             throw new UninitializedException(TextResponses.FRAME_NOT_INITIALIZED_ERROR);
         }
+        this.frames.add(index, frame);
+    }
+
+    /**
+     * Add a frame to the animation at the end of the frames list
+     * @param frame the new {@link Frame}
+     * @throws UninitializedException frame is not initialized correctly/completely
+     */
+    public void addFrame(Frame frame) throws UninitializedException {
+        this.frames.add(frame);
     }
 
     /**
