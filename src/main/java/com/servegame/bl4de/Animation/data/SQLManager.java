@@ -35,6 +35,9 @@ public class SQLManager {
         initSettings();
     }
 
+    /**
+     * TODO
+     */
     private void initSettings(){
         // In the future this would get data from a config file
         this.database = "ANIMATIONS";
