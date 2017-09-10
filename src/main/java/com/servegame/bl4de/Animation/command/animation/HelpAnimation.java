@@ -79,7 +79,8 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",
                         Util.ACTION_COLOR, " set",
-                        Util.PRIMARY_COLOR, " <pos1|pos2>\n"))
+                        Util.PRIMARY_COLOR, " <pos1|pos2> ",
+                        Util.FLAG_COLOR, "[-f]\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.NAME_COLOR, " <name>",

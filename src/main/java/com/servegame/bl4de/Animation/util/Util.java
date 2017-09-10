@@ -49,7 +49,7 @@ public class Util {
     public static final TextColor WARNING_COLOR     = TextColors.YELLOW;
     public static final TextStyle COMMAND_STYLE     = TextStyles.ITALIC;
     public static final HoverAction.ShowText COMMAND_HOVER = TextActions.showText(Text.of("Click here to suggest this command."));
-    public static final long MAX_VOLUME             = 10000L;
+    public static final long MAX_VOLUME             = 30000L;
     public static final long WARNING_VOLUME         = 2500L;
 
     /**
@@ -401,11 +401,13 @@ public class Util {
                                 firstParsing(
                                         // /animate <name> set pos1
                                         seq(
-                                                literal(Text.of("pos1"), "pos1")
+                                                literal(Text.of("pos1"), "pos1"),
+                                                optional(flags().flag("f").buildWith(none()))
                                         ),
                                         // /animate <name> set pos2
                                         seq(
-                                                literal(Text.of("pos2"), "pos2")
+                                                literal(Text.of("pos2"), "pos2"),
+                                                optional(flags().flag("f").buildWith(none()))
                                         ),
                                         // /animate <name> set name <new_name>
                                         seq(
