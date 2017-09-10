@@ -1,7 +1,7 @@
 # Minecraft Animations
 Author: TheCahyag  
 Start Date: 7/20/17  
-Objective: To create a intuitive tool that allows for the creation of frame based animations in Minecraft.
+Objective: To create a intuitive tool that allows for the creation of frame based animations in Minecraft.  
 Description: The plugin has been developed using the SpongeAPI and currently only 
 supports uses on SpongeVanilla (Although currently not in a working state). The plugin's
 purpose is to easily (hopefully) create frame based animations in Minecraft within a static 3D sub
