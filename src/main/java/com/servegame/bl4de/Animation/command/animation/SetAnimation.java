@@ -44,6 +44,9 @@ public class SetAnimation implements CommandExecutor {
         boolean setPos2 = (boolean) args.getOne("pos2").orElse(false);
         boolean setName = (boolean) args.getOne("set_name").orElse(false);
 
+        // Potential flags
+        boolean override = args.hasAny("f"); // -f flag
+
         if (this.animation.isRunning()){
             player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
             return CommandResult.success();
@@ -53,10 +56,12 @@ public class SetAnimation implements CommandExecutor {
             // Get location
             Location<World> newLocation = player.getLocation();
             Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerTwo();
-            if (optionalOtherLocation.isPresent()){
-                if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())){
-                    // The max volume has been exceeded
-                    return CommandResult.success();
+            if (!override) {
+                if (optionalOtherLocation.isPresent()) {
+                    if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())) {
+                        // The max volume has been exceeded
+                        return CommandResult.success();
+                    }
                 }
             }
             // Set the first position for the subspace
@@ -72,10 +77,12 @@ public class SetAnimation implements CommandExecutor {
             // Get location
             Location<World> newLocation = player.getLocation();
             Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerOne();
-            if (optionalOtherLocation.isPresent()){
-                if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())){
-                    // The max volume has been exceeded
-                    return CommandResult.success();
+            if (override) {
+                if (optionalOtherLocation.isPresent()) {
+                    if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())) {
+                        // The max volume has been exceeded
+                        return CommandResult.success();
+                    }
                 }
             }
             // Set the second position for the subspace
