@@ -53,7 +53,7 @@ public class SubSpace3D implements DataSerializable {
         Optional<Location<World>> cornerTwoOptional = subSpace3D.getCornerTwo();
         cornerOneOptional.ifPresent(worldLocation -> this.cornerOne = worldLocation);
         cornerTwoOptional.ifPresent(worldLocation -> this.cornerTwo = worldLocation);
-        this.contents = subSpace3D.getContents();
+        this.contents = subSpace3D.getContents().orElse(null);
     }
 
     /**
@@ -127,8 +127,8 @@ public class SubSpace3D implements DataSerializable {
      * Getter for the contents of the given {@link SubSpace3D}
      * @return contents received
      */
-    public BlockSnapshot[][][] getContents(){
-        return this.contents;
+    public Optional<BlockSnapshot[][][]> getContents(){
+        return this.contents == null ? Optional.empty() : Optional.of(this.contents);
     }
 
     /**
@@ -169,8 +169,14 @@ public class SubSpace3D implements DataSerializable {
         return container;
     }
 
+    /**
+     * TODO
+     */
     public static class Builder extends AbstractDataBuilder<SubSpace3D> {
 
+        /**
+         * TODO
+         */
         public Builder(){
             super(SubSpace3D.class, 0);
         }
@@ -180,7 +186,7 @@ public class SubSpace3D implements DataSerializable {
             SubSpace3D subSpace3D = new SubSpace3D();
             if (AnimationPlugin.instance.isDebug()){
                 for (DataQuery query :
-                     container.getKeys(true)) {
+                     container.getKeys(false)) {
                     System.out.println("Subspace Queries: " + query.toString());
                 }
                 System.out.println(container);

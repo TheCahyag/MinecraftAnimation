@@ -48,7 +48,6 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
      */
     public Frame(Frame frame){
         super(frame.getSubspace());
-        this.setContents(frame.getContents());
         this.creator = frame.getCreator();
         this.name = frame.getName();
     }
@@ -93,12 +92,12 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
     }
 
     /**
-     * TODO
-     * @return
+     * Getter for the {@link SubSpace3D}
+     * @return the {@link SubSpace3D}
      */
     public SubSpace3D getSubspace(){
         SubSpace3D tmp = new SubSpace3D(getCornerOne().get(), getCornerTwo().get());
-        tmp.setContents(getContents());
+        tmp.setContents(getContents().orElse(null));
         return tmp;
     }
 
