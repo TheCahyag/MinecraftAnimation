@@ -4,6 +4,7 @@ import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -62,13 +63,21 @@ public class InfoFrame implements CommandExecutor {
         }
         Frame frame = frameOptional.get();
 
+        String notAirBlocks;
+
+        Optional<BlockSnapshot[][][]> blockSnapshotsOptional = frame.getContents();
+
+        notAirBlocks = blockSnapshotsOptional
+                .map(blockSnapshots -> FrameController.calculateNotAirBlocks(blockSnapshots).toString())
+                .orElse("nil");
+
         Text message = Text.builder()
                 .append(Text.of(PRIMARY_COLOR, "Name",
                         WHITE, ": ",
                         NAME_COLOR, frame.getName() + "\n",
                         PRIMARY_COLOR, "Not air blocks",
                         WHITE, ": ",
-                        SECONDARY_COLOR, "todo" + "\n",
+                        SECONDARY_COLOR, notAirBlocks + "\n",
                         PRIMARY_COLOR, "Volume",
                         WHITE, ": ",
                         SECONDARY_COLOR, calculateVolume(frame) + "\n",
