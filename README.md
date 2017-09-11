@@ -77,6 +77,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Define characters that are illegal to have in a frame/animation name
 * After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation
 
+
 ## Animations to show off
 * Door opening
 * Bridge extending
@@ -92,6 +93,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 ## Bug List
 * Sometimes when running a command the server will stop for 40.7 seconds (1.11.2|6.1.0)
 * If the animation database file is being used an error is thrown to console, this needs to be accounted for so that when the database file can't be used the plugin is disabled
+
 
 
 ## Random Notes for me
