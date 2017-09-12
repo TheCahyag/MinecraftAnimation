@@ -20,7 +20,7 @@ public class TextResponses {
     public static final Text GENERAL_NO_NAME_ERROR = Text.of(ERROR_COLOR, "The name provided was not parsed correctly/wasn't specified.");
     public static final Text GENERAL_INDIFFERENT_NAME_ERROR = Text.of(ERROR_COLOR, "The name provided is indifferent to the current name.");
     public static final Text GENERAL_PROBLEM_RUNNING_COMMAND_ERROR = Text.of(ERROR_COLOR, "There was a problem running this command... check console for stacktrace.");
-    public static final Text EXCEED_MAX_VOLUME = Text.of(ERROR_COLOR, "The maximum volume for an animation has been exceeded.");
+    public static final Text EXCEED_MAX_VOLUME = Text.of(ERROR_COLOR, "The maximum volume for an animation has been exceeded. (Add the -f flag at the end of the command to override)");
     public static final Text NUMBER_FORMAT_EXCEPTION = Text.of(ERROR_COLOR, "The number entered couldn't be parsed properly. (maybe it wasn't a number)");
 
     // Debug Change Responses
@@ -47,7 +47,7 @@ public class TextResponses {
     // Frame Warning Responses
     // Frame Error Responses
     public static final Text FRAME_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The frame is not initialized correctly/completely. (This shouldn't happen)");
-    public static final Text FRAME_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Frame name/num was not parsed correctly/wasn't specified.");
+    public static final Text FRAME_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Frame name/num was not parsed correctly or wasn't specified.");
     public static final Text FRAME_NOT_FOUND_ERROR = Text.of(ERROR_COLOR, "Frame was not found.");
     public static final Text FRAME_DELETE_ERROR = Text.of(ERROR_COLOR, "There was a problem deleting the frame.");
     public static final Text FRAME_NOT_DISPLAYED_ERROR = Text.of(ERROR_COLOR, "There was a problem displaying the frame.");
