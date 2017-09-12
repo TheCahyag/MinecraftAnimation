@@ -70,7 +70,8 @@ public class Util {
         int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
         int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
         int zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
-        BlockSnapshot[][][] subSpace = new BlockSnapshot[xLen][yLen][zLen];
+        BlockSnapshot[][][] subSpace = new BlockSnapshot[xLen + 1][yLen + 1][zLen + 1];
+        System.out.println(xLen + " : " + yLen + " : " + zLen);
 
         /* Get corner to start the copy at by getting the coordinates of the
          numerically lowest coordinates of the two corners
@@ -80,12 +81,12 @@ public class Util {
         int zLow = corner1.getBlockZ() <= corner2.getBlockZ() ? corner1.getBlockZ() : corner2.getBlockZ();
 
         // Y
-        for (int y = 0; y < yLen; y++) {
+        for (int y = 0; y <= yLen; y++) {
             // Z
-            for (int z = 0; z < zLen; z++) {
+            for (int z = 0; z <= zLen; z++) {
                 // X
-                for (int x = 0; x < xLen; x++) {
-                    subSpace[x + xLow][y + yLow][z + zLow] = new Location<>(
+                for (int x = 0; x <= xLen; x++) {
+                    subSpace[x][y][z] = new Location<>(
                             corner1.getExtent(), x + xLow, y + yLow, z + zLow
                     ).createSnapshot();
                 }
@@ -105,7 +106,7 @@ public class Util {
         }
         Location<World> corner1 = subSpace.getCornerOne().get();
         Location<World> corner2 = subSpace.getCornerTwo().get();
-        BlockSnapshot[][][] subSpaceSnapShot = subSpace.getContents();
+        BlockSnapshot[][][] subSpaceSnapShot = subSpace.getContents().get();
 
         // Get absolute length of sub space dimensions
         int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
@@ -120,12 +121,12 @@ public class Util {
         int zLow = corner1.getBlockZ() <= corner2.getBlockZ() ? corner1.getBlockZ() : corner2.getBlockZ();
 
         // Y
-        for (int y = 0; y < yLen; y++) {
+        for (int y = 0; y <= yLen; y++) {
             // Z
-            for (int z = 0; z < zLen; z++) {
+            for (int z = 0; z <= zLen; z++) {
                 // X
-                for (int x = 0; x < xLen; x++) {
-                    BlockSnapshot snapshot = subSpace.getContents()[x + xLow][y + yLow][z + zLow];
+                for (int x = 0; x <= xLen; x++) {
+                    BlockSnapshot snapshot = subSpaceSnapShot[x + xLow][y + yLow][z + zLow];
                     new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow)
                             .setBlock(snapshot.getState(), Cause.source(AnimationPlugin.instance).build());
                 }
@@ -451,18 +452,19 @@ public class Util {
                                         seq(
                                                 literal(Text.of("list"), "list")
                                         ),
-                                        // /animate <name> frame <name|num> set...
-                                        seq(
-                                                string(Text.of("frame_name_num")),
-                                                literal(Text.of("set"), "set"),
-                                                firstParsing(
-                                                        // /animate <name> frame <name|num> set name <new_name>
-                                                        seq(
-                                                                literal(Text.of("name"), "name"),
-                                                                string(Text.of("new_name"))
-                                                        )
-                                                )
-                                        ),
+// Having this command breaks /animate ... frame <name> info, not sure why yet
+//                                        // /animate <name> frame <name|num> set...
+//                                        seq(
+//                                                string(Text.of("frame_name_num")),
+//                                                literal(Text.of("set"), "set"),
+//                                                firstParsing(
+//                                                        // /animate <name> frame <name|num> set name <new_name>
+//                                                        seq(
+//                                                                literal(Text.of("name"), "name"),
+//                                                                string(Text.of("new_name"))
+//                                                        )
+//                                                )
+//                                        ),
                                         // /animate <name> frame <name|num> info, this NEEDS to be last
                                         seq(
                                                 string(Text.of("frame_name_num")),
