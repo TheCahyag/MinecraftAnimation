@@ -1,8 +1,11 @@
 package com.servegame.bl4de.Animation.controller;
 
+import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
+import com.servegame.bl4de.Animation.model.SubSpace3D;
 import org.apache.commons.lang3.CharUtils;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
@@ -69,6 +72,50 @@ public class FrameController {
         return true;
     }
 
+    /**
+     * TODO
+     * @param subSpace3D
+     * @return
+     */
+    public static boolean displayContents(SubSpace3D subSpace3D){
+        try {
+            copySubSpaceToWorld(subSpace3D);
+        } catch (UninitializedException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Calculates the number of blocks that aren't minecraft:air blocks.
+     * @param snapshots 3D {@link BlockSnapshot} array
+     *                  representing the 3D subspace in game
+     * @return int - the number of blocks that aren't air in a given subspace
+     */
+    public static Integer calculateNotAirBlocks(BlockSnapshot[][][] snapshots){
+        int xLen, yLen, zLen;
+        xLen = snapshots.length;
+        yLen = snapshots[0].length;
+        zLen = snapshots[0][0].length;
+
+        int count = 0; // Counter for not air blocks
+
+        // Y
+        for (int i = 0; i < yLen; i++) {
+            // Z
+            for (int j = 0; j < zLen; j++) {
+                // X
+                for (int k = 0; k < xLen; k++) {
+                    BlockSnapshot tmp = snapshots[k][i][j];
+                    String blockName = tmp.getState().getType().getName();
+                    if (!blockName.equals("minecraft:air")){
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
 
 
     /**
