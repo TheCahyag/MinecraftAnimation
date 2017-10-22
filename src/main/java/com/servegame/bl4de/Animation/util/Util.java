@@ -66,7 +66,6 @@ public class Util {
         int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
         int zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
         BlockSnapshot[][][] subSpace = new BlockSnapshot[xLen + 1][yLen + 1][zLen + 1];
-        System.out.println(xLen + " : " + yLen + " : " + zLen);
 
         /* Get corner to start the copy at by getting the coordinates of the
          numerically lowest coordinates of the two corners
@@ -314,7 +313,7 @@ public class Util {
      */
     public static boolean isNumeric(String str) {
         try {
-            double d = Double.parseDouble(str);
+            Double.parseDouble(str);
         } catch(NumberFormatException nfe) {
             return false;
         }
