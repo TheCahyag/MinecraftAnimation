@@ -1,8 +1,8 @@
 [{
-    "modid": "animation",
-    "name": "Animation",
-    "version": "1.0",
-    "description": "TODO",
+    "modid": "animations",
+    "name": "Animations",
+    "version": "0.1.1",
+    "description": "A Minecraft plugin allowing the creation of frame based animations utilizing the Sponge API",
     "authorList": [
         "TheCahyag"
     ]
