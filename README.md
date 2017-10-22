@@ -85,6 +85,7 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Fan spinning
 * Grandfather clock with the pendulum ticking and tocking
 * Big tree that sways in the breeze
+* Two moving arrows pointing towards a door
 
 ### Testing / Stress testing
 * Local server
