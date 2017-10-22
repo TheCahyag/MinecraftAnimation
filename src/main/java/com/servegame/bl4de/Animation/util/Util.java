@@ -326,7 +326,7 @@ public class Util {
      */
     public static void registerCommands(AnimationPlugin plugin){
         CommandManager commandManager = Sponge.getCommandManager();
-
+        AnimationPlugin.logger.info("Registering commands...");
         // /animate create <name>
         CommandSpec createAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Create a new animation"))
@@ -508,5 +508,6 @@ public class Util {
                 .build();
 
         commandManager.register(plugin, animate, "animate", "animation");
+        AnimationPlugin.logger.info("... commands registered");
     }
 }
