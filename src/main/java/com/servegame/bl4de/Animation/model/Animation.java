@@ -9,16 +9,21 @@ import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.HeaderMode;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.scheduler.Task;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -110,19 +115,18 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * TODO
-     * @param frame
-     * @param index
+     * Adds a initialized {@link Frame} to the current Animation at a given index
+     * @param frame {@link Frame} to add
+     * @param index The index to insert upon
      * @throws UninitializedException
      */
-    public void addFrame(Frame frame, int index) throws UninitializedException{
+    public void addFrame(Frame frame, int index) throws UninitializedException {
         if (frame.isInitialized()){
-            this.frames.add(frame);
+            this.frames.add(index, frame);
         } else {
             // Frame wasn't initialized correctly/completely, don't think this can happen but why not
             throw new UninitializedException(TextResponses.FRAME_NOT_INITIALIZED_ERROR);
         }
-        this.frames.add(index, frame);
     }
 
     /**
@@ -131,7 +135,36 @@ public class Animation implements DataSerializable {
      * @throws UninitializedException frame is not initialized correctly/completely
      */
     public void addFrame(Frame frame) throws UninitializedException {
-        this.frames.add(frame);
+        if (frame.isInitialized()){
+            this.frames.add(frame);
+        } else {
+            // Frame wasn't initialized correctly/completely, don't think this can happen but why not
+            throw new UninitializedException(TextResponses.FRAME_NOT_INITIALIZED_ERROR);
+        }
+    }
+
+    /**
+     * TODO
+     * @param frame
+     * @return
+     */
+    public boolean removeFrame(Frame frame){
+        return this.frames.remove(frame);
+    }
+
+    /**
+     * TODO
+     * @param frame
+     * @return
+     */
+    public int getIndexOfFrame(Frame frame){
+        List<Frame> frames = this.getFrames();
+        for (int i = 0; i < frames.size(); i++) {
+            if (frames.get(i).equals(frame)){
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -530,7 +563,7 @@ public class Animation implements DataSerializable {
                     try {
                         for (Object o :
                                 list) {
-                            DataView dataView = DataFormats.HOCON.read(Util.encapColons(o.toString()));
+                            DataView dataView = hoconToContainer(Util.encapColons(o.toString()));
                             frames.add(builder.buildContent(dataView).get());
                         }
                     } catch (IOException e) {
@@ -612,12 +645,26 @@ public class Animation implements DataSerializable {
                 System.out.println("Hello from Animation.deserialize");
                 System.out.println("Item: " + item);
             }
-            DataContainer dataContainer = DataFormats.HOCON.read(item);
+            DataContainer dataContainer = hoconToContainer(item);
             Optional<Animation> optionalAnimation = new Animation.Builder().build(dataContainer);
             return optionalAnimation.orElse(null);
         } catch (IOException e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
+        final String hoconWithOutNewLines = Util.replaceNewLineWithCommaSometimes(
+                hoconString.replace("\t", "").replace(" ", ""));
+        if (AnimationPlugin.instance.isDebug()){
+            System.out.println(hoconString);
+            System.out.println(hoconWithOutNewLines);
+        }
+        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+                .setHeaderMode(HeaderMode.NONE)
+                .setSource(() -> new BufferedReader(new StringReader(hoconString)))
+                .build();
+        return DataTranslators.CONFIGURATION_NODE.translate(loader.load());
     }
 }
