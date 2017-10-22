@@ -25,7 +25,6 @@ import java.io.File;
         authors = Resource.AUTHORS, url = Resource.URL)
 public class AnimationPlugin {
 
-    @Inject
     public static Logger logger;
     public static AnimationPlugin instance;
     public static PluginContainer plugin;
@@ -39,6 +38,11 @@ public class AnimationPlugin {
     private final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";
 
     private boolean debug;
+
+    @Inject
+    public AnimationPlugin(Logger logger){
+        AnimationPlugin.logger = logger;
+    }
 
     @Listener
     public void onConstruction(GameConstructionEvent event){
@@ -58,6 +62,7 @@ public class AnimationPlugin {
         if (!new File(CONFIG_DIR).exists()){
             //noinspection ResultOfMethodCallIgnored
             new File(CONFIG_DIR).mkdir();
+            logger.info("Animation directories created.");
         }
 
         this.debug = false;
@@ -69,12 +74,12 @@ public class AnimationPlugin {
 
     @Listener
     public void onLoad(GameLoadCompleteEvent event){
+        logger.info("Animation has loaded.");
     }
 
     @Listener
     public void onStop(GameStoppingEvent event){
-        //logger.info("Stopping animations...");
-        System.out.println("Stopping animations...");
+        logger.info("Stopping animations...");
         AnimationController.stopAllAnimations();
     }
 
