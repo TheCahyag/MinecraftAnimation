@@ -2,56 +2,67 @@
 Author: TheCahyag  
 Start Date: 7/20/17  
 Objective: To create a intuitive tool that allows for the creation of frame based animations in Minecraft.  
-Description: The plugin has been developed using the SpongeAPI and currently only 
-supports uses on SpongeVanilla (Although currently not in a working state). The plugin's
+Description: The plugin has been developed using the SpongeAPI and currently only
+supports uses on SpongeVanilla (Although currently in a semi-working state -- see plugin state below). The plugin's
 purpose is to easily (hopefully) create frame based animations in Minecraft within a static 3D sub
-space, allowing users to easily (hopefully) edit individual frames leading to a animation.
+space (possibly a dynamic subspace in the far future), allowing users to easily (hopefully) edit individual 
+frames leading to an animation.
 
-## Command Structure
-/animate create \<name>  
-/animate delete \<name> -f  
-/animate help  
-/animate list  
-/animate start \<name> [-f\<num>] [-d\<num>] [-c\<num>]  
-/animate stop \<name>  
-/animate pause \<name>  
-/animate \<name> info  
-/animate \<name> set <pos1|pos2>  
-/animate \<name> set name <new_name>  
-/animate \<name> frame create [name]  
-/animate \<name> frame delete <name|num> -f  
-/animate \<name> frame display <name|num>  
-/animate \<name> frame duplicate <name|num> [num]   
-/animate \<name> frame list  
-/animate \<name> frame update <name|num> -o  
-/animate \<name> frame <name|num> info  
-/animate \<name> frame <name|num> set name <new_name>
+## Current State of the Plugin
+It works as intended with small animations.  
+  
+With the way I'm serializing and un-serializing data there is a problem when I un-serialize data that is 
+over 4096 chars long. Anything shorter then this works fine. What this means for you is that the animations 
+you can create are severely limited. I have been able to run a small 1x3x5 animation with 5 frames and not 
+had any problems. If you receive a "Mark Invalid" exception in the console, that means you have exceeded 
+4096 chars worth of data. 
 
-## TODO
+See the wiki for the commands and their respective usages.
+
+### TODO
+## High Priority
+[BUGFIX] Fix Mark Invalid error when un-serializing data
+## Medium Priority
+[WIKI] Write basic usage guidelines  
+[PERMISSIONS] Setup specific permissions for the usage of flags  
+[CODE STRUCTURE] Look into making FrameElement and AnimationElement  
+[ENHANCEMENT] Implement pause operation
+* Should stopping an animation remove all visible contents of the animation
+* Pausing should keep track of the current frame it is on  
+
+[REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
+## Low Priority
+[PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
+[COMMAND] Add .complete() lists on all arguments for tabbing arguments  
+[BOTHERING] Fix the buttons so that clicking on the spaces don't execute the command
+[ENHANCEMENT] Make a config where the user can specify the default values of animation's states (frame, delay, cycles) or just other config stuff  
+[ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing the frames and animations  
+## Backlog
+[ENHANCEMENT] Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)  
+[ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)
+[ENHANCEMENT] Add options to the way the animation loops
+* Sequentially 
+* Random order
+* Sequentially then reverse (0, 1, ..., n, n, n-1, n-2, n-..., 0)  
+
+[ENHANCEMENT] What if we have an edit mode? 
+* An item can be used for switching between frames. So while in edit mode you can use a stick (or something) to go forward a frame (left click) or go back a frame (right click)
+* Would we set a tool for saving changes? ~~So they would switch between a tool for changing frames and a tool for saving?~~ Or when they switch between frames it would save automatically
+## Done
 * ~~Set warning for a animation that has a large subspace (since it might lag the server)~~
 * ~~Set up permissions (kinda done with this, need to add permissions for sub commands and such)~~
-    * Setup specific permissions for the usage of flags
-    * Permissions that only allow certain values to be set with certain flags
 * ~~Add a way to start an animation without a command? Or just force people to use command blocks to run the command~~ (No go)
 * ~~Create~~ ~~Format a info message that can be displayed for each animation~~
 * ~~Refactor core models to check all input that is given~~
 * ~~Refactor ListAnimation command to display buttons that will act as commands~~
-* Add .complete() lists on all arguments for tabbing arguments
-* Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)
 * ~~When running /animate list if there are zero animations send a "there are no animations" message~~
-    * Maybe have a counter of how many animations there are and how many are being displayed
-* Look into making FrameElement and AnimationElement
+    * ~~Maybe have a counter of how many animations there are and how many are being displayed~~
 * ~~Should the state of the subspace be saved before an animation is played, stuff other than the animation stuff?~~ Not sure what I meant by this
-* Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)
-* Fix the buttons so that clicking on the spaces don't execute the command
-* Implement pause operation
-    * Should stopping an animation remove all visible contents of the animation
-    * Pausing should keep track of the current frame it is on
-* Make a config where the user can specify the default values of animation's states (frame, delay, cycles) or just other config stuff
 * ~~Register the commands that arn't registered see InfoAnimation~~
 * ~~Make specific response messages for every command rather than generic messages?~~
-* Fix /animate delete sub command
-* Use pageation to display only a certain number of frames and animations when listing the frames and animations
+* ~~Fix /animate delete sub command~~  
+
+to sort...
 * Make a animation's subspace the place where the animation is played, but allow a different subspace for the frame so the user can place all frames down at the same time.
 * When a user updates a frame it would be cool to show the additions and deletions.
    * Additions being when a block goes from air to not air
@@ -66,17 +77,8 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 * Fix NPE from logger
 * In the animation info view add a line for the volume of the master subspace
 * In the frame info view if there are contents show the number of not air blocks
-* Add options to the way the animation loops
-    * Sequentially 
-    * Random order
-    * Sequentially then reverse (0, 1, ..., n, n, n-1, n-2, n-..., 0)
-* What if we have an edit mode? 
-    * An item can be used for switching between frames. So while in edit mode you can use a stick (or something) to go forward a frame (left click) or go back a frame (right click)
-    * Would we set a tool for saving changes? ~~So they would switch between a tool for changing frames and a tool for saving?~~ Or when they switch between frames it would save automatically
 * For the time inbetween frames, they shouldn't be able to give a number > 1. Should there be a ceiling?
-* Define characters that are illegal to have in a frame/animation name
 * After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation
-
 
 ## Animations to show off
 * Door opening
@@ -90,11 +92,12 @@ space, allowing users to easily (hopefully) edit individual frames leading to a 
 ### Testing / Stress testing
 * Local server
 * Public server on the box
+* Find a point at which the number of block changes lag the server
 
 ## Bug List
 * Sometimes when running a command the server will stop for 40.7 seconds (1.11.2|6.1.0)
 * If the animation database file is being used an error is thrown to console, this needs to be accounted for so that when the database file can't be used the plugin is disabled
-
+* Removing a frame that doesn't exist -- /animate name frame delete_frame 0 will throw an error if there are no frames for the given animation
 
 
 ## Random Notes for me
