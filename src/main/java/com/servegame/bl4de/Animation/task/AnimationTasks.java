@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * File: AnimationTasks.java
- *
+ * AnimationTasks is a class to keep track of all the {@link FrameDisplayTask}s
+ * that are created for one {@link Animation}.
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class AnimationTasks {
