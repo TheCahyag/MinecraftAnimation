@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation;
 
 import com.google.inject.Inject;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.data.SQLManager;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.Resource;
@@ -74,7 +75,7 @@ public class AnimationPlugin {
     public void onStop(GameStoppingEvent event){
         //logger.info("Stopping animations...");
         System.out.println("Stopping animations...");
-        //AnimationController.stopAllAnimations();
+        AnimationController.stopAllAnimations();
     }
 
     /**
