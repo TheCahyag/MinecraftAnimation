@@ -6,6 +6,7 @@ import com.servegame.bl4de.Animation.command.CommandGateKeeper;
 import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
 import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
+import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
@@ -60,12 +61,6 @@ public class Util {
      * @return 3d BlockSnapshot primitive array
      */
     public static BlockSnapshot[][][] copyWorldToSubSpace(Location<World> corner1, Location<World> corner2){
-        // Make sure two corners have the same Extent
-//        if (!corner1.getExtent().getDimension().equals(corner2.getExtent().getDimension())){
-//            // todo instead of checking here, the location should be checked by one of the command classes
-                // todo should be checked in the /animate <name> set pos1|pos2
-//        }
-
         // Get absolute length of sub space dimensions
         int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
         int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
@@ -126,9 +121,9 @@ public class Util {
             for (int z = 0; z <= zLen; z++) {
                 // X
                 for (int x = 0; x <= xLen; x++) {
-                    BlockSnapshot snapshot = subSpaceSnapShot[x + xLow][y + yLow][z + zLow];
+                    BlockSnapshot snapshot = subSpaceSnapShot[x][y][z];
                     new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow)
-                            .setBlock(snapshot.getState(), Cause.source(AnimationPlugin.instance).build());
+                            .setBlock(snapshot.getState(), Cause.source(AnimationPlugin.plugin).build());
                 }
             }
         }
@@ -278,7 +273,42 @@ public class Util {
     }
 
     /**
-     *
+     * TODO no longer used
+     * @param string
+     * @return
+     */
+    public static String replaceNewLineWithCommaSometimes(String string){
+        char[] array = string.toCharArray();
+        int len = array.length;
+        for (int i = 0; i < len; i++) {
+            // For each char...
+            if (array[i] == '\n'){
+                // ..find new lines
+
+                // The default is to replace \n with ',' but in the following cases
+                // the replace should be nothing (which is represented as a space)
+                char replace = ',';
+                if (array[i - 1] == '{'){
+                    replace = ' ';
+                } else if ((i + 1 < len) && array[i + 1] == '}'){
+                    replace = ' ';
+                } else if (array[i - 1] == '['){
+                    replace = ' ';
+                } else if ((i + 1 < len) && array[i + 1] == ']'){
+                    replace = ' ';
+                } else if (array[i - 1] == ','){
+                    replace = ' ';
+                } else if (i == len - 1){
+                    replace = ' ';
+                }
+                array[i] = replace;
+            }
+        }
+        return String.valueOf(array);
+    }
+
+    /**
+     * TODO
      * @param str
      * @return
      */
@@ -310,8 +340,8 @@ public class Util {
         CommandSpec deleteAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Delete an animation"))
                 .permission(Permissions.ANIMATION_DELETE)
-                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
-                .arguments(optional(flags().flag("f").buildWith(none())))
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")),
+                        optional(flags().flag("f").buildWith(none())))
                 .executor(new DeleteAnimation())
                 .build();
 
@@ -333,17 +363,18 @@ public class Util {
         CommandSpec startAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Start a given animation"))
                 .permission(Permissions.ANIMATION_START)
-                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
-                .arguments(optional(flags()
-                        .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f<num>
-                        .buildWith(none())))
-                .arguments(optional(flags()
-                        .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d<num>
-                        .buildWith(none())))
-                .arguments(optional(flags()
-                        .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c<num>
-                        .buildWith(none())))
-                .executor(new BaseAnimation())
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")),
+                        optional(flags()
+                                .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f<num>
+                                .buildWith(none())),
+                        optional(flags()
+                                .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d<num>
+                                .buildWith(none())),
+                        optional(flags()
+                                .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c<num>
+                                .buildWith(none()))
+                        )
+                .executor(new StartAnimation())
                 .build();
 
         // /animate stop <name>
