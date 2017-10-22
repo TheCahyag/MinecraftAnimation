@@ -9,7 +9,7 @@ public class Resource {
 
     public final static String NAME = "Animation";
     public final static String ID = "animation";
-    public final static String VERSION = "0.0.0";
+    public final static String VERSION = "0.1.1";
     public final static String AUTHORS = "TheCahyag";
     public final static String URL = "https://github.com/TheCahyag/animation";
 
