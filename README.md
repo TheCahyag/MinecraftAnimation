@@ -19,10 +19,10 @@ had any problems. If you receive a "Mark Invalid" exception in the console, that
 
 See the wiki for the commands and their respective usages.
 
-### TODO
-## High Priority
+## TODO
+### High Priority
 [BUGFIX] Fix Mark Invalid error when un-serializing data
-## Medium Priority
+### Medium Priority
 [WIKI] Write basic usage guidelines  
 [PERMISSIONS] Setup specific permissions for the usage of flags  
 [CODE STRUCTURE] Look into making FrameElement and AnimationElement  
@@ -31,13 +31,14 @@ See the wiki for the commands and their respective usages.
 * Pausing should keep track of the current frame it is on  
 
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
-## Low Priority
+### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
 [COMMAND] Add .complete() lists on all arguments for tabbing arguments  
-[BOTHERING] Fix the buttons so that clicking on the spaces don't execute the command
+[BOTHERING] Fix the buttons so that clicking on the spaces don't execute the command  
+[BOTHERING] Fix the method to create frame names, it doesn't reset for every animation  
 [ENHANCEMENT] Make a config where the user can specify the default values of animation's states (frame, delay, cycles) or just other config stuff  
 [ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing the frames and animations  
-## Backlog
+### Backlog
 [ENHANCEMENT] Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)  
 [ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)  
 [ENHANCEMENT] Add options to the way the animation loops
@@ -48,7 +49,7 @@ See the wiki for the commands and their respective usages.
 [ENHANCEMENT] What if we have an edit mode? 
 * An item can be used for switching between frames. So while in edit mode you can use a stick (or something) to go forward a frame (left click) or go back a frame (right click)
 * Would we set a tool for saving changes? ~~So they would switch between a tool for changing frames and a tool for saving?~~ Or when they switch between frames it would save automatically
-## Done
+### Done
 * ~~Set warning for a animation that has a large subspace (since it might lag the server)~~
 * ~~Set up permissions (kinda done with this, need to add permissions for sub commands and such)~~
 * ~~Add a way to start an animation without a command? Or just force people to use command blocks to run the command~~ (No go)
