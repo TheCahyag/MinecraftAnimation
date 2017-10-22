@@ -63,11 +63,7 @@ public class UpdateFrame implements CommandExecutor {
 
         Frame frame = frameOptional.get();
 
-//        int frameIndex = this.animation.getIndexOfFrame(frame);
-
         frame.setContents(Util.copyWorldToSubSpace(frame.getCornerOne().get(), frame.getCornerTwo().get()));
-
-        System.out.println(this.animation.getFrame(frame.getName()));
 
         // Save the Animation
         if (AnimationController.saveAnimation(this.animation)){
@@ -80,7 +76,7 @@ public class UpdateFrame implements CommandExecutor {
                     Util.PRIMARY_COLOR, "successfully."));
             return CommandResult.success();
         } else {
-            // There was a problem creating the animation
+            // There was a problem saving the animation
             player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
             return CommandResult.empty();
         }
