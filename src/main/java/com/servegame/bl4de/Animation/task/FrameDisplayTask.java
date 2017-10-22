@@ -1,7 +1,9 @@
 package com.servegame.bl4de.Animation.task;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
+import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Frame;
+import com.servegame.bl4de.Animation.util.Util;
 
 /**
  * File: FrameDisplayTask.java
@@ -29,7 +31,11 @@ public class FrameDisplayTask implements FrameTask {
 
     @Override
     public void modifyWorld() {
-
+        try {
+            Util.copySubSpaceToWorld(this.frame.getSubspace());
+        } catch (UninitializedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
