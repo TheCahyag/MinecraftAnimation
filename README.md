@@ -27,6 +27,7 @@ See the wiki for the commands and their respective usages.
 [WIKI] Write basic usage guidelines  
 [PERMISSIONS] Setup specific permissions for the usage of flags  
 [CODE STRUCTURE] Look into making FrameElement and AnimationElement  
+[FEEDBACK] Send a message for when an animation starts, stops, or pauses  
 [ENHANCEMENT] Implement pause operation
 * Should stopping an animation remove all visible contents of the animation
 * Pausing should keep track of the current frame it is on  
