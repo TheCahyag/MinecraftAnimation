@@ -1,19 +1,19 @@
 # Minecraft Animations
 Author: TheCahyag  
 Start Date: 7/20/17  
-Objective: To create a intuitive tool that allows for the creation of frame based animations in Minecraft.  
+Objective: To create an intuitive tool that allows for the creation of frame-based animations in Minecraft.  
 Description: The plugin has been developed using the SpongeAPI and currently only
-supports uses on SpongeVanilla (Although currently in a semi-working state -- see plugin state below). The plugin's
-purpose is to easily (hopefully) create frame based animations in Minecraft within a static 3D sub
+supports use on SpongeVanilla (Although currently in a semi-working state -- see plugin state below). The plugin's
+purpose is to easily (hopefully) create frame-based animations in Minecraft within a static 3D sub
 space (possibly a dynamic subspace in the far future), allowing users to easily (hopefully) edit individual 
 frames leading to an animation.
 
 ## Current State of the Plugin
 It works as intended with small animations.  
   
-With the way I'm serializing and un-serializing data there is a problem when I un-serialize data that is 
+With the way I'm serializing and unserializing data there is a problem when I unserializing  data that is 
 over 4096 chars long. Anything shorter then this works fine. What this means for you is that the animations 
-you can create are severely limited. I have been able to run a small 1x3x5 animation with 5 frames and not 
+you can create are severely limited. I have been able to run a small 1x3x5 animation with 5 frames and had not 
 had any problems. If you receive a "Mark Invalid" exception in the console, that means you have exceeded 
 4096 chars worth of data. 
 
