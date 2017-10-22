@@ -21,7 +21,7 @@ See the wiki for the commands and their respective usages.
 
 ## TODO
 ### High Priority
-[BUGFIX] Fix Mark Invalid error when un-serializing data
+[BUGFIX] Fix Mark Invalid error when un-serializing data  
 [BUGFIX] After playing the animation for awhile the frames fall out of sync
 ### Medium Priority
 [WIKI] Write basic usage guidelines  
