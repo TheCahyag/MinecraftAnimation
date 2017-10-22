@@ -13,8 +13,7 @@ import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
-import static com.servegame.bl4de.Animation.data.DataQueries.SUBSPACE_CORNER_ONE;
-import static com.servegame.bl4de.Animation.data.DataQueries.SUBSPACE_CORNER_TWO;
+import static com.servegame.bl4de.Animation.data.DataQueries.*;
 
 /**
  * File: SubSpace3D.java
@@ -148,7 +147,7 @@ public class SubSpace3D implements DataSerializable {
             // No contents to show
             result += "Contents: nil\n";
         } else {
-            result += "Contents: " + this.contents.toString() + "\n";
+            result += "Contents: " + this.contents.toString() + "[" + this.contents.length + "][" + this.contents[0].length + "][" + this.contents[0][0].length + "]\n";
         }
         return result;
     }
@@ -165,7 +164,28 @@ public class SubSpace3D implements DataSerializable {
         DataContainer container = DataContainer.createNew();
         optionalLocation1.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_ONE, worldLocation.createSnapshot()));
         optionalLocation2.ifPresent(worldLocation -> container.set(SUBSPACE_CORNER_TWO, worldLocation.createSnapshot()));
-                //.set(SUBSPACE_CONTENTS, getContents());
+        Optional<BlockSnapshot[][][]> optionalBlockSnapshots = this.getContents();
+        if (optionalBlockSnapshots.isPresent()){
+            BlockSnapshot[][][] blockSnapshots = optionalBlockSnapshots.get();
+            int x, y, z;
+            x = blockSnapshots.length;
+            y = blockSnapshots[0].length;
+            z = blockSnapshots[0][0].length;
+            container.set(DataQuery.of("x"), x);
+            container.set(DataQuery.of("y"), y);
+            container.set(DataQuery.of("z"), z);
+            // X
+            for (int i = 0; i < x; i++) {
+                // Y
+                for (int j = 0; j < y; j++) {
+                    // Z
+                    for (int k = 0; k < z; k++) {
+                        container.set(DataQuery.of("" + i + j + k), blockSnapshots[i][j][k].toContainer());
+                    }
+                }
+            }
+            container.set(SUBSPACE_CONTENTS, true);
+        }
         return container;
     }
 
@@ -194,11 +214,11 @@ public class SubSpace3D implements DataSerializable {
             if (container.contains(SUBSPACE_CORNER_ONE)){
                 Optional<BlockSnapshot> optionalBlockSnapshot = BlockSnapshot.builder().build((DataView) container.get(SUBSPACE_CORNER_ONE).get());
                 if (!optionalBlockSnapshot.isPresent()){
-                    System.out.println("NO BLOCKSNAPSHOT");
+                    System.err.println("NO BLOCKSNAPSHOT - Subspace corner one");
                 }
                 Optional<Location<World>> optionalLocation = optionalBlockSnapshot.get().getLocation();
                 if (!optionalLocation.isPresent()){
-                    System.out.println("NO LOCATION");
+                    System.err.println("NO LOCATION - Subspace corner one");
                 }
                 Location<World> location = optionalLocation.get();
                 subSpace3D.setCornerOne(location); // TODO Clean?
@@ -206,16 +226,34 @@ public class SubSpace3D implements DataSerializable {
             if (container.contains(SUBSPACE_CORNER_TWO)){
                 Optional<BlockSnapshot> optionalBlockSnapshot = BlockSnapshot.builder().build((DataView) container.get(SUBSPACE_CORNER_TWO).get());
                 if (!optionalBlockSnapshot.isPresent()){
-                    System.out.println("NO BLOCKSNAPSHOT");
+                    System.err.println("NO BLOCKSNAPSHOT - Subspace corner two");
                 }
                 Optional<Location<World>> optionalLocation = optionalBlockSnapshot.get().getLocation();
                 if (!optionalLocation.isPresent()){
-                    System.out.println("NO LOCATION");
+                    System.err.println("NO LOCATION - Subspace corner two");
                 }
                 Location<World> location = optionalLocation.get();
                 subSpace3D.setCornerTwo(location); // TODO Clean?
             }
-            // I may need to find a different way to save contents here TODO
+            if (container.contains(SUBSPACE_CONTENTS)){
+                int x, y, z;
+                x = container.getInt(DataQuery.of("x")).get();
+                y = container.getInt(DataQuery.of("y")).get();
+                z = container.getInt(DataQuery.of("z")).get();
+
+                BlockSnapshot[][][] blockSnapshots = new BlockSnapshot[x][y][z];
+                // X
+                for (int i = 0; i < x; i++) {
+                    // Y
+                    for (int j = 0; j < y; j++) {
+                        // Z
+                        for (int k = 0; k < z; k++) {
+                            blockSnapshots[i][j][k] = BlockSnapshot.builder().build(container.getView(DataQuery.of("" + i + j + k)).get()).get();
+                        }
+                    }
+                }
+                subSpace3D.setContents(blockSnapshots);
+            }
             return Optional.of(subSpace3D);
         }
     }
