@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.task;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import org.spongepowered.api.Sponge;
@@ -34,7 +35,7 @@ public class AnimationTasks {
 
     /**
      * PopulateTaskList will start a new task for each {@link Frame} of the {@link Animation}and give
-     * it to {@link org.spongepowered.api.Sponge} to execute
+     * it to {@link Sponge} to execute
      */
     public void populateTaskList(){
         List<Frame> frames = this.animation.getFrames();
@@ -63,6 +64,9 @@ public class AnimationTasks {
     public void stopAll(){
         for (Task task :
                 this.tasks) {
+            if (AnimationPlugin.instance.isDebug()){
+                System.out.println("Stopping: " + task.getName());
+            }
             task.cancel();
         }
     }
