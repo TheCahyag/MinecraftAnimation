@@ -39,7 +39,7 @@ See the wiki for the commands and their respective usages.
 [ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing the frames and animations  
 ## Backlog
 [ENHANCEMENT] Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)  
-[ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)
+[ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)  
 [ENHANCEMENT] Add options to the way the animation loops
 * Sequentially 
 * Random order
