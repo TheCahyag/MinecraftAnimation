@@ -1,9 +1,51 @@
-group 'com.servegame.bl4de.animation'
-version '0.0.0'
+plugins {
+    id 'idea'
+    id 'ninja.miserable.blossom' version '1.0.1'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'java'
+}
 
-apply plugin: 'java'
+
+group 'com.servegame.bl4de.animation'
 
 sourceCompatibility = 1.8
+
+
+
+project.ext.versionno = '0.1.1'
+project.ext.buildno = '0'
+
+task setBuildNum {
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canRead()){
+        Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def buildno = Integer.parseInt(versionProps['VERSION_BUILD'].toString())
+        rootProject.buildno = buildno
+    }
+}
+setBuildNum
+
+project.ext.minecraftversion = '1.11.2'
+project.ext.spongeapiversion = '6.1'
+description = 'Animations - Allowing the creation of frame based animations.'
+ext.url = 'https://github.com/TheCahyag/MinecraftAnimation'
+
+task incrementBuildNum {
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canWrite()){
+        FileOutputStream versionFile = new FileOutputStream(versionPropsFile)
+        String s = "VERSION_BUILD=" + (Integer.parseInt(rootProject.buildno.toString()) + 1)
+        versionFile.write(s.getBytes())
+    }
+}
+
+allprojects {
+    version = rootProject.minecraftversion + "-" + rootProject.versionno + "." + rootProject.buildno
+    incrementBuildNum
+}
+
+
 
 repositories {
     mavenCentral()
@@ -13,7 +55,41 @@ repositories {
     }
 }
 
+
+
+
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.spongepowered:spongeapi:6.1.0-SNAPSHOT'
 }
+
+jar {
+    manifest {
+        attributes  'Implementation-Title': project.name,
+                'Implementation-Version': version,
+                'SpongeAPI-Version': project.spongeapiversion
+    }
+}
+
+shadowJar {
+    archiveName = "Animation-${version}-MC${project.ext.minecraftversion}-plugin.jar"
+}
+artifacts {
+    archives shadowJar
+}
+
+
+
+blossom {
+    def location = 'src/main/java/com/servegame/bl4de/Animation/util/Resource.java'
+
+    replaceToken '@name@', project.name, location
+    replaceToken '@version@', project.version, location
+
+    replaceToken '@description@', project.description, location
+    replaceToken '@url@', project.url, location
+}
+
+
+
