@@ -76,4 +76,3 @@ blossom {
     replaceToken '@description@', project.description, location
     replaceToken '@url@', project.url, location
 }
-
