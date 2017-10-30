@@ -7,10 +7,11 @@ package com.servegame.bl4de.Animation.util;
  */
 public class Resource {
 
-    public final static String NAME = "Animation";
+    public final static String NAME = "@name@";
     public final static String ID = "animation";
-    public final static String VERSION = "0.1.1";
+    public final static String VERSION = "@version@";
     public final static String AUTHORS = "TheCahyag";
-    public final static String URL = "https://github.com/TheCahyag/animation";
+    public final static String URL = "@url@";
+    public final static String DESCRIPTION = "@description@";
 
 }
