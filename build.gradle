@@ -42,22 +42,17 @@ task incrementBuildNum {
 
 allprojects {
     version = rootProject.minecraftversion + "-" + rootProject.versionno + "." + rootProject.buildno
+
     incrementBuildNum
-}
 
-
-
-repositories {
-    mavenCentral()
-    maven {
-        name = 'Sponge'
-        url = "http://repo.spongepowered.org/maven"
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'Sponge'
+            url = "http://repo.spongepowered.org/maven"
+        }
     }
 }
-
-
-
-
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
@@ -72,15 +67,6 @@ jar {
     }
 }
 
-shadowJar {
-    archiveName = "Animation-${version}-MC${project.ext.minecraftversion}-plugin.jar"
-}
-artifacts {
-    archives shadowJar
-}
-
-
-
 blossom {
     def location = 'src/main/java/com/servegame/bl4de/Animation/util/Resource.java'
 
@@ -90,6 +76,4 @@ blossom {
     replaceToken '@description@', project.description, location
     replaceToken '@url@', project.url, location
 }
-
-
 
