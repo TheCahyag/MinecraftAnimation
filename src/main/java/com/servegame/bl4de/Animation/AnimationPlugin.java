@@ -22,7 +22,7 @@ import java.io.File;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION,
-        authors = Resource.AUTHORS, url = Resource.URL)
+        authors = Resource.AUTHORS, url = Resource.URL, description = Resource.DESCRIPTION)
 public class AnimationPlugin {
 
     public static Logger logger;
