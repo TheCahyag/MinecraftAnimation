@@ -67,7 +67,7 @@ public class UpdateFrame implements CommandExecutor {
 
         // Save the Animation
         if (AnimationController.saveAnimation(this.animation)){
-            // Animation was created and saved successfully
+            // Animation was saved successfully
             player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Frame ",
                     Util.PRIMARY_COLOR, "'",
                     Util.NAME_COLOR, frame.getName(),
