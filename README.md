@@ -40,6 +40,8 @@ See the wiki for the commands and their respective usages.
 [BOTHERING] Fix the method to create frame names, it doesn't reset for every animation  
 [ENHANCEMENT] Make a config where the user can specify the default values of animation's states (frame, delay, cycles) or just other config stuff  
 [ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing the frames and animations  
+[ENHANCEMENT] Allow animations to be public, which would allow anyone to start the given animation  
+[ENHANCEMENT] Allow animations to be started without a player present (which would hopefully allow stuff)  
 ### Backlog
 [ENHANCEMENT] Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)  
 [ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)  
