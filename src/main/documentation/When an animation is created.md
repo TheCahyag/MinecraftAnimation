@@ -11,7 +11,7 @@ User runs /animate create \<name>
 At a glance:
 * Creates a new Animation, giving the UUID of the player and the \<name> specified
 * Writes the new Animation to the ANIMATION_TABLE
-* Creates a new table for the frames for this animations. This table is named 'playerUUID_animationName'.
+* Creates a new table for the frames for this animations. This table is named 'playerUUID_animationName_frames'.
 
 Specifically:
 * Is this going to be a thing? **TODO**
