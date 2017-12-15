@@ -41,6 +41,12 @@ public class CreateAnimation implements CommandExecutor {
         }
         String animationName = animationNameOptional.get();
 
+        // The length of the string must be <= 255 inorder to comply with the table
+        if (animationName.length() > 255){
+            player.sendMessage(TextResponses.GENERAL_NAME_TOO_LONG);
+            return CommandResult.success();
+        }
+
         // See if the animation exists already
         Optional<Animation> animationOptional = AnimationController.getAnimation(animationName, owner);
         if (animationOptional.isPresent()){
