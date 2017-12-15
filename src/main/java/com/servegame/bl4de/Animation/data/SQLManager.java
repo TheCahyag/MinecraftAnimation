@@ -65,7 +65,7 @@ public class SQLManager {
      * @param name - name of the table
      * @return true if successful, false otherwise
      */
-    protected boolean createFrameTable(String name){
+    boolean createFrameTable(String name){
         try (Connection conn = getConnection()){
             conn.prepareStatement("CREATE TABLE " + name + " (id PRIMARY KEY VARCHAR2(255), data CLOB)").executeUpdate();
         } catch (SQLException e){
@@ -80,7 +80,7 @@ public class SQLManager {
      * @param name - name of the table
      * @return true if it was successful, false otherwise
      */
-    protected boolean dropFrameTable(String name){
+    boolean dropFrameTable(String name){
         if (name.equals(ANIMATION_TABLE)){
             // Can't drop animations table
             return false;
