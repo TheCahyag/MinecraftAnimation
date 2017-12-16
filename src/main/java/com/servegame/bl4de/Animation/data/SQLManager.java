@@ -61,40 +61,6 @@ public class SQLManager {
     }
 
     /**
-     * Create frame table, usually called when an Animation is created
-     * @param name - name of the table
-     * @return true if successful, false otherwise
-     */
-    boolean createFrameTable(String name){
-        try (Connection conn = getConnection()){
-            conn.prepareStatement("CREATE TABLE " + name + " (id PRIMARY KEY VARCHAR2(255), data CLOB)").executeUpdate();
-        } catch (SQLException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Drop the frame table, usually called when an animation is deleted
-     * @param name - name of the table
-     * @return true if it was successful, false otherwise
-     */
-    boolean dropFrameTable(String name){
-        if (name.equals(ANIMATION_TABLE)){
-            // Can't drop animations table
-            return false;
-        }
-        try (Connection conn = getConnection()){
-            conn.prepareStatement("DROP TABLE " + name).executeUpdate();
-        } catch (SQLException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * TODO
      * @param plugin
      * @return
