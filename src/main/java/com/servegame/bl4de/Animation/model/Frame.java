@@ -116,7 +116,7 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
     @Override
     public DataContainer toContainer() {
         return DataContainer.createNew()
-                .set(FRAME_CREATOR, getCreator())
+                .set(FRAME_CREATOR, getCreator().toString())
                 .set(FRAME_NAME, getName())
                 .set(FRAME_SUBSPACE, getSubspace());
     }
@@ -162,7 +162,7 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
         protected Optional<Frame> buildContent(DataView container) throws InvalidDataException {
             Frame frame = null;
             if (container.contains(FRAME_CREATOR, FRAME_NAME, FRAME_SUBSPACE)){
-                UUID creator = container.getObject(FRAME_CREATOR, UUID.class).get();
+                UUID creator = UUID.fromString(container.getString(FRAME_CREATOR).get());
                 String name = container.getString(FRAME_NAME).get();
                 SubSpace3D subSpace3D = new SubSpace3D.Builder().buildContent((DataView) container.get(FRAME_SUBSPACE).get()).get();
                 frame = new Frame(creator, name, subSpace3D);
