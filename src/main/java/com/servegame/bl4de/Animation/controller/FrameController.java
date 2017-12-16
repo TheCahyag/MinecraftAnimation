@@ -20,7 +20,6 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class FrameController {
-    private static int lastNumberForName = 0;
 
     /**
      * Generates a name for a frame by starting with the string frame0,
@@ -38,7 +37,7 @@ public class FrameController {
      * @return String - name for the frame
      */
     public static String generateFrameName(Animation animation){
-        int counter = lastNumberForName;
+        int counter = animation.lastNumberForFrameName;
         List<Frame> frames = animation.getFrames();
         boolean valid = true;
         while (valid){
@@ -49,7 +48,7 @@ public class FrameController {
                 }
             }
             if (valid){
-                lastNumberForName = ++counter;
+                animation.lastNumberForFrameName = ++counter;
                 return nameTrial;
             } else {
                 counter++;
