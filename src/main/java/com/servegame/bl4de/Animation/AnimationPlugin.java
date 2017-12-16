@@ -11,6 +11,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
+import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -81,6 +82,11 @@ public class AnimationPlugin {
     public void onStop(GameStoppingEvent event){
         logger.info("Stopping animations...");
         AnimationController.stopAllAnimations();
+    }
+
+    @Listener
+    public void onMessage(MessageEvent event){
+
     }
 
     /**
