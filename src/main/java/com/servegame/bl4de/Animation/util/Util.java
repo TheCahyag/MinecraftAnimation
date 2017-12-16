@@ -251,14 +251,32 @@ public class Util {
                 }
             }
 
+            int level = 0;
             // Find end symbol (either ',' or '}'
+            OUTER:
             for (int i = colonIndex; i < data.length(); i++) {
-                if (data.charAt(i) == ',' || data.charAt(i) == '}'){
-                    endIndex = i;
-                    break;
+                if (level == 0) {
+                    switch (data.charAt(i)){
+                        case ',':
+                        case '}':
+                            endIndex = i;
+                            break OUTER;
+                        case '[':
+                        case '{':
+                            level++;
+                    }
+                } else {
+                    if (data.charAt(i) == ']' || data.charAt(i) == '}'){
+                        level--;
+                    }
                 }
             }
             assert equalIndex != 0 && endIndex != 0 && equalIndex < endIndex;
+            // Check if there is a " right after the equals
+            if (data.charAt(equalIndex + 1) == '"'){
+                return data;
+            }
+
             // Insert '"' marks at the beginning and end
             String before = data.substring(0, equalIndex + 1),
                     colonContaining = "\"" + data.substring(equalIndex + 1, endIndex) + "\"",
