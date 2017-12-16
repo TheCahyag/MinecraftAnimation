@@ -42,6 +42,7 @@ public class TextResponses {
     public static final Text ANIMATION_ALREADY_PAUSED = Text.of(ERROR_COLOR, "The animation is already paused.");
     public static final Text ANIMATION_ALREADY_STOPPED = Text.of(ERROR_COLOR, "The animation is already stopped.");
     public static final Text ANIMATION_CANT_BE_RUNNING = Text.of(ERROR_COLOR, "The action could not be performed because the specified animation is running.");
+    public static final Text ANIMATION_ISNT_RUNNING = Text.of(ERROR_COLOR, "The animation isn't running.");
 
     // Frame Responses
     public static final Text FRAME_SUCCESSFULLY_DELETED = Text.of(PRIMARY_COLOR, "The frame was successfully deleted.");
