@@ -1,7 +1,5 @@
 package com.servegame.bl4de.Animation.data;
 
-import com.google.gson.Gson;
-import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.model.Animation;
 
 import java.sql.Connection;
@@ -14,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.servegame.bl4de.Animation.data.SQLResources.*;
+import static com.servegame.bl4de.Animation.data.SQLResources.ANIMATION_TABLE;
 
 /**
  * File: PreparedStatements.java
@@ -33,14 +31,13 @@ public class PreparedStatements {
     public static boolean createAnimation(Animation animation){
         try (Connection connection = SQLManager.getConnection()){
             // Insert new animation into the table
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + ANIMATION_TABLE + " (name, owner, data) VALUES (?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO " + ANIMATION_TABLE + " (name, owner, data) VALUES (?, ?, ?)"
+            );
             statement.setString(1, animation.getAnimationName());
             statement.setObject(2, animation.getOwner());
-            statement.setString(3, animation.databaseString());
+            statement.setString(3, Animation.serialize(animation));
             statement.executeUpdate();
-
-            // Create the animation frame table
-            String frameTableName = animation.getOwner().toString() + "_" + animation.getName() + "_frames";
         } catch (SQLException e){
             e.printStackTrace();
             return false;
@@ -55,8 +52,10 @@ public class PreparedStatements {
      */
     public static boolean saveAnimation(Animation animation){
         try (Connection connection = SQLManager.getConnection()){
-            PreparedStatement statement = connection.prepareStatement("UPDATE " + ANIMATION_TABLE + " SET data = ? WHERE name = ? AND owner = ?");
-            statement.setString(1, animation.databaseString());
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE " + ANIMATION_TABLE + " SET data = ? WHERE name = ? AND owner = ?"
+            );
+            statement.setString(1, Animation.serialize(animation));
             statement.setString(2, animation.getAnimationName());
             statement.setObject(3, animation.getOwner());
             statement.executeUpdate();
@@ -78,14 +77,16 @@ public class PreparedStatements {
         Animation newAnimation = null;
         try (Connection connection = SQLManager.getConnection()){
             if (animations.contains(name)){
-                PreparedStatement statement = connection.prepareStatement("SELECT name, owner, data FROM " + ANIMATION_TABLE + " WHERE name = ? AND owner = ?");
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT name, owner, data FROM " + ANIMATION_TABLE + " WHERE name = ? AND owner = ?"
+                );
                 statement.setString(1, name);
                 statement.setObject(2, owner);
                 ResultSet rs = statement.executeQuery();
                 if (rs.next()){
                     // The data exists
-                    Gson gson = new Gson();
-                    newAnimation = gson.fromJson(rs.getString("data"), Animation.class); // TODO
+                    String animationString = rs.getString("data");
+                    newAnimation = Animation.deserialize(animationString);
                     return Optional.ofNullable(newAnimation);
                 }
             }
@@ -142,15 +143,10 @@ public class PreparedStatements {
      */
     public static boolean deleteAnimation(Animation animation){
         try (Connection connection = SQLManager.getConnection()){
-            // Delete frame table
-            String frameTableName = animation.getOwner().toString() + "_" + animation.getName() + "_frames";
-            if (!SQLManager.get(AnimationPlugin.plugin).dropFrameTable(frameTableName)){
-                // Frame table couldn't be dropped
-                return false;
-            }
-
             // Delete row in animation table
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + ANIMATION_TABLE + " WHERE name = ? AND owner = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM " + ANIMATION_TABLE + " WHERE name = ? AND owner = ?"
+            );
             statement.setString(1, animation.getAnimationName());
             statement.setObject(2, animation.getOwner());
             statement.executeUpdate();
@@ -159,29 +155,6 @@ public class PreparedStatements {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Renaming the animation saves the newly renamed animation and renames the
-     * frame table associated with the animation
-     * @param animation - given animation with the new name
-     * @param newName - new name to assigned to the animation
-     * @return true if successful, false otherwise
-     */
-    public static boolean renameAnimation(Animation animation, String newName){
-        try (Connection conn = SQLManager.getConnection()){
-            String oldTableName = animation.getOwner().toString() + "_" + animation.getName() + "_frames";
-            animation.setAnimationName(newName);
-            String newTableName = animation.getOwner().toString() + "_" + animation.getName() + "_frames";
-            conn.prepareStatement("ALTER TABLE " + oldTableName + " RENAME TO " + newTableName).executeUpdate();
-        } catch (SQLException e){
-            // If an error occurs we don't want to save the animation
-            e.printStackTrace();
-            return false;
-        }
-
-        // Save the animation
-        return saveAnimation(animation);
     }
 
     /* END: Animation Operations */
