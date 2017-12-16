@@ -9,16 +9,21 @@ import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.HeaderMode;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.scheduler.Task;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -561,7 +566,7 @@ public class Animation implements DataSerializable{
                     try {
                         for (Object o :
                                 list) {
-                            DataView dataView = DataFormats.HOCON.read(Util.encapColons(o.toString()));
+                            DataView dataView = hoconToContainer(o.toString());
                             frames.add(builder.buildContent(dataView).get());
                         }
                     } catch (IOException e) {
@@ -619,21 +624,11 @@ public class Animation implements DataSerializable{
                 System.out.println(DataFormats.HOCON.write(animation.toContainer()));
                 System.out.println(animation);
             }
-            System.out.println(DataFormats.HOCON.write(animation.toContainer()));
             return DataFormats.HOCON.write(animation.toContainer());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public String databaseString(){
-        try {
-            return DataFormats.HOCON.write(toContainer());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     /**
@@ -653,7 +648,7 @@ public class Animation implements DataSerializable{
                 System.out.println("Hello from Animation.deserialize");
                 System.out.println("Item: " + item);
             }
-            DataContainer dataContainer = DataFormats.HOCON.read(item);
+            DataContainer dataContainer = hoconToContainer(item);
             Optional<Animation> optionalAnimation = new Animation.Builder().build(dataContainer);
 
             return optionalAnimation.get();
@@ -663,17 +658,12 @@ public class Animation implements DataSerializable{
         return null;
     }
 
-//    public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
-////        final String hoconWithOutNewLines = Util.replaceNewLineWithCommaSometimes(
-////                hoconString.replace("\t", "").replace(" ", ""));
-//        if (AnimationPlugin.instance.isDebug()){
-//            System.out.println(hoconString);
-////            System.out.println(hoconWithOutNewLines);
-//        }
-//        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-//                .setHeaderMode(HeaderMode.NONE)
-//                .setSource(() -> new BufferedReader(new StringReader(hoconString)))
-//                .build();
-//        return DataTranslators.CONFIGURATION_NODE.translate(loader.load());
-//    }
+    public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
+        final String newHocon = Util.encapColons(hoconString);
+        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+                .setHeaderMode(HeaderMode.PRESET)
+                .setSource(() -> new BufferedReader(new StringReader(newHocon)))
+                .build();
+        return DataTranslators.CONFIGURATION_NODE.translate(loader.load());
+    }
 }
