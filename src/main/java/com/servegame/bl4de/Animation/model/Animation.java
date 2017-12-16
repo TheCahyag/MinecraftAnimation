@@ -9,21 +9,16 @@ import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.HeaderMode;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.DataFormats;
-import org.spongepowered.api.data.persistence.DataTranslators;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.scheduler.Task;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +31,7 @@ import static com.servegame.bl4de.Animation.data.DataQueries.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class Animation implements DataSerializable {
+public class Animation implements DataSerializable{
 
     private final Status DEFAULT_STATUS = Status.STOPPED;
     private Status status;
@@ -48,6 +43,8 @@ public class Animation implements DataSerializable {
     private int frameIndex = 0;
     private int tickDelay = 20;
     private int cycles = -1;
+
+    public int lastNumberForFrameName = 0;
 
     /**
      * Does-nothing constructor does nothing
@@ -70,7 +67,7 @@ public class Animation implements DataSerializable {
     /**
      * The possible states for the {@link Animation}
      */
-    public static enum Status {
+    public enum Status {
         /**
          * The paused state.
          */
@@ -118,7 +115,7 @@ public class Animation implements DataSerializable {
      * Adds a initialized {@link Frame} to the current Animation at a given index
      * @param frame {@link Frame} to add
      * @param index The index to insert upon
-     * @throws UninitializedException
+     * @throws UninitializedException - thrown if the {@link Frame} isn't initialized
      */
     public void addFrame(Frame frame, int index) throws UninitializedException {
         if (frame.isInitialized()){
@@ -144,18 +141,18 @@ public class Animation implements DataSerializable {
     }
 
     /**
-     * TODO
-     * @param frame
-     * @return
+     * Removes a {@link Frame} from the given Animation
+     * @param frame {@link Frame} object to remove
+     * @return true if the frame was found and removed, false otherwise
      */
     public boolean removeFrame(Frame frame){
         return this.frames.remove(frame);
     }
 
     /**
-     * TODO
-     * @param frame
-     * @return
+     * Get the index of a given {@link Frame}
+     * @param frame {@link Frame} object
+     * @return int - representation of where this {@link Frame} is in the Animation
      */
     public int getIndexOfFrame(Frame frame){
         List<Frame> frames = this.getFrames();
@@ -201,12 +198,12 @@ public class Animation implements DataSerializable {
      */
     public void start(int frame) throws UninitializedException {
         this.frameIndex = frame;
-        setStatus(Status.RUNNING);
         if (AnimationController.saveAnimation(this)){
             AnimationPlugin.taskManager.createBatch(this);
         } else {
             AnimationPlugin.logger.info("Failed to save animation");
         }
+        setStatus(Status.RUNNING);
     }
 
     /**
@@ -492,7 +489,7 @@ public class Animation implements DataSerializable {
         }
         DataContainer container = DataContainer.createNew()
                 .set(ANIMATION_STATUS, getStatus().name())
-                .set(ANIMATION_OWNER, getOwner())
+                .set(ANIMATION_OWNER, getOwner().toString())
                 .set(ANIMATION_NAME, getAnimationName())
                 .set(ANIMATION_FRAMES, getFrames())
                 .set(ANIMATION_SUBSPACE, getSubSpace())
@@ -540,8 +537,9 @@ public class Animation implements DataSerializable {
                     ANIMATION_FRAME_INDEX, ANIMATION_TICK_DELAY, ANIMATION_CYCLES)){
                 // Get data from the container
                 Status status = Status.valueOf(container.getString(ANIMATION_STATUS).get());
-                UUID owner = container.getObject(ANIMATION_OWNER, UUID.class).get();
+                UUID owner = UUID.fromString(container.getString(ANIMATION_OWNER).get());
                 String name = container.getString(ANIMATION_NAME).get();
+
                 int frameIndex = container.getInt(ANIMATION_FRAME_INDEX).get();
                 int tickDelay = container.getInt(ANIMATION_TICK_DELAY).get();
                 int cycles = container.getInt(ANIMATION_CYCLES).get();
@@ -563,7 +561,7 @@ public class Animation implements DataSerializable {
                     try {
                         for (Object o :
                                 list) {
-                            DataView dataView = hoconToContainer(Util.encapColons(o.toString()));
+                            DataView dataView = DataFormats.HOCON.read(Util.encapColons(o.toString()));
                             frames.add(builder.buildContent(dataView).get());
                         }
                     } catch (IOException e) {
@@ -621,11 +619,21 @@ public class Animation implements DataSerializable {
                 System.out.println(DataFormats.HOCON.write(animation.toContainer()));
                 System.out.println(animation);
             }
+            System.out.println(DataFormats.HOCON.write(animation.toContainer()));
             return DataFormats.HOCON.write(animation.toContainer());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String databaseString(){
+        try {
+            return DataFormats.HOCON.write(toContainer());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**
@@ -645,26 +653,27 @@ public class Animation implements DataSerializable {
                 System.out.println("Hello from Animation.deserialize");
                 System.out.println("Item: " + item);
             }
-            DataContainer dataContainer = hoconToContainer(item);
+            DataContainer dataContainer = DataFormats.HOCON.read(item);
             Optional<Animation> optionalAnimation = new Animation.Builder().build(dataContainer);
-            return optionalAnimation.orElse(null);
+
+            return optionalAnimation.get();
         } catch (IOException e){
             e.printStackTrace();
         }
         return null;
     }
 
-    public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
-        final String hoconWithOutNewLines = Util.replaceNewLineWithCommaSometimes(
-                hoconString.replace("\t", "").replace(" ", ""));
-        if (AnimationPlugin.instance.isDebug()){
-            System.out.println(hoconString);
-            System.out.println(hoconWithOutNewLines);
-        }
-        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                .setHeaderMode(HeaderMode.NONE)
-                .setSource(() -> new BufferedReader(new StringReader(hoconString)))
-                .build();
-        return DataTranslators.CONFIGURATION_NODE.translate(loader.load());
-    }
+//    public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
+////        final String hoconWithOutNewLines = Util.replaceNewLineWithCommaSometimes(
+////                hoconString.replace("\t", "").replace(" ", ""));
+//        if (AnimationPlugin.instance.isDebug()){
+//            System.out.println(hoconString);
+////            System.out.println(hoconWithOutNewLines);
+//        }
+//        HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+//                .setHeaderMode(HeaderMode.NONE)
+//                .setSource(() -> new BufferedReader(new StringReader(hoconString)))
+//                .build();
+//        return DataTranslators.CONFIGURATION_NODE.translate(loader.load());
+//    }
 }
