@@ -303,38 +303,6 @@ public class Animation implements DataSerializable{
         return (status == null) ? DEFAULT_STATUS : this.status;
     }
 
-    public void setStatusAsInt(int status){
-        switch (status){
-            case 0:
-                this.status = Status.STOPPED;
-                break;
-            case 1:
-                this.status = Status.RUNNING;
-                break;
-            case 2:
-                this.status = Status.PAUSED;
-                break;
-            default:
-                this.status = Status.STOPPED;
-        }
-    }
-
-    public int getStatusAsInt(){
-        if (status == null){
-            return 0;
-        }
-        switch (this.status){
-            case STOPPED:
-                return 0;
-            case RUNNING:
-                return 1;
-            case PAUSED:
-                return 2;
-            default:
-                return 0;
-        }
-    }
-
     /**
      * Get the number of frames contained in the {@link Animation#frames} list
      * @return int - number of frames currently assigned to this {@link Animation}
