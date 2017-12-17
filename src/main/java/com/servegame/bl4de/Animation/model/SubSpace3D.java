@@ -140,7 +140,7 @@ public class SubSpace3D implements DataSerializable {
 
     @Override
     public String toString() {
-        String result =  "*******************************   SUBSPACE INFO    ******************************\n" +
+        String result =  "\n*******************************   SUBSPACE INFO    ******************************\n" +
                 "Corner one: " + this.getCornerOne().map(Location::toString).orElse("nil") + "\n" +
                 "Corner two: " + this.getCornerTwo().map(Location::toString).orElse("nil") + "\n";
         if (this.contents == null){
