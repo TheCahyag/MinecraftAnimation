@@ -151,8 +151,14 @@ public class Util {
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "STOP",
-                                PRIMARY_COLOR, "]"))
+                                PRIMARY_COLOR, "]    "))
                         .onClick(TextActions.runCommand("/animate stop " + animation.getAnimationName()))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "SETTINGS",
+                                PRIMARY_COLOR, "]"))
+                        .onClick(TextActions.runCommand(""))
                         .build())
                 .build();
         return message;
@@ -272,15 +278,18 @@ public class Util {
                 }
             }
             assert equalIndex != 0 && endIndex != 0 && equalIndex < endIndex;
+            String before, colonContaining, after;
             // Check if there is a " right after the equals
-            if (data.charAt(equalIndex + 1) == '"'){
-                return data;
+            if (data.charAt(equalIndex + 1) == '"') {
+                before = data.substring(0, equalIndex + 1);
+                colonContaining = data.substring(equalIndex + 1, endIndex);
+                after = data.substring(endIndex, data.length());
+            } else {
+                // Insert '"' marks at the beginning and end
+                before = data.substring(0, equalIndex + 1);
+                colonContaining = "\"" + data.substring(equalIndex + 1, endIndex) + "\"";
+                after = data.substring(endIndex, data.length());
             }
-
-            // Insert '"' marks at the beginning and end
-            String before = data.substring(0, equalIndex + 1),
-                    colonContaining = "\"" + data.substring(equalIndex + 1, endIndex) + "\"",
-                    after = data.substring(endIndex, data.length());
             if (after.contains(":")){
                 after = encapColons(after);
             }
@@ -381,16 +390,18 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Start a given animation"))
                 .permission(Permissions.ANIMATION_START)
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")),
-                        optional(flags()
-                                .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f<num>
-                                .buildWith(none())),
-                        optional(flags()
-                                .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d<num>
-                                .buildWith(none())),
-                        optional(flags()
-                                .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c<num>
-                                .buildWith(none()))
+                        firstParsing(
+                                flags()
+                                        .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f<num>
+                                        .buildWith(none()),
+                                flags()
+                                        .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d<num>
+                                        .buildWith(none()),
+                                flags()
+                                        .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c<num>
+                                        .buildWith(none())
                         )
+                )
                 .executor(new StartAnimation())
                 .build();
 
