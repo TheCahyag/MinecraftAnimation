@@ -203,12 +203,12 @@ public class Animation implements DataSerializable{
      */
     public void start(int frame) throws UninitializedException {
         this.frameIndex = frame;
+        setStatus(Status.RUNNING);
         if (AnimationController.saveAnimation(this)){
             AnimationPlugin.taskManager.createBatch(this);
         } else {
             AnimationPlugin.logger.info("Failed to save animation");
         }
-        setStatus(Status.RUNNING);
     }
 
     /**
@@ -632,7 +632,7 @@ public class Animation implements DataSerializable{
     }
 
     /**
-     * Deserializes a {@link Animation} from a given String.
+     * De-serializes a {@link Animation} from a given String.
      *
      * The string (which was obtained from the database) is first converted to a
      * {@link DataContainer} using the {@link DataFormats#HOCON} read method. The
