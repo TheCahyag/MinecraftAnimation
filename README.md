@@ -76,7 +76,11 @@ When all the threads are done executing that will tell us the animation is fully
 * ~~Make specific response messages for every command rather than generic messages?~~
 * ~~Fix /animate delete sub command~~  
 * [BUGFIX] ~~Fix Mark Invalid error when un-serializing data~~
-
+* ~~Add condition for pausing and playing an animation~~
+    * ~~An animation can only be played if it's initialized and has more than one frame~~
+    * ~~An animation can only be paused if the current status is a played status~~
+* ~~In the frame info view if there are contents show the number of not air blocks~~
+* ~~In the animation info view add a line for the volume of the master subspace (no longer think I want to do this)~~
 to sort...
 * Make a animation's subspace the place where the animation is played, but allow a different subspace for the frame so the user can place all frames down at the same time.
 * When a user updates a frame it would be cool to show the additions and deletions.
@@ -85,13 +89,8 @@ to sort...
    * And if a block changes that would be both a deletion and an addition
 * Add sound to animations? Allow adding a sound or a list of sounds to play among rendering a frame of a animation
 * If the animation is already running and the user calls /animate start <name> and specifies a flag, those flag values should update on the currently playing animation (this would probably require stopping the animation, changing the internal states and then starting the animation backup on the frame it stopped on)
-* Add condition for pausing and playing an animation
-    * An animation can only be played if it's initialized and has more than one frame
-    * An animation can only be paused if the current status is a played status
 * Add a message in the bottom middle of the users screen showing what frame the animation is on
-* Fix NPE from logger
-* In the animation info view add a line for the volume of the master subspace
-* In the frame info view if there are contents show the number of not air blocks
+* Fix NPE from logger (little vague)
 * For the time inbetween frames, they shouldn't be able to give a number > 1. Should there be a ceiling?
 * After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation
 
