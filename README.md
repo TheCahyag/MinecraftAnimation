@@ -9,19 +9,12 @@ space (possibly a dynamic subspace in the far future), allowing users to easily 
 frames leading to an animation.
 
 ## Current State of the Plugin
-It works as intended with small animations.  
-  
-With the way I'm serializing and unserializing data there is a problem when I unserializing  data that is 
-over 4096 chars long. Anything shorter then this works fine. What this means for you is that the animations 
-you can create are severely limited. I have been able to run a small 1x3x5 animation with 5 frames and had not 
-had any problems. If you receive a "Mark Invalid" exception in the console, that means you have exceeded 
-4096 chars worth of data. 
+The Animation plugin works mostly as intended. The max animation size has been scaled up significantly.
 
-See the wiki for the commands and their respective usages.
+See the wiki for the commands and their respective usages. (Still a WIP)
 
 ## TODO
 ### High Priority
-[BUGFIX] Fix Mark Invalid error when un-serializing data  
 [BUGFIX] After playing the animation for awhile the frames fall out of sync
 ### Medium Priority
 [WIKI] Write basic usage guidelines  
@@ -32,27 +25,43 @@ See the wiki for the commands and their respective usages.
 * Should stopping an animation remove all visible contents of the animation
 * Pausing should keep track of the current frame it is on  
 
+[BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
+[BUGFIX] There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0  
+
 ### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
 [COMMAND] Add .complete() lists on all arguments for tabbing arguments  
 [BOTHERING] Fix the buttons so that clicking on the spaces don't execute the command  
 [BOTHERING] Fix the method to create frame names, it doesn't reset for every animation  
-[ENHANCEMENT] Make a config where the user can specify the default values of animation's states (frame, delay, cycles) or just other config stuff  
-[ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing the frames and animations  
+[ENHANCEMENT] Make a config where the user can specify the default values of animation's states 
+(frame, delay, cycles) or just other config stuff  
+[ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing 
+the frames and animations  
 [ENHANCEMENT] Allow animations to be public, which would allow anyone to start the given animation  
 [ENHANCEMENT] Allow animations to be started without a player present (which would hopefully allow stuff)  
 ### Backlog
-[ENHANCEMENT] Should the BlockSnapshots be able to be converted between a .schematic file for MCEdit and stuff? (Look into this)  
-[ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if the corner is set to something different just change all the frames (make sure to give a warning)  
+[ENHANCEMENT] Should the BlockSnapshots be able to be converted between a .schematic file for 
+MCEdit and stuff? (Look into this)  
+[ENHANCEMENT] Provide flexibility to change the subspace corners after frames are made, or if 
+the corner is set to something different just change all the frames (make sure to give a warning)  
 [ENHANCEMENT] Add options to the way the animation loops
 * Sequentially 
 * Random order
 * Sequentially then reverse (0, 1, ..., n, n, n-1, n-2, n-..., 0)  
 
+[ENHANCEMENT] Have a "up-time" for each frame in an animation instead of having an animation wide 
+delay time. So you could tell the first frame to be live for 30 ticks, but the next frame would be 
+live for 5.  
 [ENHANCEMENT] What if we have an edit mode? 
 * An item can be used for switching between frames. So while in edit mode you can use a stick (or something) to go forward a frame (left click) or go back a frame (right click)
 * Would we set a tool for saving changes? ~~So they would switch between a tool for changing frames and a tool for saving?~~ Or when they switch between frames it would save automatically
+
+[CODE STRUCTURE] When animations get very large with lots of frames and lots of data, 
+it's going to take a really long time to load. Possible solution: We have a table for each 
+animation that for every row represents one frame. When loading in the animation we can create
+one thread for every row in the table that will load in one frame and add it to the animation.
+When all the threads are done executing that will tell us the animation is fully created.  
 ### Done
 * ~~Set warning for a animation that has a large subspace (since it might lag the server)~~
 * ~~Set up permissions (kinda done with this, need to add permissions for sub commands and such)~~
@@ -66,6 +75,7 @@ See the wiki for the commands and their respective usages.
 * ~~Register the commands that arn't registered see InfoAnimation~~
 * ~~Make specific response messages for every command rather than generic messages?~~
 * ~~Fix /animate delete sub command~~  
+* [BUGFIX] ~~Fix Mark Invalid error when un-serializing data~~
 
 to sort...
 * Make a animation's subspace the place where the animation is played, but allow a different subspace for the frame so the user can place all frames down at the same time.
