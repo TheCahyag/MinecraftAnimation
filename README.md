@@ -80,7 +80,8 @@ When all the threads are done executing that will tell us the animation is fully
     * ~~An animation can only be played if it's initialized and has more than one frame~~
     * ~~An animation can only be paused if the current status is a played status~~
 * ~~In the frame info view if there are contents show the number of not air blocks~~
-* ~~In the animation info view add a line for the volume of the master subspace (no longer think I want to do this)~~
+* ~~In the animation info view add a line for the volume of the master subspace (no longer think I want to do this)~~  
+
 to sort...
 * Make a animation's subspace the place where the animation is played, but allow a different subspace for the frame so the user can place all frames down at the same time.
 * When a user updates a frame it would be cool to show the additions and deletions.
