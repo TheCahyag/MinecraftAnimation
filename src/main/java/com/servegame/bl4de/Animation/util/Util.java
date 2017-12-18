@@ -239,63 +239,83 @@ public class Util {
                 theWorld.getDimension().getType().getId() + ")";
     }
 
+    public static class StringContinuation {
+        private String modifiedString;
+        private StringContinuation nextString;
+
+        public StringContinuation(String toModify){
+            this.nextString = null;
+            this.modifiedString = encapColonsContinuation(toModify);
+
+        }
+
+        public String getString(){
+            String next = this.nextString == null ? "" : this.nextString.getString();
+            return this.modifiedString + next;
+        }
+
+        private String encapColonsContinuation(String string) {
+            String data = string;
+            if (data.contains(":")) {
+                int colonIndex = data.indexOf(":"), equalIndex = 0, endIndex = 0;
+
+                // Find equal sign
+                for (int i = colonIndex; i > 0; i--) {
+                    if (data.charAt(i) == '=') {
+                        equalIndex = i;
+                        break;
+                    }
+                }
+
+                int level = 0;
+                // Find end symbol (either ',' or '}'
+                OUTER:
+                for (int i = colonIndex; i < data.length(); i++) {
+                    if (level == 0) {
+                        switch (data.charAt(i)) {
+                            case ',':
+                            case '}':
+                                endIndex = i;
+                                break OUTER;
+                            case '[':
+                            case '{':
+                                level++;
+                        }
+                    } else {
+                        if (data.charAt(i) == ']' || data.charAt(i) == '}') {
+                            level--;
+                        }
+                    }
+                }
+                assert equalIndex != 0 && endIndex != 0 && equalIndex < endIndex;
+                String before, colonContaining, after;
+                // Check if there is a " right after the equals
+                if (data.charAt(equalIndex + 1) == '"') {
+                    before = data.substring(0, equalIndex + 1);
+                    colonContaining = data.substring(equalIndex + 1, endIndex);
+                    after = data.substring(endIndex, data.length());
+                } else {
+                    // Insert '"' marks at the beginning and end
+                    before = data.substring(0, equalIndex + 1);
+                    colonContaining = "\"" + data.substring(equalIndex + 1, endIndex) + "\"";
+                    after = data.substring(endIndex, data.length());
+                }
+                this.nextString = new StringContinuation(after);
+
+                data = before + colonContaining;
+            }
+            return data;
+        }
+    }
+
     /**
      * TODO
      * @param string
      * @return
      */
     public static String encapColons(String string){
-        String data = string;
-        if (data.contains(":")) {
-            int colonIndex = data.indexOf(":"), equalIndex = 0, endIndex = 0;
-
-            // Find equal sign
-            for (int i = colonIndex; i > 0; i--) {
-                if (data.charAt(i) == '='){
-                    equalIndex = i;
-                    break;
-                }
-            }
-
-            int level = 0;
-            // Find end symbol (either ',' or '}'
-            OUTER:
-            for (int i = colonIndex; i < data.length(); i++) {
-                if (level == 0) {
-                    switch (data.charAt(i)){
-                        case ',':
-                        case '}':
-                            endIndex = i;
-                            break OUTER;
-                        case '[':
-                        case '{':
-                            level++;
-                    }
-                } else {
-                    if (data.charAt(i) == ']' || data.charAt(i) == '}'){
-                        level--;
-                    }
-                }
-            }
-            assert equalIndex != 0 && endIndex != 0 && equalIndex < endIndex;
-            String before, colonContaining, after;
-            // Check if there is a " right after the equals
-            if (data.charAt(equalIndex + 1) == '"') {
-                before = data.substring(0, equalIndex + 1);
-                colonContaining = data.substring(equalIndex + 1, endIndex);
-                after = data.substring(endIndex, data.length());
-            } else {
-                // Insert '"' marks at the beginning and end
-                before = data.substring(0, equalIndex + 1);
-                colonContaining = "\"" + data.substring(equalIndex + 1, endIndex) + "\"";
-                after = data.substring(endIndex, data.length());
-            }
-            if (after.contains(":")){
-                after = encapColons(after);
-            }
-            data = before + colonContaining + after;
-        }
-        return data;
+        StringContinuation sc = new StringContinuation(string);
+        return sc.getString();
     }
 
     /**
@@ -532,6 +552,8 @@ public class Util {
                                 )
                         )
                 )
+
+
                 .permission(Permissions.ANIMATION_BASE)
                 .executor(new CommandGateKeeper())
                 .build();
