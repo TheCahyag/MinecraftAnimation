@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command;
 
+import com.servegame.bl4de.Animation.command.animation.BaseAnimation;
 import com.servegame.bl4de.Animation.command.animation.InfoAnimation;
 import com.servegame.bl4de.Animation.command.animation.SetAnimation;
 import com.servegame.bl4de.Animation.command.frame.*;
@@ -36,9 +37,9 @@ public class CommandGateKeeper implements CommandExecutor {
         boolean frame = (boolean) args.getOne("frame").orElse(false);
 
         if (!animationNameOptional.isPresent()){
-            // Animation name wasn't parsed correctly
-            player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
-            return CommandResult.empty();
+            // Animation name wasn't specified
+            new BaseAnimation().execute(src, args);
+            return CommandResult.success();
         }
         String animationName = animationNameOptional.get();
         Optional<Animation> animationOptional = AnimationController.getAnimation(animationName, player.getUniqueId());
