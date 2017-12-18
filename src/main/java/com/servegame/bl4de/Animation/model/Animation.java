@@ -461,14 +461,14 @@ public class Animation implements DataSerializable{
             System.out.println(this);
         }
         DataContainer container = DataContainer.createNew()
-                .set(ANIMATION_STATUS, getStatus().name())
-                .set(ANIMATION_OWNER, getOwner().toString())
-                .set(ANIMATION_NAME, getAnimationName())
-                .set(ANIMATION_FRAMES, getFrames())
-                .set(ANIMATION_SUBSPACE, getSubSpace())
-                .set(ANIMATION_FRAME_INDEX, getFrameIndex())
-                .set(ANIMATION_TICK_DELAY, getTickDelay())
-                .set(ANIMATION_CYCLES, getCycles());
+                .set(ANIMATION_STATUS, getStatus().name())   // String
+                .set(ANIMATION_OWNER, getOwner().toString()) // String
+                .set(ANIMATION_NAME, getAnimationName())     // String
+                .set(ANIMATION_FRAMES, getFrames())          // List<Frame>
+                .set(ANIMATION_SUBSPACE, getSubSpace())      // SubSpace3D
+                .set(ANIMATION_FRAME_INDEX, getFrameIndex()) // int
+                .set(ANIMATION_TICK_DELAY, getTickDelay())   // int
+                .set(ANIMATION_CYCLES, getCycles());         // int
 
         if (AnimationPlugin.instance.isDebug()){
             System.out.println("Container: " + container.toString());
@@ -534,7 +534,7 @@ public class Animation implements DataSerializable{
                     try {
                         for (Object o :
                                 list) {
-                            DataView dataView = hoconToContainer(o.toString());
+                            DataView dataView = hoconToContainer(Util.encapColons(o.toString()));
                             frames.add(builder.buildContent(dataView).get());
                         }
                     } catch (IOException e) {
@@ -627,10 +627,9 @@ public class Animation implements DataSerializable{
     }
 
     public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
-        final String newHocon = Util.encapColons(hoconString);
         HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .setHeaderMode(HeaderMode.PRESET)
-                .setSource(() -> new BufferedReader(new StringReader(newHocon)))
+                .setSource(() -> new BufferedReader(new StringReader(hoconString)))
                 .build();
         return DataTranslators.CONFIGURATION_NODE.translate(loader.load());
     }
