@@ -116,9 +116,9 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
     @Override
     public DataContainer toContainer() {
         return DataContainer.createNew()
-                .set(FRAME_CREATOR, getCreator().toString())
-                .set(FRAME_NAME, getName())
-                .set(FRAME_SUBSPACE, getSubspace());
+                .set(FRAME_CREATOR, getCreator().toString()) // String
+                .set(FRAME_NAME, getName())                  // String
+                .set(FRAME_SUBSPACE, getSubspace());         // SubSpace3D
     }
 
     @Override
