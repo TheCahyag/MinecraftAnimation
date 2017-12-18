@@ -23,7 +23,7 @@ public class HelpAnimation implements CommandExecutor {
             /animate
             /animate create <name>
             /animate delete <name> -f
-            /animate start <name> -f<num> -d<num> -c<num>
+            /animate start <name> -f <num> -d <num> -c <num>
             /animate stop <name>
             /animate list
             /animate <name> info
@@ -56,7 +56,7 @@ public class HelpAnimation implements CommandExecutor {
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " start",
                         Util.NAME_COLOR, " <name>",
-                        Util.FLAG_COLOR, " -f<num> -d<num> -c<num>\n"))
+                        Util.FLAG_COLOR, " -f <num> -d <num> -c <num>\n"))
                 .append(Text.of(TextColors.WHITE, "/",
                         Util.PRIMARY_COLOR, "animate",
                         Util.ACTION_COLOR, " stop",
