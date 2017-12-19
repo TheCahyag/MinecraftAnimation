@@ -10,6 +10,7 @@ import org.spongepowered.api.text.Text;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * File: FrameElement.java
@@ -39,5 +40,9 @@ public class FrameElement extends CommandElement {
     @Override
     public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
         return null;
+    }
+
+    public Optional<Frame> getFrame() {
+        return Optional.ofNullable(this.frame);
     }
 }
