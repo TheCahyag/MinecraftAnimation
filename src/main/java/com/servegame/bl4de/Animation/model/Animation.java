@@ -626,7 +626,14 @@ public class Animation implements DataSerializable{
         return null;
     }
 
-    public static DataContainer hoconToContainer(String hoconString) throws InvalidDataException, IOException {
+    /**
+     * Creates a {@link DataContainer} from a {@link DataFormats#HOCON} String
+     * @param hoconString HOCON string to convert to a DataContainer
+     * @return {@link DataContainer} that is an object representation of the provided
+     * HOCON string
+     * @throws IOException
+     */
+    public static DataContainer hoconToContainer(String hoconString) throws IOException {
         HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .setHeaderMode(HeaderMode.PRESET)
                 .setSource(() -> new BufferedReader(new StringReader(hoconString)))
