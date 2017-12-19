@@ -7,10 +7,10 @@ import org.spongepowered.api.service.sql.SqlService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.servegame.bl4de.Animation.data.SQLResources.ANIMATION_TABLE;
 import static com.servegame.bl4de.Animation.data.SQLResources.TABLES;
 
 /**
@@ -91,5 +91,17 @@ public class SQLManager {
     public DataSource getDataSource() throws SQLException {
         SqlService sqlService = Sponge.getServiceManager().provide(SqlService.class).get();
         return sqlService.getDataSource("jdbc:h2:./config/" + this.plugin.getId() + "/animation/" + this.database);
+    }
+
+    void createFrameTable(String tableName){
+        try (Connection conn = getConnection()){
+            PreparedStatement preparedStatement = conn.prepareStatement("CREATE TABLE " + tableName + " ()");
+        } catch (SQLException e){
+
+        }
+    }
+
+    void createContentsTable(String tableName){
+
     }
 }
