@@ -102,11 +102,6 @@ public class Util {
         Location<World> corner2 = subSpace.getCornerTwo().get();
         BlockSnapshot[][][] subSpaceSnapShot = subSpace.getContents().get();
 
-        // Get absolute length of sub space dimensions
-        int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
-        int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
-        int zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
-
         /* Get corner to start the copy at by getting the coordinates of the
          numerically lowest coordinates of the two corners
          (may result in a corner different from the parameters)*/
@@ -114,15 +109,20 @@ public class Util {
         int yLow = corner1.getBlockY() <= corner2.getBlockY() ? corner1.getBlockY() : corner2.getBlockY();
         int zLow = corner1.getBlockZ() <= corner2.getBlockZ() ? corner1.getBlockZ() : corner2.getBlockZ();
 
+        int xLength = subSpaceSnapShot.length;
+        int yLength = subSpaceSnapShot[0].length;
+        int zLength = subSpaceSnapShot[0][0].length;
+        System.out.println(xLength + ", " + yLength + ", " + zLength);
+
         // Y
-        for (int y = 0; y <= yLen; y++) {
+        for (int x = 0; x < xLength; x++) {
             // Z
-            for (int z = 0; z <= zLen; z++) {
+            for (int y = 0; y < yLength; y++) {
                 // X
-                for (int x = 0; x <= xLen; x++) {
+                for (int z = 0; z < zLength; z++) {
                     BlockSnapshot snapshot = subSpaceSnapShot[x][y][z];
-                    new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow)
-                            .setBlock(snapshot.getState(), Cause.source(AnimationPlugin.plugin).build());
+                    Location loc = new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow);
+                    loc.setBlock(snapshot.getState(), Cause.source(AnimationPlugin.plugin).build());
                 }
             }
         }
