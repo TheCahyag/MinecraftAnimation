@@ -180,7 +180,7 @@ public class SubSpace3D implements DataSerializable {
                 for (int j = 0; j < y; j++) {
                     // Z
                     for (int k = 0; k < z; k++) {
-                        container.set(DataQuery.of("" + i + j + k), blockSnapshots[i][j][k].toContainer());
+                        container.set(DataQuery.of(i + "|" + j + "|" + k), blockSnapshots[i][j][k].toContainer());
                     }
                 }
             }
@@ -248,7 +248,7 @@ public class SubSpace3D implements DataSerializable {
                     for (int j = 0; j < y; j++) {
                         // Z
                         for (int k = 0; k < z; k++) {
-                            blockSnapshots[i][j][k] = BlockSnapshot.builder().build(container.getView(DataQuery.of("" + i + j + k)).get()).get();
+                            blockSnapshots[i][j][k] = BlockSnapshot.builder().build(container.getView(DataQuery.of(i + "|" + j + "|" + k)).get()).get();
                         }
                     }
                 }
