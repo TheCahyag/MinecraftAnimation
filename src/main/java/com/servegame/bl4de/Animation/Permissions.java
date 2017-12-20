@@ -22,6 +22,7 @@ public class Permissions {
     public static final String ANIMATION_SET_NAME           = "animate.set.name";
     public static final String ANIMATION_SET_POS            = "animate.set.pos";
     public static final String ANIMATION_STATS              = "animate.stats.base";
+    public static final String ANIMATION_STOP_ALL           = "animate.stopall.base";
 
     // Frame permissions
     public static final String FRAME_CREATE                 = "animate.frame.create.base";
