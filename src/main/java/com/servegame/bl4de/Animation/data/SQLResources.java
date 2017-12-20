@@ -14,6 +14,8 @@ class SQLResources {
 
     static final String[] TABLES = {ANIMATION_TABLE};
 
+    static final String DATABASE = "ANIMATIONS";
+
     /**
      * Creates the name of a table that will contain the frames associated with a given animation.
      * Result is: animationName_owner_frames, where animationName is the name of the animation
