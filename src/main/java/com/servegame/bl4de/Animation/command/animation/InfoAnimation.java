@@ -85,7 +85,7 @@ public class InfoAnimation implements CommandExecutor {
                         SECONDARY_COLOR, animation.getTickDelay() + "\n",
                         PRIMARY_COLOR, "Start Frame",
                         WHITE, ": ",
-                        SECONDARY_COLOR, this.animation.getFrameIndex() + "\n",
+                        SECONDARY_COLOR, this.animation.getStartFrameIndex() + "\n",
                         PRIMARY_COLOR, "Cycles to Complete",
                         WHITE, ": ",
                         SECONDARY_COLOR, this.animation.getCycles() + "\n"))
