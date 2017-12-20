@@ -35,6 +35,8 @@ See the wiki for the commands and their respective usages. (Still a WIP)
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
 [BUGFIX] There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0  
+[BUGFIX] Some animations, when stopped, play certain frames continuously even after they are stopped (maybe because it 
+was played and then stopped immediately)  
 
 #### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
@@ -108,6 +110,9 @@ the internal states and then starting the animation backup on the frame it stopp
     * ~~An animation can only be paused if the current status is a played status~~
 * ~~In the frame info view if there are contents show the number of not air blocks~~
 * ~~In the animation info view add a line for the volume of the master subspace (no longer think I want to do this)~~  
+
+#### Matt Notes
+* Pausing the the animation should stop the animation on the given frame, 
 
 ## Animations to show off
 * Door opening
