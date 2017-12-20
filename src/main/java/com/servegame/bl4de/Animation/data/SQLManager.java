@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.servegame.bl4de.Animation.data.SQLResources.TABLES;
+import static com.servegame.bl4de.Animation.data.SQLResources.*;
 
 /**
  * File: SQLManager.java
@@ -47,14 +47,17 @@ public class SQLManager {
      */
     private void initSettings(){
         // In the future this would get data from a config file
-        this.database = "ANIMATIONS";
+        this.database = DATABASE;
         try (Connection connection = getDataSource().getConnection()){
-            for (String table :
-                    TABLES) {
-                connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table + " (name VARCHAR2(255), owner UUID, data CLOB)")
-                        .executeUpdate();
-
-            }
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + ANIMATION_TABLE + " (" +
+                    "name VARCHAR2(255), " +
+                    "owner UUID, " +
+                    "status ENUM('STOPPED', 'RUNNING', 'PAUSED'), " +
+                    "startFrameIndex INT, " +
+                    "tickDelay INT, " +
+                    "cycles INT, " +
+                    "frameNames ARRAY)")
+                    .executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
