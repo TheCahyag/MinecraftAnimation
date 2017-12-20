@@ -11,8 +11,10 @@ import org.spongepowered.api.text.Text;
 public class TextResponses {
 
     // General Responses
+    public static final Text ALL_ANIMATIONS_STOPPED = Text.of(PRIMARY_COLOR, "All animations have been stopped.");
     // General Warning Responses
     public static final Text PLAYER_ONLY_COMMAND_WARNING = Text.of(WARNING_COLOR, "This command must be ran by a player in-game.");
+    public static final Text CONSOLE_ONLY_COMMAND_WARNING = Text.of(WARNING_COLOR, "This command must be ran by the console.");
     public static final Text LARGE_VOLUME_WARNING = Text.of(WARNING_COLOR, "Warning: Large animation volume. May cause lag.");
 
     // General Error Responses
