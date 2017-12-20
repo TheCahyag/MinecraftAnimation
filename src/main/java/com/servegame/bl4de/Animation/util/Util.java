@@ -7,6 +7,7 @@ import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
 import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
+import com.servegame.bl4de.Animation.command.animation.action.StopAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
@@ -112,7 +113,6 @@ public class Util {
         int xLength = subSpaceSnapShot.length;
         int yLength = subSpaceSnapShot[0].length;
         int zLength = subSpaceSnapShot[0][0].length;
-        System.out.println(xLength + ", " + yLength + ", " + zLength);
 
         // Y
         for (int x = 0; x < xLength; x++) {
@@ -412,13 +412,13 @@ public class Util {
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")),
                         firstParsing(
                                 flags()
-                                        .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f<num>
+                                        .valueFlag(integer(Text.of(FLAG_COLOR, "frame")), "f") // -f <num>
                                         .buildWith(none()),
                                 flags()
-                                        .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d<num>
+                                        .valueFlag(integer(Text.of(FLAG_COLOR, "delay")), "d") // -d <num>
                                         .buildWith(none()),
                                 flags()
-                                        .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c<num>
+                                        .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c <num>
                                         .buildWith(none())
                         )
                 )
@@ -455,6 +455,14 @@ public class Util {
                 .executor(new DebugToggle())
                 .build();
 
+        // /animate stopall -f
+        CommandSpec stopAllAnimation = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Stop all animations that are currently playing"))
+                .permission(Permissions.ANIMATION_STOP_ALL)
+                .arguments(optional(flags().flag("f").buildWith(none()))) // -f
+                .executor(new StopAllAnimations())
+                .build();
+
         // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Base animation command"))
@@ -467,6 +475,7 @@ public class Util {
                 .child(pauseAnimation, "pause")
                 .child(statsAnimation, "stats", "statistics")
                 .child(debugAnimation, "debug")
+                .child(stopAllAnimation, "stopall")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
