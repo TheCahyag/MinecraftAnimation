@@ -45,7 +45,7 @@ public class Animation implements DataSerializable{
     private String animationName;
     private List<Frame> frames;
     private SubSpace3D masterSubSpace;
-    private int frameIndex = 0;
+    private int startFrameIndex = 0;
     private int tickDelay = 20;
     private int cycles = -1;
 
@@ -202,7 +202,7 @@ public class Animation implements DataSerializable{
      * @param frame the starting {@link Frame}
      */
     public void start(int frame) throws UninitializedException {
-        this.frameIndex = frame;
+        this.startFrameIndex = frame;
         setStatus(Status.RUNNING);
         if (AnimationController.saveAnimation(this)){
             AnimationPlugin.taskManager.createBatch(this);
@@ -240,7 +240,7 @@ public class Animation implements DataSerializable{
      * Pauses the {@link Animation}.
      *
      * There's no need to specifically save {@link Frame} it was on because
-     * that is always saved under the {@link Animation#frameIndex} state.
+     * that is always saved under the {@link Animation#startFrameIndex} state.
      */
     public void pause(){
         setStatus(Status.PAUSED);
@@ -383,16 +383,16 @@ public class Animation implements DataSerializable{
      * Getter for the frame index (-f flag in {@link StartAnimation} command)
      * @return int - the frame the animation will start on when it is ran
      */
-    public int getFrameIndex() {
-        return frameIndex;
+    public int getStartFrameIndex() {
+        return startFrameIndex;
     }
 
     /**
      * Setter for the frame index (-f flag in {@link StartAnimation} command)
-     * @param frameIndex int - the new frame index
+     * @param startFrameIndex int - the new frame index
      */
-    public void setFrameIndex(int frameIndex) {
-        this.frameIndex = frameIndex;
+    public void setStartFrameIndex(int startFrameIndex) {
+        this.startFrameIndex = startFrameIndex;
     }
 
     /**
@@ -441,7 +441,7 @@ public class Animation implements DataSerializable{
                 ", \nanimationName='" + animationName + '\'' +
                 ", \nframes=" + frames +
                 ", \nmasterSubSpace=\n" + masterSubSpace +
-                ", \nframeIndex=" + frameIndex +
+                ", \nstartFrameIndex=" + startFrameIndex +
                 ", \ntickDelay=" + tickDelay +
                 ", \ncycles=" + cycles +
                 "\n}";
@@ -466,7 +466,7 @@ public class Animation implements DataSerializable{
                 .set(ANIMATION_NAME, getAnimationName())     // String
                 .set(ANIMATION_FRAMES, getFrames())          // List<Frame>
                 .set(ANIMATION_SUBSPACE, getSubSpace())      // SubSpace3D
-                .set(ANIMATION_FRAME_INDEX, getFrameIndex()) // int
+                .set(ANIMATION_FRAME_INDEX, getStartFrameIndex()) // int
                 .set(ANIMATION_TICK_DELAY, getTickDelay())   // int
                 .set(ANIMATION_CYCLES, getCycles());         // int
 
@@ -520,7 +520,7 @@ public class Animation implements DataSerializable{
                 // Create animation and set information
                 animation = new Animation(owner, name);
                 animation.setStatus(status);
-                animation.setFrameIndex(frameIndex);
+                animation.setStartFrameIndex(frameIndex);
                 animation.setTickDelay(tickDelay);
                 animation.setCycles(cycles);
 
