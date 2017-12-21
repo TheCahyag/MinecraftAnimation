@@ -10,7 +10,25 @@ import com.servegame.bl4de.Animation.model.SubSpace3D;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 class SQLResources {
-    static final String ANIMATION_TABLE = "animations";
+
+    /* Animation Table Constants */
+    static final String ANIMATION_TABLE                     = "animations";
+    static final String COLUMN_ANIMATION_NAME               = "name";
+    static final String COLUMN_ANIMATION_OWNER              = "owner";
+    static final String COLUMN_ANIMATION_STATUS             = "status";
+    static final String COLUMN_ANIMATION_START_FRAME_INDEX  = "startFrameIndex";
+    static final String COLUMN_ANIMATION_TICK_DELAY         = "tickDelay";
+    static final String COLUMN_ANIMATION_CYCLES             = "cycles";
+    static final String COLUMN_ANIMATION_FRAME_NAMES        = "frameNames";
+
+    /* Frame Table Constants */
+    static final String COLUMN_FRAME_NAME                   = "frameName";
+    static final String COLUMN_FRAME_CREATOR                = "creator";
+    static final String COLUMN_FRAME_SUBSPACE_C1            = "subspace_cornerOne";
+    static final String COLUMN_FRAME_SUBSPACE_C2            = "subspace_cornerTwo";
+    static final String COLUMN_FRAME_SUBSPACE_CONTENTS      = "subspace_contents";
+
+    /* Contents Table Constants */
 
     static final String[] TABLES = {ANIMATION_TABLE};
 
