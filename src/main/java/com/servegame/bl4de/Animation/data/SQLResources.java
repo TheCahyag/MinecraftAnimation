@@ -13,6 +13,7 @@ class SQLResources {
 
     /* Animation Table Constants */
     static final String ANIMATION_TABLE                     = "animations";
+
     static final String COLUMN_ANIMATION_NAME               = "name";
     static final String COLUMN_ANIMATION_OWNER              = "owner";
     static final String COLUMN_ANIMATION_STATUS             = "status";
@@ -29,6 +30,8 @@ class SQLResources {
     static final String COLUMN_FRAME_SUBSPACE_CONTENTS      = "subspace_contents";
 
     /* Contents Table Constants */
+    static final String COLUMN_CONTENTS_XYZ                 = "xyz";
+    static final String COLUMN_CONTENTS_DATA                = "data";
 
     static final String[] TABLES = {ANIMATION_TABLE};
 
