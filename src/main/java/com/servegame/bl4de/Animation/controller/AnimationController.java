@@ -1,16 +1,15 @@
 package com.servegame.bl4de.Animation.controller;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.data.PreparedStatements;
 import com.servegame.bl4de.Animation.model.Animation;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.servegame.bl4de.Animation.data.PreparedStatements.getAnimations;
 import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
@@ -27,15 +26,7 @@ public class AnimationController {
      * Stops all animations, usually ran when the server is shutting down.
      */
     public static void stopAllAnimations(){
-        Map<UUID, ArrayList<String>> animations = getAnimations();
-        for (Map.Entry<UUID, ArrayList<String>> entry :
-                animations.entrySet()) {
-            ArrayList<String> animationNames = entry.getValue();
-            UUID uuid = entry.getKey();
-            for (int i = 0; i < animationNames.size(); i++) {
-                getAnimation(animationNames.get(i), uuid).get().stop();
-            }
-        }
+        AnimationPlugin.taskManager.stopAllAnimations();
     }
 
     /**
@@ -93,22 +84,48 @@ public class AnimationController {
                 .build();
     }
 
+    /**
+     * todo
+     * @param animation
+     * @return
+     */
     public static boolean createAnimation(Animation animation){
         return PreparedStatements.createAnimation(animation);
     }
 
+    /**
+     * TODO
+     * @param name
+     * @param owner
+     * @return
+     */
     public static Optional<Animation> getAnimation(String name, UUID owner){
         return PreparedStatements.getAnimation(name, owner);
     }
 
+    /**
+     * TODO
+     * @param owner
+     * @return
+     */
     public static ArrayList<String> getAnimationsByOwner(UUID owner) {
         return PreparedStatements.getAnimationsByOwner(owner);
     }
 
+    /**
+     * todo
+     * @param animation
+     * @return
+     */
     public static boolean saveAnimation(Animation animation){
         return PreparedStatements.saveAnimation(animation);
     }
 
+    /**
+     * todo
+     * @param animation
+     * @return
+     */
     public static boolean deleteAnimation(Animation animation){
         return PreparedStatements.deleteAnimation(animation);
     }
