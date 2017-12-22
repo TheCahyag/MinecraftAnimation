@@ -56,7 +56,9 @@ public class SQLManager {
                     "startFrameIndex INT, " +
                     "tickDelay INT, " +
                     "cycles INT, " +
-                    "frameNames ARRAY)")
+                    "frameNames ARRAY," +
+                    "animation_cornerOne CLOB, " +
+                    "animation_cornerTwo CLOB) ")
                     .executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,8 +103,8 @@ public class SQLManager {
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " (" +
                     "frameName VARCHAR2(255), " +
                     "creator UUID, " +
-                    "subspace_cornterOne CLOB, " +
-                    "subspace_cornterTwo CLOB, " +
+                    "subspace_cornerOne CLOB, " +
+                    "subspace_cornerTwo CLOB, " +
                     "subspace_contents ARRAY" +
                     ")").executeUpdate();
         } catch (SQLException e){
