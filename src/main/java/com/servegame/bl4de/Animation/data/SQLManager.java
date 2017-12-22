@@ -96,9 +96,9 @@ public class SQLManager {
         return sqlService.getDataSource("jdbc:h2:./config/" + this.plugin.getId() + "/animation/" + this.database);
     }
 
-    protected void createFrameTable(String tableName){
+    void createFrameTable(String tableName){
         try (Connection conn = getConnection()){
-            conn.prepareStatement("CREATE TABLE " + tableName + " (" +
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " (" +
                     "frameName VARCHAR2(255), " +
                     "creator UUID, " +
                     "subspace_cornterOne CLOB, " +
@@ -110,9 +110,17 @@ public class SQLManager {
         }
     }
 
-    protected void createContentsTable(String tableName){
+    void deleteTable(String tableName){
+        try (Connection connection = SQLManager.getConnection()){
+            connection.prepareStatement("DROP TABLE " + tableName);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    void createContentsTable(String tableName){
         try (Connection conn = getConnection()){
-            conn.prepareStatement("CREATE TABLE " + tableName + " (" +
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " (" +
                     "xyz VARCHAR2(100), " +
                     "data CLOB" +
                     ")").executeUpdate();
