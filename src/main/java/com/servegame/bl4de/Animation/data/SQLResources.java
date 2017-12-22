@@ -21,6 +21,8 @@ class SQLResources {
     static final String COLUMN_ANIMATION_TICK_DELAY         = "tickDelay";
     static final String COLUMN_ANIMATION_CYCLES             = "cycles";
     static final String COLUMN_ANIMATION_FRAME_NAMES        = "frameNames";
+    static final String COLUMN_ANIMATION_C1                 = "animation_corner1";
+    static final String COLUMN_ANIMATION_C2                 = "animation_corner2";
 
     /* Frame Table Constants */
     static final String COLUMN_FRAME_NAME                   = "frameName";
