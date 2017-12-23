@@ -103,6 +103,10 @@ public class AnimationController {
         return PreparedStatements.getAnimation(name, owner);
     }
 
+    public static Optional<Animation> getBareAnimation(String name, UUID owner){
+        return PreparedStatements.getBareAnimation(name, owner);
+    }
+
     /**
      * TODO
      * @param owner
