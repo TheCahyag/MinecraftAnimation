@@ -7,7 +7,6 @@ import org.spongepowered.api.service.sql.SqlService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,7 +51,7 @@ public class SQLManager {
             connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + ANIMATION_TABLE + " (" +
                     "name VARCHAR2(255), " +
                     "owner UUID, " +
-                    "status ENUM('STOPPED', 'RUNNING', 'PAUSED'), " +
+                    "status VARCHAR_IGNORECASE(100) CHECK (status IN ('STOPPED', 'RUNNING', 'PAUSED')), " +
                     "startFrameIndex INT, " +
                     "tickDelay INT, " +
                     "cycles INT, " +
