@@ -14,7 +14,7 @@ The Animation plugin works mostly as intended. The max animation size has been s
 See the wiki for the commands and their respective usages. (Still a WIP)
 
 #### Known bugs / Not Implemented Yet
-* Many tile entities are wonky and mostly don't work
+* Many tile entities are wonky and ~~mostly don't work~~ don't retain their data
 * At a certain point the animation becomes too big and won't load -- leads to a OutOfMemory exception
 * Pause button does nothing
 * Settings button does nothing
