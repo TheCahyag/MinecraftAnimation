@@ -1,16 +1,10 @@
 package com.servegame.bl4de.Animation.data;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
-import com.servegame.bl4de.Animation.data.PreparedStatements;
-import com.servegame.bl4de.Animation.data.SQLManager;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
