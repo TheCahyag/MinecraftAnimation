@@ -40,6 +40,12 @@ public class StartAnimation implements CommandExecutor {
         }
         Animation animation = animationOptional.get();
 
+        if (!animation.isInitialized()){
+            // Animation is not initialized
+            player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
+            return CommandResult.success();
+        }
+
         if (animation.getStatus() == Animation.Status.RUNNING){
             // Animation is already running
             player.sendMessage(TextResponses.ANIMATION_ALREADY_RUNNING);
