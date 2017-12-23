@@ -21,8 +21,8 @@ class SQLResources {
     static final String COLUMN_ANIMATION_TICK_DELAY         = "tickDelay";
     static final String COLUMN_ANIMATION_CYCLES             = "cycles";
     static final String COLUMN_ANIMATION_FRAME_NAMES        = "frameNames";
-    static final String COLUMN_ANIMATION_C1                 = "animation_corner1";
-    static final String COLUMN_ANIMATION_C2                 = "animation_corner2";
+    static final String COLUMN_ANIMATION_C1                 = "animation_cornerOne";
+    static final String COLUMN_ANIMATION_C2                 = "animation_cornerTwo";
 
     /* Frame Table Constants */
     static final String COLUMN_FRAME_NAME                   = "frameName";
@@ -47,7 +47,7 @@ class SQLResources {
      * @return String in the format of: animationName_owner_frames
      */
     static String getFrameTableName(Animation animation){
-        return animation.getAnimationName() + "_" + animation.getOwner().toString() + "_frames";
+        return "`" + animation.getAnimationName() + "_" + animation.getOwner().toString() + "_frames`";
     }
 
     /**
@@ -61,8 +61,8 @@ class SQLResources {
      * @return String in the format of: animationName_owner_frameName_contents
      */
     static String getContentTableName(Animation animation, Frame frame){
-        return animation.getAnimationName() + "_" +
+        return "`" + animation.getAnimationName() + "_" +
                 frame.getCreator().toString() + "_" +
-                frame.getName() + "_contents";
+                frame.getName() + "_contents`";
     }
 }
