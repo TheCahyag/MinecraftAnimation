@@ -67,6 +67,12 @@ public class DisplayFrame implements CommandExecutor {
 
         Frame frame = frameOptional.get();
 
+        if (!frame.getContents().isPresent()) {
+            // The frame has no contents
+            player.sendMessage(TextResponses.FRAME_HAS_NO_CONTENT);
+            return CommandResult.success();
+        }
+
         if (FrameController.displayContents(frame)){
             Text message = Text.of(
                     PRIMARY_COLOR, "Frame '",
