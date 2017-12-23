@@ -112,7 +112,6 @@ public class Util {
         int xLength = subSpaceSnapShot.length;
         int yLength = subSpaceSnapShot[0].length;
         int zLength = subSpaceSnapShot[0][0].length;
-        System.out.println(xLength + ", " + yLength + ", " + zLength);
 
         // Y
         for (int x = 0; x < xLength; x++) {
@@ -202,9 +201,9 @@ public class Util {
      */
     public static long calculateVolume(Location corner1, Location corner2){
         // Get absolute length of sub space dimensions
-        long xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX()));
-        long yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY()));
-        long zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ()));
+        long xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX())) + 1;
+        long yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY())) + 1;
+        long zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ())) + 1;
         return xLen * yLen * zLen;
     }
 
