@@ -113,7 +113,7 @@ public class SQLManager {
 
     void deleteTable(String tableName){
         try (Connection connection = SQLManager.getConnection()){
-            connection.prepareStatement("DROP TABLE " + tableName);
+            connection.prepareStatement("DROP TABLE IF EXISTS " + tableName).executeUpdate();
         } catch (SQLException e){
             e.printStackTrace();
         }
