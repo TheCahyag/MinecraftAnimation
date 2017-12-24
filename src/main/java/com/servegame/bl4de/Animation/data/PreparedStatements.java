@@ -42,8 +42,10 @@ public class PreparedStatements {
                             COLUMN_ANIMATION_START_FRAME_INDEX + ", " +
                             COLUMN_ANIMATION_TICK_DELAY + ", " +
                             COLUMN_ANIMATION_CYCLES + ", " +
-                            COLUMN_ANIMATION_FRAME_NAMES +") " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?)"
+                            COLUMN_ANIMATION_FRAME_NAMES + ", " +
+                            COLUMN_ANIMATION_C1 + ", " +
+                            COLUMN_ANIMATION_C2 + ") " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
             // Put all the names of the frames into a list
             final List<Frame> frames = animation.getFrames();
@@ -57,6 +59,18 @@ public class PreparedStatements {
             statement.setInt(5, animation.getTickDelay());              // Tick delay
             statement.setInt(6, animation.getCycles());                 // Cycles
             statement.setObject(7, frameNames.toArray());
+            Optional<Location<World>> locationOptional1 = animation.getSubSpace().getCornerOne();
+            Optional<Location<World>> locationOptional2 = animation.getSubSpace().getCornerTwo();
+            if (locationOptional1.isPresent()){
+                statement.setString(8, DataFormats.HOCON.write(locationOptional1.get().createSnapshot().toContainer()));
+            } else {
+                statement.setString(8, null);
+            }
+            if (locationOptional2.isPresent()){
+                statement.setString(9, DataFormats.HOCON.write(locationOptional2.get().createSnapshot().toContainer()));
+            } else {
+                statement.setString(9, null);
+            }
             statement.executeUpdate();
 
             // Add all the frames
@@ -67,7 +81,7 @@ public class PreparedStatements {
                     return false;
                 }
             }
-        } catch (SQLException e){
+        } catch (SQLException|IOException e){
             e.printStackTrace();
             return false;
         }
