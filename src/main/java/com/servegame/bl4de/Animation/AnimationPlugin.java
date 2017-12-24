@@ -51,12 +51,6 @@ public class AnimationPlugin {
         instance = this;
         plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
         taskManager = new TaskManager();
-
-        logger.info("Checking database structure...");
-        if (DatabaseSchemaUpdates.checkForVersionOne()){
-            logger.info("...Old database structure found, converting animations.");
-            DatabaseSchemaUpdates.convertVersionOneToVersionTwo();
-        }
     }
 
     @Listener
@@ -82,7 +76,19 @@ public class AnimationPlugin {
 
     @Listener
     public void onLoad(GameLoadCompleteEvent event){
+        instance = this;
+        plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
+        taskManager = new TaskManager();
         logger.info("Animation has loaded.");
+    }
+
+    @Listener
+    public void onServerStart(GameStartingServerEvent event){
+        logger.info("Checking database structure...");
+        if (DatabaseSchemaUpdates.checkForVersionOne()){
+            logger.info("...Old database structure found, converting animations.");
+            DatabaseSchemaUpdates.convertVersionOneToVersionTwo();
+        }
     }
 
     @Listener
