@@ -46,7 +46,6 @@ public class DatabaseSchemaUpdates {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_VERSION_ONE);
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
-                System.out.println(rs.getString("name"));
                 Animation tmp = Animation.deserialize(Util.encapColons(rs.getString("data")));
                 animations.add(tmp);
             }
