@@ -245,12 +245,8 @@ public class Animation implements DataSerializable{
      * that is always saved under the {@link Animation#startFrameIndex} state.
      */
     public void pause(){
-        setStatus(Status.PAUSED);
-        if (AnimationController.saveAnimation(this)){
-            // No functionality right now, need to add some things for this to work
-        } else {
-            AnimationPlugin.logger.info("Failed to save animation");
-        }
+        AnimationController.updateAnimationStatus(this, Status.PAUSED);
+        AnimationPlugin.taskManager.stopAnimation(this);
     }
 
     /* END ACTION METHODS */
