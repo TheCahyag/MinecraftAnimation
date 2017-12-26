@@ -186,7 +186,7 @@ public class PreparedStatements {
                 for (String frameName :
                         frames) {
                     Optional<Frame> frameOptional = getFrame(frameName, FRAME_TABLE,
-                            getContentTableName(animation, new Frame(animation.getOwner(), frameName, new SubSpace3D())));
+                            getContentTableName(animation, new Frame(animation.getOwner(), frameName, new SubSpace3D())), true);
                     if (frameOptional.isPresent()) {
                         animation.addFrame(frameOptional.get());
                     }
@@ -220,7 +220,7 @@ public class PreparedStatements {
             getAnimation.setString(1, name);
             getAnimation.setObject(2, owner);
             ResultSet rs = getAnimation.executeQuery();
-            String[] frames = {};
+            String[] frameNames = {};
 
             if (rs.next()){
                 // Get animation data (except subspace data)
@@ -231,10 +231,10 @@ public class PreparedStatements {
                 animation.setStartFrameIndex(rs.getInt(COLUMN_ANIMATION_START_FRAME_INDEX));
 
                 Object[] array = ((Object[]) rs.getArray(COLUMN_ANIMATION_FRAME_NAMES).getArray());
-                frames = new String[array.length];
+                frameNames = new String[array.length];
 
                 for (int i = 0; i < array.length; i++) {
-                    frames[i] = (String) array[i];
+                    frameNames[i] = (String) array[i];
                 }
 
                 // Create SubSpace3D
@@ -256,11 +256,10 @@ public class PreparedStatements {
                 c2.ifPresent(blockSnapshot -> subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null)));
                 animation.setSubSpace(subSpace3D);
             }
-            if (animation != null && animation.isInitialized()) {
-                // Add blank frames
-                for (int i = 0; i < frames.length; i++) {
-                    animation.addFrame(new Frame());
-                }
+
+            for (String frameName :
+                    frameNames) {
+                animation.addFrame(getFrame(frameName, SQLResources.getFrameTableName(animation), null, false).get());
             }
         } catch (SQLException|IOException e){
             e.printStackTrace();
@@ -489,7 +488,24 @@ public class PreparedStatements {
         return true;
     }
 
-    public static Optional<Frame> getFrame(String frameName, final String FRAME_TABLE, final String CONTENTS_TABLE){
+    public static boolean updateAnimationStatus(Animation animation, Animation.Status status){
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement updateStatus = connection.prepareStatement(
+                    "UPDATE " + ANIMATION_TABLE +
+                            " SET " + COLUMN_ANIMATION_STATUS + " = ? WHERE " +
+                            COLUMN_ANIMATION_NAME + " = ? AND " + COLUMN_ANIMATION_OWNER + " = ?");
+            updateStatus.setString(1, status.toString());
+            updateStatus.setString(2, animation.getAnimationName());
+            updateStatus.setObject(3, animation.getOwner());
+            updateStatus.executeUpdate();
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static Optional<Frame> getFrame(String frameName, final String FRAME_TABLE, final String CONTENTS_TABLE, boolean loadContents){
         Frame frame = null;
         try (Connection connection = SQLManager.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -506,8 +522,8 @@ public class PreparedStatements {
                 c1.ifPresent(blockSnapshot -> subSpace3D.setCornerOne(blockSnapshot.getLocation().orElse(null)));
                 c2.ifPresent(blockSnapshot -> subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null)));
 
-                if (rs.getObject(COLUMN_FRAME_SUBSPACE_CONTENTS) != null){
-                    // Create and set contents of the SubSpace
+                if (rs.getObject(COLUMN_FRAME_SUBSPACE_CONTENTS) != null && loadContents){
+                    // Create and set contents of the SubSpace if loadContents is true
                     Location<World> corner1 = c1.get().getLocation().get();
                     Location<World> corner2 = c2.get().getLocation().get();
 
@@ -657,6 +673,7 @@ public class PreparedStatements {
         int zLength = blockSnapshotsReference[0][0].length;
 
         try (Connection connection = SQLManager.getConnection()) {
+
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT *" + " FROM " + CONTENT_TABLE);
             ResultSet rs = statement.executeQuery();
@@ -669,6 +686,13 @@ public class PreparedStatements {
                 int z =  Integer.parseInt(xyzData[2]);
                 blockSnapshotsReference[x][y][z] = BlockSnapshot.builder().build(DataFormats.HOCON.read(data)).get();
             }
+            // Iterate through the list and check for nulls (if null insert minecraft air) todo
+//            for (int i = 0; i < xLength; i++) {
+//                for (int j = 0; j < yLength; j++) {
+//                    for (int k = 0; k < zLength; k++) {
+//                    }
+//                }
+//            }
         } catch (SQLException|IOException e){
             e.printStackTrace();
         }
