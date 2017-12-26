@@ -9,7 +9,7 @@ import com.servegame.bl4de.Animation.model.SubSpace3D;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-class SQLResources {
+public class SQLResources {
 
     /* Animation Table Constants */
     static final String ANIMATION_TABLE                     = "animations";
@@ -46,7 +46,7 @@ class SQLResources {
      * @param animation {@link Animation} to create the name for a frame table
      * @return String in the format of: animationName_owner_frames
      */
-    static String getFrameTableName(Animation animation){
+    public static String getFrameTableName(Animation animation){
         return "`" + animation.getAnimationName() + "_" + animation.getOwner().toString() + "_frames`";
     }
 
@@ -60,7 +60,7 @@ class SQLResources {
      *              the created table
      * @return String in the format of: animationName_owner_frameName_contents
      */
-    static String getContentTableName(Animation animation, Frame frame){
+    public static String getContentTableName(Animation animation, Frame frame){
         return "`" + animation.getAnimationName() + "_" +
                 frame.getCreator().toString() + "_" +
                 frame.getName() + "_contents`";
