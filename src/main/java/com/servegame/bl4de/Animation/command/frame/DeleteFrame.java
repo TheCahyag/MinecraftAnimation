@@ -1,9 +1,8 @@
 package com.servegame.bl4de.Animation.command.frame;
 
-import com.servegame.bl4de.Animation.controller.FrameController;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
-import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.command.CommandException;
@@ -15,9 +14,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
-import static com.servegame.bl4de.Animation.util.Util.*;
-
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: DeleteFrame.java
@@ -84,7 +83,7 @@ public class DeleteFrame implements CommandExecutor {
         }
 
         this.animation.deleteFrame(frameToDelete);
-        if (FrameController.deleteFrame(this.animation, frameToDelete)){
+        if (AnimationController.saveAnimation(this.animation)){
             // Animation changed and saved
             Text message = Text.builder()
                     .append(Text.of(PRIMARY_COLOR, "Frame '",

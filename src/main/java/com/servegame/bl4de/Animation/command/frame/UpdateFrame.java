@@ -1,6 +1,5 @@
 package com.servegame.bl4de.Animation.command.frame;
 
-import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;

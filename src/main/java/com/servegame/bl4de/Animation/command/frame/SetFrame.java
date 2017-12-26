@@ -1,7 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
-import com.servegame.bl4de.Animation.controller.FrameController;
-import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -12,8 +11,12 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.NAME_COLOR;
+import static com.servegame.bl4de.Animation.util.Util.PRIMARY_COLOR;
 
 /**
  * File: SetFrame.java
@@ -76,7 +79,19 @@ public class SetFrame implements CommandExecutor {
             }
             // Modify the frame and save the frame that is being changed
             frame.setName(newFrameNameOptional.get());
-            FrameController.saveFrame(this.animation, frame);
+            if (AnimationController.saveAnimation(this.animation)){
+                Text message = Text.of(
+                        PRIMARY_COLOR, "Frame has been renamed and is now known as '",
+                        NAME_COLOR, frame.getName(),
+                        PRIMARY_COLOR, "'",
+                        PRIMARY_COLOR, ". "
+                );
+                player.sendMessage(message);
+                return CommandResult.success();
+            } else {
+                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
+                return CommandResult.empty();
+            }
         }
         return CommandResult.success();
     }
