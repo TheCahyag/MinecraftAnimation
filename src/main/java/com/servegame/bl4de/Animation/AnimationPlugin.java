@@ -88,6 +88,8 @@ public class AnimationPlugin {
         if (DatabaseSchemaUpdates.checkForVersionOne()){
             logger.info("...Old database structure found, converting animations.");
             DatabaseSchemaUpdates.convertVersionOneToVersionTwo();
+        } else {
+            logger.info("...database is up to date, no action needed.");
         }
     }
 
@@ -95,11 +97,6 @@ public class AnimationPlugin {
     public void onStop(GameStoppingEvent event){
         logger.info("Stopping animations...");
         AnimationController.stopAllAnimations();
-    }
-
-    @Listener
-    public void onMessage(MessageEvent event){
-
     }
 
     /**
