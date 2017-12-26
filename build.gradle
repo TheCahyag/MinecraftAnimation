@@ -12,7 +12,8 @@ sourceCompatibility = 1.8
 
 
 
-project.ext.versionno = '0.1.1'
+project.ext.versionno = '0.2.1'
+project.ext.versionending = '-SNAPSHOT'
 project.ext.buildno = '0'
 
 task setBuildNum {
@@ -41,7 +42,7 @@ task incrementBuildNum {
 }
 
 allprojects {
-    version = rootProject.minecraftversion + "-" + rootProject.versionno + "." + rootProject.buildno
+    version = rootProject.minecraftversion + "-" + rootProject.versionno + "." + rootProject.buildno + rootProject.versionending
 
     incrementBuildNum
 
