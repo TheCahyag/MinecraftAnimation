@@ -116,6 +116,10 @@ public class AnimationController {
         return PreparedStatements.getAnimationsByOwner(owner);
     }
 
+    public static boolean updateAnimationStatus(Animation animation, Animation.Status status){
+        return PreparedStatements.updateAnimationStatus(animation, status);
+    }
+
     /**
      * todo
      * @param animation
