@@ -88,6 +88,18 @@ public class FrameController {
         );
     }
 
+    public static boolean saveFrame(Animation animation, Frame frame){
+        return PreparedStatements.saveFrame(animation, frame);
+    }
+
+    public static boolean createFrame(Animation animation, Frame frame){
+        return PreparedStatements.createFrame(animation, frame);
+    }
+
+    public static boolean deleteFrame(Animation animation, Frame frame){
+        return PreparedStatements.deleteFrame(animation, frame);
+    }
+
     /**
      * TODO
      * @param name
