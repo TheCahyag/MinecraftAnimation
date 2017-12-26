@@ -657,24 +657,17 @@ public class PreparedStatements {
         int zLength = blockSnapshotsReference[0][0].length;
 
         try (Connection connection = SQLManager.getConnection()) {
-            // X
-            for (int i = 0; i < xLength; i++) {
-                // Y
-                for (int j = 0; j < yLength; j++) {
-                    // Z
-                    for (int k = 0; k < zLength; k++) {
-                        PreparedStatement statement = connection.prepareStatement(
-                                "SELECT " + COLUMN_CONTENTS_DATA +
-                                        " FROM " + CONTENT_TABLE +
-                                        " WHERE " + COLUMN_CONTENTS_XYZ + " = ?");
-                        statement.setString(1, i + "|" + j + "|" + k);
-                        ResultSet rs = statement.executeQuery();
-                        if (rs.next()){
-                            String data = rs.getString(COLUMN_CONTENTS_DATA);
-                            blockSnapshotsReference[i][j][k] = BlockSnapshot.builder().build(DataFormats.HOCON.read(data)).get();
-                        }
-                    }
-                }
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT *" + " FROM " + CONTENT_TABLE);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                String posData = rs.getString(COLUMN_CONTENTS_XYZ);
+                String data = rs.getString(COLUMN_CONTENTS_DATA);
+                String[] xyzData = posData.split("\\|");
+                int x =  Integer.parseInt(xyzData[0]);
+                int y =  Integer.parseInt(xyzData[1]);
+                int z =  Integer.parseInt(xyzData[2]);
+                blockSnapshotsReference[x][y][z] = BlockSnapshot.builder().build(DataFormats.HOCON.read(data)).get();
             }
         } catch (SQLException|IOException e){
             e.printStackTrace();
