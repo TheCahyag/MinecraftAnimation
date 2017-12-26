@@ -94,7 +94,7 @@ public class DuplicateFrame implements CommandExecutor {
         }
         if (frameInserted){
             // Frame went in just fine
-            if (AnimationController.saveAnimation(this.animation)){
+            if (FrameController.createFrame(this.animation, newFrame)){
                 Text message = Text.of(
                         PRIMARY_COLOR, "Frame '",
                         NAME_COLOR, theFrame.getName(),

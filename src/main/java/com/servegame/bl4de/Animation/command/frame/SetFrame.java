@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -73,17 +74,9 @@ public class SetFrame implements CommandExecutor {
                 player.sendMessage(TextResponses.GENERAL_ARGUMENTS_INCORRECT);
                 return CommandResult.empty();
             }
-            // Get the index of the frame needing renaming, remove the frame,
-            // change the name, readd the frame at the same index
-            int frameIndex = this.animation.getIndexOfFrame(frame);
-            this.animation.removeFrame(frame);
+            // Modify the frame and save the frame that is being changed
             frame.setName(newFrameNameOptional.get());
-            try {
-                this.animation.addFrame(frame, frameIndex);
-            } catch (UninitializedException e) {
-                // This should never happen
-                player.sendMessage(TextResponses.FRAME_NOT_INITIALIZED_ERROR);
-            }
+            FrameController.saveFrame(this.animation, frame);
         }
         return CommandResult.success();
     }
