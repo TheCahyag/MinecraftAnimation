@@ -55,8 +55,7 @@ public class DeleteFrame implements CommandExecutor {
         Optional<Frame> frameOptional;
         if (StringUtils.isNumeric(frameName)){
             // They gave the frame number
-            Integer frameNum = Integer.valueOf(frameName);
-            frameOptional = this.animation.getFrame(frameNum);
+            frameOptional = this.animation.getFrame(Integer.valueOf(frameName));
         } else {
             // They gave the frame name
             frameOptional = this.animation.getFrame(frameName);
