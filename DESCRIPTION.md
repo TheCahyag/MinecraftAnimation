@@ -14,4 +14,4 @@ https://i.imgur.com/xapoJqA.mp4
 or  
 https://imgur.com/Shdtj1N  
   
- **At the moment the plugin has only been tested for servers running API 6.0 and 6.1.** This should soon be updated to API 7.
+**At the moment the plugin has only been tested for servers running API 6.0 and 6.1.** This should soon be updated to API 7.
