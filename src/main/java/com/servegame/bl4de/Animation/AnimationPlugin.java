@@ -2,9 +2,9 @@ package com.servegame.bl4de.Animation;
 
 import com.google.inject.Inject;
 import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.data.DatabaseSchemaUpdates;
 import com.servegame.bl4de.Animation.data.SQLManager;
 import com.servegame.bl4de.Animation.task.TaskManager;
-import com.servegame.bl4de.Animation.data.DatabaseSchemaUpdates;
 import com.servegame.bl4de.Animation.util.Resource;
 import com.servegame.bl4de.Animation.util.Util;
 import org.slf4j.Logger;
@@ -12,7 +12,6 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
-import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -71,7 +70,6 @@ public class AnimationPlugin {
         Util.registerCommands(this);
         taskManager.stopAllAnimations();
         sqlManager = SQLManager.get(plugin);
-
     }
 
     @Listener
