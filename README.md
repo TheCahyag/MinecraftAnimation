@@ -22,7 +22,8 @@ See the wiki for the commands and their respective usages. (Still a WIP)
 ### TODO
 #### High Priority
 [WIKI] Write basic usage guidelines  
-[BUGFIX] After playing the animation for awhile the frames fall out of sync
+[BUGFIX] After playing the animation for awhile the frames fall out of sync  
+[README] Make the readme more friendly to visitors
 
 #### Medium Priority
 [UI] The message that tells the user that the frame has been created or deleted should link to that frame  
