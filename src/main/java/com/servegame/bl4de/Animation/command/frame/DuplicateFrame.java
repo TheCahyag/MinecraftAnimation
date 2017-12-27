@@ -54,10 +54,10 @@ public class DuplicateFrame implements CommandExecutor {
 
         if (isNumeric(frameName)){
             // User specified a frame number 0, 1, ..., n
-            frameOptional = this.animation.getFrame(Integer.parseInt(frameName));
+            frameOptional = FrameController.getFrameWithContents(this.animation, Integer.parseInt(frameName));
         } else {
             // User specified a frame name
-            frameOptional = this.animation.getFrame(frameName);
+            frameOptional = FrameController.getFrameWithContents(this.animation, frameName);
         }
 
         if (!frameOptional.isPresent()){

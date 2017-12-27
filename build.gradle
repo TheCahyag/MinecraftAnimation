@@ -12,7 +12,8 @@ sourceCompatibility = 1.8
 
 
 
-project.ext.versionno = '0.1.1'
+project.ext.versionno = '0.2.1'
+project.ext.versionending = '-SNAPSHOT'
 project.ext.buildno = '0'
 
 task setBuildNum {
@@ -27,7 +28,7 @@ task setBuildNum {
 setBuildNum
 
 project.ext.minecraftversion = '1.11.2'
-project.ext.spongeapiversion = '6.1'
+project.ext.spongeapiversion = '6.1.0'
 description = 'Animations - Allowing the creation of frame based animations.'
 ext.url = 'https://github.com/TheCahyag/MinecraftAnimation'
 
@@ -41,7 +42,7 @@ task incrementBuildNum {
 }
 
 allprojects {
-    version = rootProject.minecraftversion + "-" + rootProject.versionno + "." + rootProject.buildno
+    version = rootProject.minecraftversion + "-" + rootProject.versionno + "." + rootProject.buildno + rootProject.versionending
 
     incrementBuildNum
 
@@ -69,6 +70,14 @@ jar {
 
 blossom {
     def location = 'src/main/java/com/servegame/bl4de/Animation/util/Resource.java'
+
+    replaceToken '@name@', project.name, location
+    replaceToken '@version@', project.version, location
+
+    replaceToken '@description@', project.description, location
+    replaceToken '@url@', project.url, location
+
+    location = 'src/main/resources/mcmod.info'
 
     replaceToken '@name@', project.name, location
     replaceToken '@version@', project.version, location

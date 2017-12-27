@@ -228,12 +228,14 @@ public class Animation implements DataSerializable{
      * {@link Task}s associated with this {@link Animation}
      */
     public void stop(){
-        setStatus(Status.STOPPED);
-        if (AnimationController.saveAnimation(this)){
-            AnimationPlugin.taskManager.stopAnimation(this);
-        } else {
-            AnimationPlugin.logger.info("Failed to save animation");
-        }
+        // This will set the status of the animation in the database. We don't
+        // need to update it in this class since the update will take affect the
+        // next time the animation is loaded
+        AnimationController.updateAnimationStatus(this, Status.STOPPED);
+        AnimationPlugin.taskManager.stopAnimation(this);
+
+        // Now display the first frame
+        FrameController.displayContents(FrameController.getFrameWithContents(this, 0).get());
     }
 
     /**
@@ -243,12 +245,8 @@ public class Animation implements DataSerializable{
      * that is always saved under the {@link Animation#startFrameIndex} state.
      */
     public void pause(){
-        setStatus(Status.PAUSED);
-        if (AnimationController.saveAnimation(this)){
-            // No functionality right now, need to add some things for this to work
-        } else {
-            AnimationPlugin.logger.info("Failed to save animation");
-        }
+        AnimationController.updateAnimationStatus(this, Status.PAUSED);
+        AnimationPlugin.taskManager.stopAnimation(this);
     }
 
     /* END ACTION METHODS */

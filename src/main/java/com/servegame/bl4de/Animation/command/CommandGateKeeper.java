@@ -4,8 +4,8 @@ import com.servegame.bl4de.Animation.command.animation.BaseAnimation;
 import com.servegame.bl4de.Animation.command.animation.InfoAnimation;
 import com.servegame.bl4de.Animation.command.animation.SetAnimation;
 import com.servegame.bl4de.Animation.command.frame.*;
-import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -42,7 +42,7 @@ public class CommandGateKeeper implements CommandExecutor {
             return CommandResult.success();
         }
         String animationName = animationNameOptional.get();
-        Optional<Animation> animationOptional = AnimationController.getAnimation(animationName, player.getUniqueId());
+        Optional<Animation> animationOptional = AnimationController.getBareAnimation(animationName, player.getUniqueId());
         if (!animationOptional.isPresent()){
             // Animation wasn't found
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);

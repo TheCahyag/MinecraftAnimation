@@ -41,7 +41,7 @@ public class ListAnimation implements CommandExecutor {
             int animationsToList = animationsByOwner.size() > 10 ? 10 : animationsByOwner.size();
             for (int i = 0; i < animationsToList; i++) {
                 // Add all animations that are owned into a Text object
-                Optional<Animation> optionalAnimation = AnimationController.getAnimation(animationsByOwner.get(i), player.getUniqueId());
+                Optional<Animation> optionalAnimation = AnimationController.getBareAnimation(animationsByOwner.get(i), player.getUniqueId());
                 if (!optionalAnimation.isPresent()){
                     // There are no animations to display
                     if (AnimationPlugin.instance.isDebug()){
@@ -87,7 +87,7 @@ public class ListAnimation implements CommandExecutor {
         }
         if (!displayedAAnimation){
             // There were animations to display but weren't
-            player.sendMessage(Text.of(PRIMARY_COLOR, "There were no animations displayed."));
+            player.sendMessage(Text.of(PRIMARY_COLOR, "No animations were displayed."));
         }
         return CommandResult.success();
     }

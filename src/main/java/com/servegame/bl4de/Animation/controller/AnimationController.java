@@ -1,16 +1,15 @@
 package com.servegame.bl4de.Animation.controller;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.data.PreparedStatements;
 import com.servegame.bl4de.Animation.model.Animation;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.servegame.bl4de.Animation.data.PreparedStatements.getAnimations;
 import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
@@ -20,22 +19,11 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  */
 public class AnimationController {
 
-    private static final String CONFIG_DIR = "./config/animation";
-    private static final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";
-
     /**
      * Stops all animations, usually ran when the server is shutting down.
      */
     public static void stopAllAnimations(){
-        Map<UUID, ArrayList<String>> animations = getAnimations();
-        for (Map.Entry<UUID, ArrayList<String>> entry :
-                animations.entrySet()) {
-            ArrayList<String> animationNames = entry.getValue();
-            UUID uuid = entry.getKey();
-            for (int i = 0; i < animationNames.size(); i++) {
-                getAnimation(animationNames.get(i), uuid).get().stop();
-            }
-        }
+        AnimationPlugin.taskManager.stopAllAnimations();
     }
 
     /**
@@ -79,8 +67,8 @@ public class AnimationController {
     }
 
     /**
-     * TODO
-     * @return
+     * Creates the buttons that appear at the bottom of /animate list
+     * @return Text representing a button that allows for creating animations
      */
     public static Text getButtonsForList(){
         return Text.builder()
@@ -93,6 +81,8 @@ public class AnimationController {
                 .build();
     }
 
+    // Most of these methods are just calls to the PreparedStatements class
+
     public static boolean createAnimation(Animation animation){
         return PreparedStatements.createAnimation(animation);
     }
@@ -101,8 +91,16 @@ public class AnimationController {
         return PreparedStatements.getAnimation(name, owner);
     }
 
+    public static Optional<Animation> getBareAnimation(String name, UUID owner){
+        return PreparedStatements.getBareAnimation(name, owner);
+    }
+
     public static ArrayList<String> getAnimationsByOwner(UUID owner) {
         return PreparedStatements.getAnimationsByOwner(owner);
+    }
+
+    public static boolean updateAnimationStatus(Animation animation, Animation.Status status){
+        return PreparedStatements.updateAnimationStatus(animation, status);
     }
 
     public static boolean saveAnimation(Animation animation){

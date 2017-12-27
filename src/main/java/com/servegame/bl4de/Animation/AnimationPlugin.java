@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.data.SQLManager;
 import com.servegame.bl4de.Animation.task.TaskManager;
+import com.servegame.bl4de.Animation.data.DatabaseSchemaUpdates;
 import com.servegame.bl4de.Animation.util.Resource;
 import com.servegame.bl4de.Animation.util.Util;
 import org.slf4j.Logger;
@@ -35,8 +36,8 @@ public class AnimationPlugin {
     @Inject
     private Game game;
 
-    private final String CONFIG_DIR = "./config/animation";
-    private final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animations";
+    public final String CONFIG_DIR = "./config/animation";
+    public final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animation";
 
     private boolean debug;
 
@@ -75,18 +76,27 @@ public class AnimationPlugin {
 
     @Listener
     public void onLoad(GameLoadCompleteEvent event){
+        instance = this;
+        plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
+        taskManager = new TaskManager();
         logger.info("Animation has loaded.");
+    }
+
+    @Listener
+    public void onServerStart(GameStartingServerEvent event){
+        logger.info("Checking database structure...");
+        if (DatabaseSchemaUpdates.checkForVersionOne()){
+            logger.info("...Old database structure found, converting animations.");
+            DatabaseSchemaUpdates.convertVersionOneToVersionTwo();
+        } else {
+            logger.info("...database is up to date, no action needed.");
+        }
     }
 
     @Listener
     public void onStop(GameStoppingEvent event){
         logger.info("Stopping animations...");
         AnimationController.stopAllAnimations();
-    }
-
-    @Listener
-    public void onMessage(MessageEvent event){
-
     }
 
     /**

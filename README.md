@@ -14,7 +14,7 @@ The Animation plugin works mostly as intended. The max animation size has been s
 See the wiki for the commands and their respective usages. (Still a WIP)
 
 #### Known bugs / Not Implemented Yet
-* Many tile entities are wonky and mostly don't work
+* Many tile entities are wonky and ~~mostly don't work~~ don't retain their data
 * At a certain point the animation becomes too big and won't load -- leads to a OutOfMemory exception
 * Pause button does nothing
 * Settings button does nothing
@@ -23,7 +23,7 @@ See the wiki for the commands and their respective usages. (Still a WIP)
 #### High Priority
 [WIKI] Write basic usage guidelines  
 [BUGFIX] After playing the animation for awhile the frames fall out of sync
-[BUGFIX] Tile entities aren't un-serialized correctly
+
 #### Medium Priority
 [UI] The message that tells the user that the frame has been created or deleted should link to that frame  
 [PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
@@ -35,6 +35,9 @@ See the wiki for the commands and their respective usages. (Still a WIP)
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
 [BUGFIX] There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0  
+[BUGFIX] Some animations, when stopped, play certain frames continuously even after they are stopped (maybe because it 
+was played and then stopped immediately)  
+[BUGFIX] Deleting a frame that doesn't exist leads to a index out of bounds error  
 
 #### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
@@ -108,6 +111,9 @@ the internal states and then starting the animation backup on the frame it stopp
     * ~~An animation can only be paused if the current status is a played status~~
 * ~~In the frame info view if there are contents show the number of not air blocks~~
 * ~~In the animation info view add a line for the volume of the master subspace (no longer think I want to do this)~~  
+* [BUGFIX] ~~Tile entities aren't un-serialized correctly~~
+#### Matt Notes
+* Pausing the the animation should stop the animation on the given frame, 
 
 ## Animations to show off
 * Door opening

@@ -1,9 +1,10 @@
 [{
-    "modid": "animations",
+    "modid": "animation",
     "name": "Animations",
-    "version": "0.1.1",
-    "description": "A Minecraft plugin allowing the creation of frame based animations utilizing the Sponge API",
+    "version": "0.2.1",
+    "description": "Animations - Allowing the creation of frame based animations.",
     "authorList": [
         "TheCahyag"
-    ]
+    ],
+    "url": "https://github.com/TheCahyag/MinecraftAnimation"
 }]

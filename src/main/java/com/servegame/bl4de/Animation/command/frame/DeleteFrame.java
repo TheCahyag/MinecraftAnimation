@@ -1,8 +1,8 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
-import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.command.CommandException;
@@ -14,9 +14,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
-import static com.servegame.bl4de.Animation.util.Util.*;
-
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: DeleteFrame.java
@@ -55,8 +55,7 @@ public class DeleteFrame implements CommandExecutor {
         Optional<Frame> frameOptional;
         if (StringUtils.isNumeric(frameName)){
             // They gave the frame number
-            Integer frameNum = Integer.valueOf(frameName);
-            frameOptional = this.animation.getFrame(frameNum);
+            frameOptional = this.animation.getFrame(Integer.valueOf(frameName));
         } else {
             // They gave the frame name
             frameOptional = this.animation.getFrame(frameName);

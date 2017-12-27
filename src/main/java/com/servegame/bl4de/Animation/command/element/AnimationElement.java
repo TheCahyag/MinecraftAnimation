@@ -33,7 +33,7 @@ public class AnimationElement extends CommandElement {
 
     @Nullable
     @Override
-    protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
+    protected Optional<Animation> parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         return null;
     }
 

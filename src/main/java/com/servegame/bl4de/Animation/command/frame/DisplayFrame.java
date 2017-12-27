@@ -52,10 +52,10 @@ public class DisplayFrame implements CommandExecutor {
 
         if (isNumeric(frameName)){
             // User specified a frame number 0, 1, ..., n
-            frameOptional = this.animation.getFrame(Integer.parseInt(frameName));
+            frameOptional = FrameController.getFrameWithContents(this.animation, Integer.parseInt(frameName));
         } else {
             // User specified a frame name
-            frameOptional = this.animation.getFrame(frameName);
+            frameOptional = FrameController.getFrameWithContents(this.animation, frameName);
         }
 
         if (!frameOptional.isPresent()){
@@ -66,6 +66,12 @@ public class DisplayFrame implements CommandExecutor {
 
 
         Frame frame = frameOptional.get();
+
+        if (!frame.getContents().isPresent()) {
+            // The frame has no contents
+            player.sendMessage(TextResponses.FRAME_HAS_NO_CONTENT);
+            return CommandResult.success();
+        }
 
         if (FrameController.displayContents(frame)){
             Text message = Text.of(

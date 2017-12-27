@@ -1,5 +1,7 @@
 package com.servegame.bl4de.Animation.controller;
 
+import com.servegame.bl4de.Animation.data.PreparedStatements;
+import com.servegame.bl4de.Animation.data.SQLResources;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -9,7 +11,9 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
@@ -57,6 +61,43 @@ public class FrameController {
         }
         // This line <i>should</i> never execute
         return "frame" + ((Integer) new Random().nextInt(999999)).toString();
+    }
+
+    /**
+     *
+     * @param animation
+     * @param index
+     * @return
+     */
+    public static Optional<Frame> getFrameWithContents(Animation animation, int index){
+        String frameName = animation.getFrame(index).get().getName();
+        return PreparedStatements.getFrame(
+                frameName,
+                SQLResources.getFrameTableName(animation),
+                SQLResources.getContentTableName(animation, animation.getFrame(index).get()),
+                true
+        );
+    }
+
+    public static Optional<Frame> getFrameWithContents(Animation animation, String name){
+        return PreparedStatements.getFrame(
+                name,
+                SQLResources.getFrameTableName(animation),
+                SQLResources.getContentTableName(animation, animation.getFrame(name).get()),
+                true
+        );
+    }
+
+    public static boolean saveFrame(Animation animation, Frame frame){
+        return PreparedStatements.saveFrame(animation, frame);
+    }
+
+    public static boolean createFrame(Animation animation, Frame frame){
+        return PreparedStatements.createFrame(animation, frame);
+    }
+
+    public static boolean deleteFrame(Animation animation, Frame frame){
+        return PreparedStatements.deleteFrame(animation, frame);
     }
 
     /**

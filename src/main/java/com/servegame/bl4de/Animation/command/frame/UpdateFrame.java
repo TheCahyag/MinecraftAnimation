@@ -1,6 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
-import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -66,7 +66,7 @@ public class UpdateFrame implements CommandExecutor {
         frame.setContents(Util.copyWorldToSubSpace(frame.getCornerOne().get(), frame.getCornerTwo().get()));
 
         // Save the Animation
-        if (AnimationController.saveAnimation(this.animation)){
+        if (FrameController.saveFrame(this.animation, frame)){
             // Animation was saved successfully
             player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Frame ",
                     Util.PRIMARY_COLOR, "'",
