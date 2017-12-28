@@ -27,7 +27,7 @@ public class CreateFrame implements CommandExecutor {
     private Animation animation;
 
     public CreateFrame(Animation animation){
-        this.animation = animation;
+        this.animation = AnimationController.getAnimation(animation.getAnimationName(), animation.getOwner()).get();
     }
 
     @Override
