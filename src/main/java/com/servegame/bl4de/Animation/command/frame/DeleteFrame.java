@@ -28,7 +28,7 @@ public class DeleteFrame implements CommandExecutor {
     private Animation animation;
 
     public DeleteFrame(Animation animation){
-        this.animation = animation;
+        this.animation = AnimationController.getAnimation(animation.getAnimationName(), animation.getOwner()).get();
     }
 
     @Override
