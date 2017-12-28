@@ -32,7 +32,7 @@ public class StopAnimation implements CommandExecutor {
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();
         }
-        Optional<Animation> animationOptional = AnimationController.getBareAnimation(animationNameOptional.get(), player.getUniqueId());
+        Optional<Animation> animationOptional = AnimationController.getAnimation(animationNameOptional.get(), player.getUniqueId());
         if (!animationOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
             return CommandResult.success();
