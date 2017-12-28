@@ -14,10 +14,10 @@ The Animation plugin works mostly as intended. The max animation size has been s
 See the wiki for the commands and their respective usages. (Still a WIP)
 
 #### Known bugs / Not Implemented Yet
-* Many tile entities are wonky and ~~mostly don't work~~ don't retain their data
-* At a certain point the animation becomes too big and won't load -- leads to a OutOfMemory exception
+* Most to all tile entities work, but don't retain their inventory data
+* Big animations will take awhile to load which leads to the server lagging. (An Animation that has 4 frames with each holding 15000 blocks of data will take ~7 seconds to load, this will be optimized in the future)
 * Pause button does nothing
-* Settings button does nothing
+* Settings button does nothing (Will be updated in the UI Enhancement update)
 
 #### Matt Notes
 * Pausing the the animation should stop the animation on the given frame, 
