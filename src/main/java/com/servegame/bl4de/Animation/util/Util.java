@@ -122,7 +122,7 @@ public class Util {
                 for (int z = 0; z < zLength; z++) {
                     BlockSnapshot snapshot = subSpaceSnapShot[x][y][z];
                     Location loc = new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow);
-                    loc.setBlock(snapshot.getState(), Cause.source(AnimationPlugin.plugin).build());
+                    loc.setBlock(snapshot.getState());
                 }
             }
         }
