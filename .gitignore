@@ -21,5 +21,6 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 /version.properties
+version.properties
 META-INF/MANIFEST.MF
 
