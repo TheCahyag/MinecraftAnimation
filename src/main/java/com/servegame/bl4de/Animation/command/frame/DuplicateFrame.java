@@ -28,7 +28,7 @@ public class DuplicateFrame implements CommandExecutor {
     private Animation animation;
 
     public DuplicateFrame(Animation animation){
-        this.animation = animation;
+        this.animation = AnimationController.getAnimation(animation.getAnimationName(), animation.getOwner()).get();
     }
 
     @Override
