@@ -6,8 +6,9 @@ Animations is a Sponge plugin that allows for the creation of frame-based animat
 [**Download**](https://github.com/TheCahyag/MinecraftAnimation/releases)  
 [**Source Code**](https://github.com/TheCahyag/MinecraftAnimation)
 
-**Statement of purpose:** The Animations plugin is intended to be used by all on creative mode/building servers and by a select some on any other type of servers that want to make a build a little more special. The plugin is inherently dup-tastic and currently has no protection against that, hence the previous statement.
-#### Permissions
+**Statement of purpose:** The Animations plugin is intended to give a server's designated builders a more creative outlet for showing off works of art. The plugin attempts to create an intuitive tool allowing for frame-based animations with the need to type only a few commands.  
+  
+**Permissions**  
 Please see [this](https://github.com/TheCahyag/MinecraftAnimation/wiki/Permissions) permissions list to determine what permissions you will need for your server.
 #### Examples
 https://media.giphy.com/media/3oFzm2IvnWvpGMYfh6/giphy.gif 
