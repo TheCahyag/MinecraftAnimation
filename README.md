@@ -5,7 +5,7 @@ Objective: To create an intuitive tool that allows for the creation of frame-bas
 Description: The plugin has been developed using the SpongeAPI and currently only supports use on SpongeVanilla (will expand to SpongeForge soon). The plugin's
 purpose is to easily create frame-based animations in Minecraft within a static 3D sub
 space (possibly a dynamic subspace in the far future), allowing users to easily edit individual frames leading to an animation. Like this:  
-<a href="https://i.imgur.com/xapoJqA.mp4"><img src="https://i.imgur.com/xapoJqA.mp4"/></a>
+<a href="https://i.imgur.com/xapoJqA.gifv"><img src="https://i.imgur.com/xapoJqA.gifv" title="Smiley face" /></a>
 
 #### Known bugs / Not Implemented Yet
 * Blocks that hold inventory don't retain their data
