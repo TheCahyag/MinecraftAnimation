@@ -70,7 +70,18 @@ the frame so the user can place all frames down at the same time.
 flag values should update on the currently playing animation (this would probably require stopping the animation, changing 
 the internal states and then starting the animation backup on the frame it stopped on)  
 [UI] Add a message in the bottom middle of the users screen showing what frame the animation is on  
-[UI] After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation
+[UI] After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation  
+
+## Animations to show off
+* Door opening
+* Bridge extending
+* Running horse
+* Fan spinning
+* Grandfather clock with the pendulum ticking and tocking
+* Big tree that sways in the breeze
+* Two moving arrows pointing towards a door
+* Christmas tree with lights blinking
+* Arcade machine with the screen playing an animation
 
 #### Done
 * ~~Set warning for a animation that has a large subspace (since it might lag the server)~~
