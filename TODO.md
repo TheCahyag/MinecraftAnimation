@@ -1,17 +1,11 @@
 ### TODO
 #### High Priority
-[WIKI] Write basic usage guidelines  
-[BUGFIX] After playing the animation for awhile the frames fall out of sync  
-[README] Make the readme more friendly to visitors
+[ENHANCEMENT] After playing the animation for awhile the frames fall out of sync  
 
 #### Medium Priority
 [UI] The message that tells the user that the frame has been created or deleted should link to that frame  
 [PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
 [FEEDBACK] Send a message for when an animation starts, stops, or pauses (send these to the middle message bar)  
-[ENHANCEMENT] Implement pause operation
-* Should stopping an animation remove all visible contents of the animation
-* Pausing should keep track of the current frame it is on  
-
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
 [BUGFIX] There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0  
@@ -103,3 +97,8 @@ the internal states and then starting the animation backup on the frame it stopp
 * ~~In the frame info view if there are contents show the number of not air blocks~~
 * ~~In the animation info view add a line for the volume of the master subspace (no longer think I want to do this)~~  
 * [BUGFIX] ~~Tile entities aren't un-serialized correctly~~
+* [WIKI] ~~Write basic usage guidelines~~  
+* [README] ~~Make the readme more friendly to visitors~~
+* [ENHANCEMENT] ~~Implement pause operation~~
+  * ~~Should stopping an animation remove all visible contents of the animation~~
+  * ~~Pausing should keep track of the current frame it is on~~  
