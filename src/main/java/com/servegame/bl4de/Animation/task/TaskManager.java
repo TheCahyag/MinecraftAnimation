@@ -4,7 +4,6 @@ import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.TextResponses;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -39,7 +38,7 @@ public class TaskManager {
             throw new UninitializedException(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
         }
         AnimationTasks animationTasks =
-                new AnimationTasks(animation, Sponge.getScheduler().createSyncExecutor(this.plugin));
+                new AnimationTasks(animation);
         animationTasks.populateTaskList();
         if (this.runningAnimations.containsKey(owner)){
             // The owner is running multiple animations
