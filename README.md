@@ -1,4 +1,9 @@
 # Minecraft Animations
+* [Source](https://github.com/TheCahyag/MinecraftAnimation)
+* [Issues](https://github.com/TheCahyag/MinecraftAnimation/issues)
+* [Downloads](https://github.com/TheCahyag/MinecraftAnimation/releases)
+* [Planned Enhancements](https://github.com/TheCahyag/MinecraftAnimation/projects)
+
 Author: TheCahyag  
 Start Date: 7/20/17  
 Objective: To create an intuitive tool that allows for the creation of frame-based animations in Minecraft.  
