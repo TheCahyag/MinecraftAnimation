@@ -12,6 +12,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 
 import java.util.Optional;
 
@@ -61,12 +62,19 @@ public class CreateFrame implements CommandExecutor {
         }
         if (AnimationController.saveAnimation(this.animation)){
             // Animation was updated and saved
-            player.sendMessage(Text.of(PRIMARY_COLOR, "Frame ",
-                    PRIMARY_COLOR, "'",
-                    NAME_COLOR, frame.getName(),
-                    PRIMARY_COLOR, "' ",
-                    ACTION_COLOR, "created ",
-                    PRIMARY_COLOR, "successfully."));
+            Text message = Text.builder()
+                    .append(Text.of(PRIMARY_COLOR, "Frame ",
+                            PRIMARY_COLOR, "'"))
+                    .append(Text.builder()
+                            .append(Text.of(NAME_COLOR, COMMAND_STYLE, frame.getName()))
+                            .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " frame " + frame.getName() + " info"))
+                            .onHover(TextActions.showText(TextResponses.FRAME_C2V_INFO))
+                            .build())
+                    .append(Text.of(PRIMARY_COLOR, "' ",
+                            ACTION_COLOR, "created ",
+                            PRIMARY_COLOR, "successfully."))
+                    .build();
+            player.sendMessage(message);
             return CommandResult.success();
         } else {
             // There was a problem saving the animation

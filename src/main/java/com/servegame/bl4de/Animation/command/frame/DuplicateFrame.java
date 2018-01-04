@@ -13,6 +13,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 
 import java.util.Optional;
 
@@ -95,17 +96,25 @@ public class DuplicateFrame implements CommandExecutor {
         if (frameInserted){
             // Frame went in just fine
             if (AnimationController.saveAnimation(this.animation)){
-                Text message = Text.of(
-                        PRIMARY_COLOR, "Frame '",
-                        NAME_COLOR, theFrame.getName(),
-                        PRIMARY_COLOR, "' ",
-                        ACTION_COLOR, "duplicated",
-                        PRIMARY_COLOR, " successfully. ",
-                        ACTION_COLOR, "Inserted ",
-                        PRIMARY_COLOR, "'",
-                        NAME_COLOR, newFrame.getName(),
-                        PRIMARY_COLOR, "' at index " + insertIndex + "."
-                );
+                Text message = Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "Frame '"))
+                        .append(Text.builder()
+                                .append(Text.of(NAME_COLOR, COMMAND_STYLE, theFrame.getName()))
+                                .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " frame " + theFrame.getName() + " info"))
+                                .onHover(TextActions.showText(TextResponses.FRAME_C2V_INFO))
+                                .build())
+                        .append(Text.of(PRIMARY_COLOR, "' ",
+                                ACTION_COLOR, "duplicated",
+                                PRIMARY_COLOR, " successfully. ",
+                                ACTION_COLOR, "Inserted ",
+                                PRIMARY_COLOR, "'"))
+                        .append(Text.builder()
+                                .append(Text.of(NAME_COLOR, COMMAND_STYLE, newFrame.getName()))
+                                .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " frame " + newFrame.getName() + " info"))
+                                .onHover(TextActions.showText(TextResponses.FRAME_C2V_INFO))
+                                .build())
+                        .append(Text.of(PRIMARY_COLOR, "' at index " + insertIndex + "."))
+                        .build();
                 player.sendMessage(message);
             } else {
                 // The animation failed to save
