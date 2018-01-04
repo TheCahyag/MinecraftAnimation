@@ -219,6 +219,12 @@ public class FrameController {
                                 PRIMARY_COLOR, "]    "))
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame update " + frame.getName()))
                         .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "DELETE",
+                                PRIMARY_COLOR, "]"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame delete " + frame.getName()))
+                        .build())
                 .build();
     }
 }
