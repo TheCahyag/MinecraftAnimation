@@ -61,4 +61,9 @@ public class TextResponses {
 
     // Other Error Responses
     public static final Text SUBSPACE_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The subspace is not fully initialized. (Set the animation corners with /animate <name> set <pos1|pos2>)");
+
+    // Hover Messages
+
+    public static final Text ANIMATION_C2V_INFO = Text.of("Click here to see the animation's info.");
+    public static final Text FRAME_C2V_INFO = Text.of("Click here to see the frame's info.");
 }
