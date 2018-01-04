@@ -1,8 +1,8 @@
 ### TODO
 #### High Priority
+[BUGFIX] If a frame in an animation doesn't have any content when played, an error is thrown to console
 
 #### Medium Priority
-[UI] The message that tells the user that the frame has been created or deleted should link to that frame  
 [PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
 [FEEDBACK] Send a message for when an animation starts, stops, or pauses (send these to the middle message bar)  
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
@@ -102,4 +102,5 @@ the internal states and then starting the animation backup on the frame it stopp
   * ~~Pausing should keep track of the current frame it is on~~  
 * [BUGFIX] ~~There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0~~  
 * [ENHANCEMENT] ~~After playing the animation for awhile the frames fall out of sync~~  
+* [UI] ~~The message that tells the user that the frame has been created or deleted should link to that frame~~
 
