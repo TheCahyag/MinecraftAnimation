@@ -61,6 +61,12 @@ public class InfoAnimation implements CommandExecutor {
         cornerOne = cornerOneOptional.map(Util::locationToString).orElse("nil");
         cornerTwo = cornerTwoOptional.map(Util::locationToString).orElse("nil");
 
+        // The unit for the tick delay (either tick or ticks and not tick(s) because that looks bad)
+        String tickUnit = this.animation.getTickDelay() == 1 ? "tick" : "ticks";
+
+        // Extra information for cycles information (currently only adding one for -1)
+        String cycleInfo = this.animation.getCycles() == -1 ? "(infinite)" : "";
+
         Text message = Text.builder()
                 .append(Text.of(PRIMARY_COLOR, "Name",
                         WHITE, ": ",
@@ -82,13 +88,13 @@ public class InfoAnimation implements CommandExecutor {
                         SECONDARY_COLOR, cornerTwo + "\n",
                         PRIMARY_COLOR, "Frame Delay",
                         WHITE, ": ",
-                        SECONDARY_COLOR, animation.getTickDelay() + "\n",
+                        SECONDARY_COLOR, this.animation.getTickDelay() + " " + tickUnit + "\n",
                         PRIMARY_COLOR, "Start Frame",
                         WHITE, ": ",
                         SECONDARY_COLOR, this.animation.getStartFrameIndex() + "\n",
                         PRIMARY_COLOR, "Cycles to Complete",
                         WHITE, ": ",
-                        SECONDARY_COLOR, this.animation.getCycles() + "\n"))
+                        SECONDARY_COLOR, this.animation.getCycles() + " " + cycleInfo + "\n"))
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n"))
                 .append(getAnimationButtons(this.animation))
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
