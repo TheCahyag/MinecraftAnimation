@@ -70,13 +70,13 @@ public class DeleteFrame implements CommandExecutor {
         // Parse flag argument
         if (!args.hasAny("f")){
             // Check for the -f
-            player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to delete the '",
+            player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to delete '",
                     NAME_COLOR, frameName,
-                    ERROR_COLOR, "' frame, run",
+                    ERROR_COLOR, "' from the animation, run",
                     PRIMARY_COLOR, " /animation " + animation.getAnimationName() + " frame delete " + frameName,
                     FLAG_COLOR, " -f").toBuilder()
                     .append(Text.of(ERROR_COLOR, COMMAND_STYLE, ", or click this message."))
-                    .onClick(TextActions.runCommand("/animation " + animation.getAnimationName() + " frame delete_frame " + frameName + " -f"))
+                    .onClick(TextActions.runCommand("/animation " + animation.getAnimationName() + " frame delete " + frameName + " -f"))
                     .onHover(COMMAND_HOVER)
                     .build());
             return CommandResult.success();
