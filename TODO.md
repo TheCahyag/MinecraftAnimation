@@ -1,14 +1,12 @@
 ### TODO
 #### High Priority
-[ENHANCEMENT] After playing the animation for awhile the frames fall out of sync  
 
 #### Medium Priority
 [UI] The message that tells the user that the frame has been created or deleted should link to that frame  
 [PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
 [FEEDBACK] Send a message for when an animation starts, stops, or pauses (send these to the middle message bar)  
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
-[REQUIREMENT] Define characters that are illegal to have in a frame/animation name  
-[BUGFIX] There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0  
+[REQUIREMENT] Define characters that are illegal to have in a frame/animation name    
 [BUGFIX] Some animations, when stopped, play certain frames continuously even after they are stopped (maybe because it 
 was played and then stopped immediately)  
 [BUGFIX] Deleting a frame that doesn't exist leads to a index out of bounds error  
@@ -102,3 +100,6 @@ the internal states and then starting the animation backup on the frame it stopp
 * [ENHANCEMENT] ~~Implement pause operation~~
   * ~~Should stopping an animation remove all visible contents of the animation~~
   * ~~Pausing should keep track of the current frame it is on~~  
+* [BUGFIX] ~~There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0~~  
+* [ENHANCEMENT] ~~After playing the animation for awhile the frames fall out of sync~~  
+

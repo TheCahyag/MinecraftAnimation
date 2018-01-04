@@ -4,6 +4,10 @@
 * [Downloads](https://github.com/TheCahyag/MinecraftAnimation/releases)
 * [Planned Enhancements](https://github.com/TheCahyag/MinecraftAnimation/projects)
 
+**Current Active Branches are:**  
+* sponge-api/7 (this branch, for 1.12.2)
+* sponge-api/6.1 (for 1.11.2)
+
 Author: TheCahyag  
 Start Date: 7/20/17  
 Objective: To create an intuitive tool that allows for the creation of frame-based animations in Minecraft.  
