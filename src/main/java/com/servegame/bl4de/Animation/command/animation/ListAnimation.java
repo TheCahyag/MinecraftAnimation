@@ -54,7 +54,7 @@ public class ListAnimation implements CommandExecutor {
                 Text animationNameLink = Text.builder()
                         .append(Text.of(COMMAND_STYLE, NAME_COLOR, animationsByOwner.get(i)))
                         .onClick(TextActions.runCommand("/animate " + animationsByOwner.get(i) + " info"))
-                        .onHover(TextActions.showText(Text.of("Click here to see the animation's info.")))
+                        .onHover(TextActions.showText(TextResponses.ANIMATION_C2V_INFO))
                         .build();
                 message = message.toBuilder()
                         .append(Text.of(AnimationController.getButtonsForAnimation(animation),
