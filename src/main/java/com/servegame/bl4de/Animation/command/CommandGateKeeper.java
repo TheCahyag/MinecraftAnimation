@@ -3,6 +3,7 @@ package com.servegame.bl4de.Animation.command;
 import com.servegame.bl4de.Animation.command.animation.BaseAnimation;
 import com.servegame.bl4de.Animation.command.animation.InfoAnimation;
 import com.servegame.bl4de.Animation.command.animation.SetAnimation;
+import com.servegame.bl4de.Animation.command.animation.SettingsAnimation;
 import com.servegame.bl4de.Animation.command.frame.*;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
@@ -34,6 +35,7 @@ public class CommandGateKeeper implements CommandExecutor {
         Optional<String> animationNameOptional = args.getOne("animation_name");
         boolean animationInfo = (boolean) args.getOne("animation_info").orElse(false);
         boolean animationSet = (boolean) args.getOne("animation_set").orElse(false);
+        boolean animationSetting = (boolean) args.getOne("animation_setting").orElse(false);
         boolean frame = (boolean) args.getOne("frame").orElse(false);
 
         if (!animationNameOptional.isPresent()){
@@ -53,6 +55,8 @@ public class CommandGateKeeper implements CommandExecutor {
             return new InfoAnimation(animation).execute(src, args);
         } else if (animationSet){
             return new SetAnimation(animation).execute(src, args);
+        } else if (animationSetting) {
+            return new SettingsAnimation(animation).execute(src, args);
         } else if (frame){
             boolean create      = (boolean) args.getOne("create").orElse(false);
             boolean delete      = (boolean) args.getOne("delete_frame").orElse(false);
