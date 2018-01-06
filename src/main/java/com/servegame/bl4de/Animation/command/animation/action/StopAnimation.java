@@ -9,8 +9,12 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: StopAnimation.java
@@ -46,6 +50,14 @@ public class StopAnimation implements CommandExecutor {
         }
 
         animation.stop();
+
+        // Send a stop message to the users action bar
+        Text stopMessage = Text.of(
+                NAME_COLOR, animation.getAnimationName(),
+                PRIMARY_COLOR, " was ",
+                ACTION_COLOR, "stopped",
+                PRIMARY_COLOR, ".");
+        player.sendMessage(ChatTypes.ACTION_BAR, stopMessage);
 
         return CommandResult.success();
     }
