@@ -10,8 +10,12 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: StartAnimation.java
@@ -65,6 +69,15 @@ public class StartAnimation implements CommandExecutor {
             } else {
                 animation.start();
             }
+
+            // Send a start message to the users action bar
+            Text startMessage = Text.of(
+                    NAME_COLOR, animation.getAnimationName(),
+                    PRIMARY_COLOR, " was ",
+                    ACTION_COLOR, "started",
+                    PRIMARY_COLOR, ".");
+            player.sendMessage(ChatTypes.ACTION_BAR, startMessage);
+
         } catch (UninitializedException ue){
             player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
         }
