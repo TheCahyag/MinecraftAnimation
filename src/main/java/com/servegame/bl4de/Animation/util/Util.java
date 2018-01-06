@@ -158,10 +158,149 @@ public class Util {
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "SETTINGS",
                                 PRIMARY_COLOR, "]"))
-                        .onClick(TextActions.runCommand(""))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting"))
                         .build())
                 .build();
         return message;
+    }
+
+    public static Text getSettingsButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "ANIMATION",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " info"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "FRAME DELAY",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingDelayButtons(animation))))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "CYCLES",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingCyclesButtons(animation))))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "START FRAME",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingStartFrameButtons(animation))))
+                        .build())
+                .build();
+    }
+
+    public static Text settingDelayButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "FRAME DELAY",
+                        TextColors.WHITE, ":    "))
+                        .onHover(COMMAND_HOVER)
+                        .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting delay "))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-10",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment -10"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment -1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "20",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay 20"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment 1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+10",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment 10"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
+    }
+
+    public static Text settingCyclesButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "CYCLES",
+                                TextColors.WHITE, ":    "))
+                        .onHover(COMMAND_HOVER)
+                        .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting cycles "))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-5",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment -5"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment -1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                SECONDARY_COLOR, "\"",
+                                ACTION_COLOR, "-1",
+                                SECONDARY_COLOR, "\"",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles -1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment 1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+5",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment 5"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
+    }
+
+    public static Text settingStartFrameButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "START FRAME",
+                                TextColors.WHITE, ":    "))
+                        .onHover(COMMAND_HOVER)
+                        .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting frame_index "))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "FIRST",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting frame_index first"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "LAST",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting frame_index last"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
     }
 
     public static Text getFrameButtons(){
@@ -484,7 +623,9 @@ public class Util {
                                 // /animate <name> set...
                                 literal(Text.of("animation_set"), "set"),
                                 // /animate <name> frame...
-                                literal(Text.of("frame"), "frame")
+                                literal(Text.of("frame"), "frame"),
+                                // /animate <name> setting...
+                                literal(Text.of("animation_setting"), "setting")
                         ),
                         optional(
                                 firstParsing(
@@ -502,6 +643,51 @@ public class Util {
                                         seq(
                                                 literal(Text.of("set_name"), "name"),
                                                 string(Text.of("new_name"))
+                                        ),
+                                        // /animate <name> setting ...
+                                        seq(
+                                                optional(
+                                                        firstParsing(
+                                                                // /animate <name> setting delay...
+                                                                seq(
+                                                                        literal(Text.of("setting_delay"), "delay"),
+                                                                        firstParsing(
+                                                                                // /animate <name> setting delay #
+                                                                                integer(Text.of("setting_delay_num")),
+                                                                                // /animate <name> setting delay increment #
+                                                                                seq(
+                                                                                        literal(Text.of("setting_delay_increment"), "increment"),
+                                                                                        integer(Text.of("increment_value"))
+                                                                                )
+                                                                        )
+                                                                ),
+                                                                // /animate <name> setting frame_index...
+                                                                seq(
+                                                                        literal(Text.of("setting_frame_index"), "frame_index"),
+                                                                        firstParsing(
+                                                                                // /animate <name> setting frame_index #
+                                                                                integer(Text.of("setting_frame_index_num")),
+                                                                                // /animate <name> setting frame_index first
+                                                                                literal(Text.of("setting_frame_index_first"), "first"),
+                                                                                // /animate <name> setting frame_index last
+                                                                                literal(Text.of("setting_frame_index_last"), "last")
+                                                                        )
+                                                                ),
+                                                                // /animate <name> setting cycles...
+                                                                seq(
+                                                                        literal(Text.of("setting_cycles"), "cycles"),
+                                                                        firstParsing(
+                                                                                // /animate <name> setting cycles #
+                                                                                integer(Text.of("setting_cycles_num")),
+                                                                                // /animate <name> setting cycles increment #
+                                                                                seq(
+                                                                                        literal(Text.of("setting_cycles_increment"), "increment"),
+                                                                                        integer(Text.of("increment_value"))
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
                                         )
                                 )
                         ),
