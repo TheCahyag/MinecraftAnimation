@@ -9,8 +9,12 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: PauseAnimation.java
@@ -49,6 +53,14 @@ public class PauseAnimation implements CommandExecutor {
             return CommandResult.success();
         }
         animation.pause();
+
+        // Send a pause message to the users action bar
+        Text pauseMessage = Text.of(
+                NAME_COLOR, animation.getAnimationName(),
+                PRIMARY_COLOR, " was ",
+                ACTION_COLOR, "paused",
+                PRIMARY_COLOR, ".");
+        player.sendMessage(ChatTypes.ACTION_BAR, pauseMessage);
 
         return CommandResult.success();
     }
