@@ -197,10 +197,11 @@ public class Util {
         return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "FRAME DELAY",
-                        TextColors.WHITE, ":    "))
+                        TextColors.WHITE, ":"))
                         .onHover(COMMAND_HOVER)
                         .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting delay "))
                         .build())
+                .append(Text.of("    "))
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, "-10",
@@ -239,10 +240,11 @@ public class Util {
         return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "CYCLES",
-                                TextColors.WHITE, ":    "))
+                                TextColors.WHITE, ":"))
                         .onHover(COMMAND_HOVER)
                         .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting cycles "))
                         .build())
+                .append(Text.of("           "))
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, "-5",
@@ -283,10 +285,11 @@ public class Util {
         return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "START FRAME",
-                                TextColors.WHITE, ":    "))
+                                TextColors.WHITE, ":"))
                         .onHover(COMMAND_HOVER)
                         .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting frame_index "))
                         .build())
+                .append(Text.of("    "))
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, "FIRST",
