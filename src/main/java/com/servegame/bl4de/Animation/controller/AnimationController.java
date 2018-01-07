@@ -107,6 +107,11 @@ public class AnimationController {
         return PreparedStatements.saveAnimation(animation);
     }
 
+    public static boolean saveBareAnimation(Animation animation){
+        return PreparedStatements.saveBareAnimation(animation);
+    }
+
+
     public static boolean deleteAnimation(Animation animation){
         return PreparedStatements.deleteAnimation(animation);
     }
