@@ -150,6 +150,59 @@ public class PreparedStatements {
         return true;
     }
 
+    public static boolean saveBareAnimation(Animation animation){
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE " + ANIMATION_TABLE + " SET " +
+                            COLUMN_ANIMATION_STATUS + " = ?, " +
+                            COLUMN_ANIMATION_START_FRAME_INDEX + " = ?, " +
+                            COLUMN_ANIMATION_TICK_DELAY + " = ?, " +
+                            COLUMN_ANIMATION_CYCLES + " = ?, " +
+                            //COLUMN_ANIMATION_FRAME_NAMES + " = ?, " +
+                            COLUMN_ANIMATION_C1 + " = ?, " +
+                            COLUMN_ANIMATION_C2 + " = ? " +
+                            "WHERE " +
+                            COLUMN_ANIMATION_NAME + " = ? AND " +
+                            COLUMN_ANIMATION_OWNER + " = ?"
+            );
+
+            // Put all the names of the frames into a list
+            final List<Frame> frames = animation.getFrames();
+            final List<String> frameNames = new ArrayList<>();
+            frames.forEach(frame -> frameNames.add(frame.getName()));
+
+            // SET Clause
+            statement.setString(1, animation.getStatus().toString());   // Status
+            statement.setInt(2, animation.getStartFrameIndex());        // Start frame index
+            statement.setInt(3, animation.getTickDelay());              // Tick delay
+            statement.setInt(4, animation.getCycles());                 // Cycles
+//            statement.setObject(5, frameNames.toArray());
+            Optional<Location<World>> worldLocation1 = animation.getSubSpace().getCornerOne();
+            Optional<Location<World>> worldLocation2 = animation.getSubSpace().getCornerTwo();
+            if (worldLocation1.isPresent()){
+                statement.setString(5, DataFormats.HOCON.write(worldLocation1.get().createSnapshot().toContainer()));
+            } else {
+                statement.setString(5, null);
+            }
+            if (worldLocation2.isPresent()){
+                statement.setString(6, DataFormats.HOCON.write(worldLocation2.get().createSnapshot().toContainer()));
+            } else {
+                statement.setString(6, null);
+
+            }
+
+            // WHERE Clause
+            statement.setString(7, animation.getAnimationName());       // Animation name
+            statement.setObject(8, animation.getOwner());               // Owner
+            statement.executeUpdate();
+
+        } catch (SQLException|IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Searches through all files and will check if there is a valid {@link Animation} with a given owner
      * @param name name of the animation
