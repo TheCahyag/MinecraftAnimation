@@ -57,7 +57,7 @@ public class SettingsAnimation implements CommandExecutor {
                 this.animation.setTickDelay(newDelay);
 
                 // Save animation
-                if (AnimationController.saveAnimation(this.animation)){
+                if (AnimationController.saveBareAnimation(this.animation)){
                     Text delayChangedMessage = Text.of(
                             NAME_COLOR, this.animation.getAnimationName(),
                             PRIMARY_COLOR, "'s frame delay was ",
@@ -96,7 +96,7 @@ public class SettingsAnimation implements CommandExecutor {
 
             this.animation.setStartFrameIndex(newIndex);
 
-            if (AnimationController.saveAnimation(this.animation)){
+            if (AnimationController.saveBareAnimation(this.animation)){
                 Text frameIndexChangedMessage = Text.of(
                         NAME_COLOR, this.animation.getAnimationName(),
                         PRIMARY_COLOR, "'s start frame was ",
@@ -130,7 +130,7 @@ public class SettingsAnimation implements CommandExecutor {
 
             this.animation.setCycles(newCycles);
 
-            if (AnimationController.saveAnimation(this.animation)){
+            if (AnimationController.saveBareAnimation(this.animation)){
                 Text cyclesChangedMessage = Text.of(
                         NAME_COLOR, this.animation.getAnimationName(),
                         PRIMARY_COLOR, "'s cycles was ",
