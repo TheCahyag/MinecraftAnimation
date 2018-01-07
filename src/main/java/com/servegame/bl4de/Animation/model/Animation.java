@@ -218,7 +218,7 @@ public class Animation implements DataSerializable{
      * 0 (the first {@link Frame})
      */
     public void start() throws UninitializedException {
-        start(0);
+        start(this.startFrameIndex);
     }
 
     /**
@@ -234,8 +234,8 @@ public class Animation implements DataSerializable{
         AnimationController.updateAnimationStatus(this, Status.STOPPED);
         AnimationPlugin.taskManager.stopAnimation(this);
 
-        // Now display the first frame
-        FrameController.displayContents(FrameController.getFrameWithContents(this, 0).get());
+        // Now display the start frame
+        FrameController.displayContents(FrameController.getFrameWithContents(this, this.getStartFrameIndex()).get());
     }
 
     /**
