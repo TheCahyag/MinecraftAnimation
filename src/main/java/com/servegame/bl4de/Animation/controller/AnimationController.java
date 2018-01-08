@@ -111,8 +111,11 @@ public class AnimationController {
         return PreparedStatements.saveBareAnimation(animation);
     }
 
-
     public static boolean deleteAnimation(Animation animation){
         return PreparedStatements.deleteAnimation(animation);
+    }
+
+    public static boolean refreshAnimation(String name, UUID owner){
+        return PreparedStatements.refreshAnimation(name, owner);
     }
 }
