@@ -84,8 +84,12 @@ public class AnimationPlugin {
     public void onServerStart(GameStartingServerEvent event){
         logger.info("Checking database structure...");
         if (DatabaseSchemaUpdates.checkForVersionOne()){
-            logger.info("...Old database structure found, converting animations.");
+            logger.info("...Old database structure version one found, converting animations to version two.");
             DatabaseSchemaUpdates.convertVersionOneToVersionTwo();
+            //DatabaseSchemaUpdates.convertVersionTwoToVersionThree();
+        } else if (DatabaseSchemaUpdates.checkForVersionTwo()){
+            logger.info("...Old database structure version two found, converting animations to version three.");
+            //DatabaseSchemaUpdates.convertVersionTwoToVersionThree();
         } else {
             logger.info("...database is up to date, no action needed.");
         }
