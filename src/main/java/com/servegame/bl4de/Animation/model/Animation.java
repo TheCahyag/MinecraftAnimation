@@ -146,15 +146,6 @@ public class Animation implements DataSerializable{
     }
 
     /**
-     * Removes a {@link Frame} from the given Animation
-     * @param frame {@link Frame} object to remove
-     * @return true if the frame was found and removed, false otherwise
-     */
-    public boolean removeFrame(Frame frame){
-        return this.frames.remove(frame);
-    }
-
-    /**
      * Get the index of a given {@link Frame}
      * @param frame {@link Frame} object
      * @return int - representation of where this {@link Frame} is in the Animation
