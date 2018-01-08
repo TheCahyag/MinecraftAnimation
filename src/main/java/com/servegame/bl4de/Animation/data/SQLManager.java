@@ -9,6 +9,8 @@ import org.spongepowered.api.service.sql.SqlService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -142,5 +144,22 @@ public class SQLManager {
         } catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public static boolean doesTableExist(String tableName){
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = ?");
+            statement.setString(1, tableName.toUpperCase());
+            ResultSet rs = statement.executeQuery();
+            System.out.println(rs);
+            if (rs.next()){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
