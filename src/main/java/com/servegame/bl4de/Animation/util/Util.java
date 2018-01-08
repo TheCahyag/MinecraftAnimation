@@ -605,6 +605,13 @@ public class Util {
                 .executor(new StopAllAnimations())
                 .build();
 
+        // /animate refreshAnimations
+        CommandSpec refreshAnimations = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Refreshes all animations in the database (see wiki for more details)"))
+                .permission(Permissions.REFRESH_ALL_ANIMATIONS)
+                .executor(new RefreshAnimations())
+                .build();
+
         // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Base animation command"))
@@ -618,6 +625,7 @@ public class Util {
                 .child(statsAnimation, "stats", "statistics")
                 .child(debugAnimation, "debug")
                 .child(stopAllAnimation, "stopall")
+                .child(refreshAnimations, "refreshAnimations")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
