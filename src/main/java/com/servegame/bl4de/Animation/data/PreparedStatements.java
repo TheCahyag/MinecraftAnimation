@@ -399,6 +399,57 @@ public class PreparedStatements {
         return true;
     }
 
+    public static boolean refreshAnimation(String animationName, UUID owner){
+        try (Connection conn = SQLManager.getConnection()){
+            PreparedStatement getAnimationFrameNames = conn.prepareStatement(
+                    "SELECT " + COLUMN_ANIMATION_FRAME_NAMES +
+                            " FROM " + ANIMATION_TABLE);
+            ResultSet rs = getAnimationFrameNames.executeQuery();
+            String[] frameNames;
+            if (rs.next()){
+                Object[] array = ((Object[]) rs.getArray(COLUMN_ANIMATION_FRAME_NAMES).getArray());
+                frameNames = new String[array.length];
+                for (int i = 0; i < array.length; i++) {
+                    frameNames[i] = (String) array[i];
+                }
+            } else {
+                // Couldn't get the frames from the animation
+                return false;
+            }
+
+            for (String frameName :
+                    frameNames) {
+                // For each frame check if there exists a table for its content, if so
+                // then set subspace_contents to true in the animation frames table
+                Frame bareFrame = new Frame();
+                bareFrame.setName(frameName);
+                bareFrame.setCreator(owner);
+                String frameContentTableName = getContentTableName(new Animation(owner, animationName), bareFrame);
+                frameContentTableName = frameContentTableName.substring(1, frameContentTableName.length() - 1).toUpperCase();
+                String contentValue;
+                if (SQLManager.doesTableExist(frameContentTableName)){
+                    contentValue = "()";
+                } else {
+                    contentValue = null;
+                }
+                // The content table exists
+                String framesTable = getFrameTableName(animationName, owner);
+                PreparedStatement updateSubspaceContent = conn.prepareStatement(
+                        "UPDATE " + framesTable +
+                                " SET " + COLUMN_FRAME_SUBSPACE_CONTENTS + " = ? " +
+                                "WHERE " + COLUMN_FRAME_NAME + " = '" + frameName + "' " +
+                                " AND " + COLUMN_FRAME_CREATOR + " = ?");
+                updateSubspaceContent.setString(1, contentValue); // empty array for now should be changed to true todo
+                updateSubspaceContent.setObject(2, owner);
+                updateSubspaceContent.executeUpdate();
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /* END: Animation Operations */
 
     /* START: Frame Operations */
