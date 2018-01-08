@@ -76,6 +76,14 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
     }
 
     /**
+     * Setter for the {@link UUID} of the frame creator
+     * @param creator {@link UUID}
+     */
+    public void setCreator(UUID creator) {
+        this.creator = creator;
+    }
+
+    /**
      * Getter for the name of the frame
      * @return frame name
      */
