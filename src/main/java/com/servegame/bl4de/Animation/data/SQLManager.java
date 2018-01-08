@@ -151,7 +151,6 @@ public class SQLManager {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = ?");
             statement.setString(1, tableName.toUpperCase());
             ResultSet rs = statement.executeQuery();
-            System.out.println(rs);
             if (rs.next()){
                 return true;
             } else {
