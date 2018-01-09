@@ -6,6 +6,8 @@ import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,6 +16,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -87,12 +90,20 @@ public class InfoAnimation implements CommandExecutor {
                         SECONDARY_COLOR, this.animation.getNumOfFrames() + "\n",
                         PRIMARY_COLOR, "Status",
                         WHITE, ": ",
-                        SECONDARY_COLOR, this.animation.getStatus() + "\n",
-                        PRIMARY_COLOR, "Corner 1",
-                        WHITE, ": ",
-                        SECONDARY_COLOR, cornerOne + "\n",
-                        PRIMARY_COLOR, "Corner 2",
-                        WHITE, ": ",
+                        SECONDARY_COLOR, this.animation.getStatus() + "\n"))
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "Corner 1"))
+                        .onHover(CORNER_HOVER)
+                        .onClick(TextActions.executeCallback(commandSource -> showVirtualCorner(commandSource, this.animation.getSubSpace().getCornerTwo().orElse(null))))
+                        .build())
+                .append(Text.of(WHITE, ": ",
+                        SECONDARY_COLOR, cornerOne + "\n"))
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "Corner 2"))
+                        .onHover(CORNER_HOVER)
+                        .onClick(TextActions.executeCallback(commandSource -> showVirtualCorner(commandSource, this.animation.getSubSpace().getCornerOne().orElse(null))))
+                        .build())
+                .append(Text.of(WHITE, ": ",
                         SECONDARY_COLOR, cornerTwo + "\n",
                         PRIMARY_COLOR, "Frame Delay",
                         WHITE, ": ",
@@ -109,5 +120,18 @@ public class InfoAnimation implements CommandExecutor {
                 .build();
         src.sendMessage(message);
         return CommandResult.success();
+    }
+
+    private void showVirtualCorner(CommandSource src, Location<World> location){
+        if (location == null){
+            src.sendMessage(TextResponses.ANIMATION_CORNER_NOT_SET);
+            return;
+        }
+        if (!(src instanceof Player)){
+            src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
+            return;
+        }
+        Player player = ((Player) src);
+        player.sendBlockChange(location.getBlockPosition(), BlockState.builder().blockType(BlockTypes.BEDROCK).build());
     }
 }
