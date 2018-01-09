@@ -338,7 +338,9 @@ public class Animation implements DataSerializable{
      * @return resulting {@link Frame}
      */
     public Optional<Frame> getFrame(int frameNum){
-        if (frameNum > this.frames.size()){
+        int numOfFrames = this.frames.size();
+        if (frameNum > numOfFrames || numOfFrames == 0 || frameNum < 0){
+            // Out of bounds
             return Optional.empty();
         } else {
             return Optional.of(this.frames.get(frameNum));
