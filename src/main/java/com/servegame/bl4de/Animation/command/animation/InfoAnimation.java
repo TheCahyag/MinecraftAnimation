@@ -2,6 +2,7 @@ package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.model.Animation;
+import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.Sponge;
@@ -67,6 +68,13 @@ public class InfoAnimation implements CommandExecutor {
         // Extra information for cycles information (currently only adding one for -1)
         String cycleInfo = this.animation.getCycles() == -1 ? "(infinite)" : "";
 
+        // Start frame name
+        String startFrameName = "nil";
+        Optional<Frame> frameOptional = this.animation.getFrame(this.animation.getStartFrameIndex());
+        if (frameOptional.isPresent()){
+            startFrameName = frameOptional.get().getName();
+        }
+
         Text message = Text.builder()
                 .append(Text.of(PRIMARY_COLOR, "Name",
                         WHITE, ": ",
@@ -91,7 +99,7 @@ public class InfoAnimation implements CommandExecutor {
                         SECONDARY_COLOR, this.animation.getTickDelay() + " " + tickUnit + "\n",
                         PRIMARY_COLOR, "Start Frame",
                         WHITE, ": ",
-                        SECONDARY_COLOR, this.animation.getStartFrameIndex() + " (" + this.animation.getFrame(this.animation.getStartFrameIndex()).get().getName() + ")\n",
+                        SECONDARY_COLOR, this.animation.getStartFrameIndex() + " (" + startFrameName + ")\n",
                         PRIMARY_COLOR, "Cycles to Complete",
                         WHITE, ": ",
                         SECONDARY_COLOR, this.animation.getCycles() + " " + cycleInfo + "\n"))
