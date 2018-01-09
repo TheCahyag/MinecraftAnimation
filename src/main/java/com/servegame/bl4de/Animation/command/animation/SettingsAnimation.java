@@ -88,6 +88,12 @@ public class SettingsAnimation implements CommandExecutor {
                 newIndex = (Integer) args.getOne(Text.of("setting_frame_index_num")).get();
             }
 
+            if (this.animation.getNumOfFrames() == 0){
+                // There are no frames
+                player.sendMessage(TextResponses.ANIMATION_NO_FRAMES_PRESENT);
+                return CommandResult.empty();
+            }
+
             if (newIndex >= this.animation.getNumOfFrames()){
                 // The index being set is invalid
                 player.sendMessage(TextResponses.GENERAL_INDEX_INVALID_ERROR);
