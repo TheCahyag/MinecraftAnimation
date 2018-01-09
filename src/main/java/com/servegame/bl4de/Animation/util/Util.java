@@ -51,6 +51,7 @@ public class Util {
     public static final TextColor WARNING_COLOR     = TextColors.YELLOW;
     public static final TextStyle COMMAND_STYLE     = TextStyles.ITALIC;
     public static final HoverAction.ShowText COMMAND_HOVER = TextActions.showText(Text.of("Click here to suggest this command."));
+    public static final HoverAction.ShowText CORNER_HOVER = TextActions.showText(Text.of("Click here to show the corner."));
     public static final long MAX_VOLUME             = 30000L;
     public static final long WARNING_VOLUME         = 2500L;
 

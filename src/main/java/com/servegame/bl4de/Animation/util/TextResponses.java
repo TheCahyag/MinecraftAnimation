@@ -49,6 +49,9 @@ public class TextResponses {
     public static final Text ANIMATION_SETTING_DELAY_TOO_LOW = Text.of(ERROR_COLOR, "The resulting delay must be > 0.");
     public static final Text ANIMATION_SETTING_CYCLES_TOO_LOW = Text.of(ERROR_COLOR, "The cycles can not be < -1.");
     public static final Text ANIMATION_SETTING_CYCLES_NOT_ZERO = Text.of(ERROR_COLOR, "The cycles can not be 0.");
+    public static final Text ANIMATION_NO_FRAMES_PRESENT = Text.of(ERROR_COLOR, "There are no frames for this animation.");
+    public static final Text ANIMATION_CORNER_NOT_SET = Text.of(ERROR_COLOR, "That corner hasn't been set yet.");
+
 
     // Frame Responses
     public static final Text FRAME_SUCCESSFULLY_DELETED = Text.of(PRIMARY_COLOR, "The frame was successfully deleted.");
