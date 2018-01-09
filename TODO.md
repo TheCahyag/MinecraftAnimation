@@ -58,7 +58,7 @@ the frame so the user can place all frames down at the same time.
 [ENHANCEMENT] If the animation is already running and the user calls /animate start <name> and specifies a flag, those 
 flag values should update on the currently playing animation (this would probably require stopping the animation, changing 
 the internal states and then starting the animation backup on the frame it stopped on)  
-[UI] Add a message in the bottom middle of the users screen showing what frame the animation is on  
+[UI] Add a message in the bottom middle of the users screen showing what frame the animation is on -- this likely won't be possible since it's not very useful when there are two animations running at the same time  
 [UI] After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation  
 
 ## Animations to show off
