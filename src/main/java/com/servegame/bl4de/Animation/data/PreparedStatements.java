@@ -444,7 +444,7 @@ public class PreparedStatements {
                 updateSubspaceContent.executeUpdate();
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            AnimationPlugin.logger.error(e.getMessage());
             return false;
         }
         return true;
