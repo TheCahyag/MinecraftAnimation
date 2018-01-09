@@ -2,20 +2,17 @@
 #### High Priority
 
 #### Medium Priority
-[UI] The message that tells the user that the frame has been created or deleted should link to that frame  
 [PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
 [FEEDBACK] Send a message for when an animation starts, stops, or pauses (send these to the middle message bar)  
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name    
 [BUGFIX] Some animations, when stopped, play certain frames continuously even after they are stopped (maybe because it 
-was played and then stopped immediately)  
-[BUGFIX] Deleting a frame that doesn't exist leads to a index out of bounds error  
+was played and then stopped immediately)   
 
 #### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
 [COMMAND] Add .complete() lists on all arguments for tabbing arguments  
 [BOTHERING] Fix the buttons so that clicking on the spaces don't execute the command  
-[BOTHERING] Fix the method to create frame names, it doesn't reset for every animation  
 [ENHANCEMENT] Make a config where the user can specify the default values of animation's states 
 (frame, delay, cycles) or just other config stuff  
 [ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing 
@@ -102,4 +99,7 @@ the internal states and then starting the animation backup on the frame it stopp
   * ~~Pausing should keep track of the current frame it is on~~  
 * [BUGFIX] ~~There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0~~  
 * [ENHANCEMENT] ~~After playing the animation for awhile the frames fall out of sync~~  
+* [UI] ~~The message that tells the user that the frame has been created or deleted should link to that frame~~
+* [BUGFIX] ~~Deleting a frame that doesn't exist leads to a index out of bounds error~~
+* [BOTHERING] ~~Fix the method to create frame names, it doesn't reset for every animation~~
 
