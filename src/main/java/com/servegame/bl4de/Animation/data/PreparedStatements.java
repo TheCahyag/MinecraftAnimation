@@ -707,6 +707,9 @@ public class PreparedStatements {
             for (int i = 0; i <= xLen; i++) {
                 for (int j = 0; j <= yLen; j++) {
                     for (int k = 0; k <= zLen; k++) {
+                        if (contents[i][j][k] == null){
+                            continue;
+                        }
                         contentPositions.put(i + "|" + j + "|" + k, DataFormats.HOCON.write(contents[i][j][k].toContainer()));
                     }
                 }
@@ -751,6 +754,10 @@ public class PreparedStatements {
                 for (int j = 0; j < yLength; j++) {
                     for (int k = 0; k < zLength; k++) {
                         // Re add each block as a row
+                        if (blockSnapshots[i][j][k] == null){
+                            // If the block is air, don't put it in the database
+                            continue;
+                        }
                         PreparedStatement statement1 = connection.prepareStatement(
                                 "INSERT INTO " + CONTENT_TABLE +
                                         " SET " +

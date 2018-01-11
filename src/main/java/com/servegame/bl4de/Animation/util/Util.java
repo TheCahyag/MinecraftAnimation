@@ -14,6 +14,8 @@ import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.SubSpace3D;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -82,9 +84,12 @@ public class Util {
             for (int z = 0; z <= zLen; z++) {
                 // X
                 for (int x = 0; x <= xLen; x++) {
-                    subSpace[x][y][z] = new Location<>(
-                            corner1.getExtent(), x + xLow, y + yLow, z + zLow
-                    ).createSnapshot();
+                    BlockSnapshot snapshot = new Location<>(
+                        corner1.getExtent(), x + xLow, y + yLow, z + zLow)
+                        .createSnapshot();
+                    if (!snapshot.getState().getType().getName().equalsIgnoreCase("minecraft:air")){
+                        subSpace[x][y][z] = snapshot;
+                    }
                 }
             }
         }
@@ -121,9 +126,16 @@ public class Util {
             for (int y = 0; y < yLength; y++) {
                 // X
                 for (int z = 0; z < zLength; z++) {
+                    BlockState state;
                     BlockSnapshot snapshot = subSpaceSnapShot[x][y][z];
+                    if (snapshot == null){
+                        // If it's null in the array, it represents air
+                        state = BlockState.builder().blockType(BlockTypes.AIR).build();
+                    } else {
+                        state = snapshot.getState();
+                    }
                     Location loc = new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow);
-                    loc.setBlock(snapshot.getState());
+                    loc.setBlock(state);
                 }
             }
         }
