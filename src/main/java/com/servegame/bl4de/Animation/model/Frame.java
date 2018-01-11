@@ -104,9 +104,7 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
      * @return the {@link SubSpace3D}
      */
     public SubSpace3D getSubspace(){
-        SubSpace3D tmp = new SubSpace3D(getCornerOne().get(), getCornerTwo().get());
-        tmp.setContents(getContents().orElse(null));
-        return tmp;
+        return this;
     }
 
     @Override
@@ -155,7 +153,7 @@ public class Frame extends SubSpace3D implements DataSerializable, Cloneable {
     }
 
     /**
-     * TODO
+     * This Builder class is for the deserializing the first version of database, but is no longer used in recent versions
      */
     public static class Builder extends AbstractDataBuilder<Frame> {
 
