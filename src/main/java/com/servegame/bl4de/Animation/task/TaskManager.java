@@ -77,7 +77,7 @@ public class TaskManager {
     public boolean stopAnimation(Animation animation, UUID starter) {
         if (!this.runningAnimations.containsKey(starter)) {
             // Owner isn't running any animations
-            AnimationPlugin.logger.info(
+            AnimationPlugin.logger.error(
                     "Couldn't stop "
                             + animation.getAnimationName()
                             + "."
