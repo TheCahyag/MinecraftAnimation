@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation.task;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
+import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import org.spongepowered.api.Sponge;
@@ -62,6 +63,7 @@ public class AnimationTasks {
             if (AnimationPlugin.instance.isDebug()){
                 System.out.println("Stopping: " + task.getName());
             }
+            AnimationController.updateAnimationStatus(this.animation, Animation.Status.STOPPED);
             task.cancel();
         }
     }
