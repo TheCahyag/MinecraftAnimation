@@ -35,6 +35,10 @@ public class AnimationTasks {
      */
     public void populateTaskList(){
         List<Frame> frames = this.animation.getFrames();
+
+        // Prune out frames that don't have content
+        frames.removeIf(frame -> !frame.getSubspace().getContents().isPresent());
+
         long initDelay = 0;
         long periodBetweenRepeat = this.animation.getTickDelay() * frames.size();
         for (int i = 0; i < frames.size(); i++, initDelay += this.animation.getTickDelay()) {
