@@ -91,6 +91,14 @@ public class SQLManager {
         return get(AnimationPlugin.plugin).getDataSource().getConnection();
     }
 
+    public static boolean testConnection(){
+        try (Connection conn = SQLManager.getConnection()){
+            return true;
+        } catch (SQLException e){
+            return false;
+        }
+    }
+
     private DataSource getDataSource() throws SQLException {
         SqlService sqlService = Sponge.getServiceManager().provide(SqlService.class).get();
         return sqlService.getDataSource("jdbc:h2:./config/" + this.plugin.getId() + "/animation/" + this.database);
