@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -82,7 +83,8 @@ public class DeleteFrame implements CommandExecutor {
             return CommandResult.success();
         }
 
-        this.animation.deleteFrame(frameToDelete);
+        // Delete the frame from the database and the animation
+        FrameController.deleteFrame(this.animation, frameToDelete);
         if (AnimationController.saveAnimation(this.animation)){
             // Animation changed and saved
             Text message = Text.builder()
