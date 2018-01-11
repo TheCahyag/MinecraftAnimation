@@ -97,6 +97,7 @@ public class FrameController {
     }
 
     public static boolean deleteFrame(Animation animation, Frame frame){
+        animation.deleteFrame(frame);
         return PreparedStatements.deleteFrame(animation, frame);
     }
 
@@ -146,9 +147,7 @@ public class FrameController {
             for (int j = 0; j < zLen; j++) {
                 // X
                 for (int k = 0; k < xLen; k++) {
-                    BlockSnapshot tmp = snapshots[k][i][j];
-                    String blockName = tmp.getState().getType().getName();
-                    if (!blockName.equals("minecraft:air")){
+                    if (snapshots[k][i][j] != null){
                         count++;
                     }
                 }
