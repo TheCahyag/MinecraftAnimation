@@ -66,7 +66,7 @@ public class ListAnimation implements CommandExecutor {
                             ACTION_COLOR, animationsToList,
                             PRIMARY_COLOR, " out of ",
                             ACTION_COLOR, animationsByOwner.size(),
-                            PRIMARY_COLOR, " animations."))
+                            PRIMARY_COLOR, " animations.\n"))
                     .build();
             message = message.toBuilder()
                     .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------\n",
