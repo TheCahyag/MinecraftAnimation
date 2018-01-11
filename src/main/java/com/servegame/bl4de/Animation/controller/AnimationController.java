@@ -88,11 +88,19 @@ public class AnimationController {
     }
 
     public static Optional<Animation> getAnimation(String name, UUID owner){
-        return PreparedStatements.getAnimation(name, owner);
+        long startTime = System.currentTimeMillis();
+        Optional<Animation> optionalAnimation = PreparedStatements.getAnimation(name, owner);
+        long endTime = System.currentTimeMillis();
+        AnimationPlugin.logger.info("Get full (" + name + "): " + (endTime - startTime));
+        return optionalAnimation;
     }
 
     public static Optional<Animation> getBareAnimation(String name, UUID owner){
-        return PreparedStatements.getBareAnimation(name, owner);
+        long startTime = System.currentTimeMillis();
+        Optional<Animation> optionalAnimation = PreparedStatements.getBareAnimation(name, owner);
+        long endTime = System.currentTimeMillis();
+        AnimationPlugin.logger.info("Get bare (" + name + "): " + (endTime - startTime));
+        return optionalAnimation;
     }
 
     public static ArrayList<String> getAnimationsByOwner(UUID owner) {
