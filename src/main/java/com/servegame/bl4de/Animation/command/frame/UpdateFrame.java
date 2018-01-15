@@ -12,8 +12,11 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: UpdateFrame.java
@@ -68,12 +71,19 @@ public class UpdateFrame implements CommandExecutor {
         // Save the Animation
         if (FrameController.saveFrame(this.animation, frame)){
             // Animation was saved successfully
-            player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Frame ",
-                    Util.PRIMARY_COLOR, "'",
-                    Util.NAME_COLOR, frame.getName(),
-                    Util.PRIMARY_COLOR, "' ",
-                    Util.ACTION_COLOR, "updated ",
-                    Util.PRIMARY_COLOR, "successfully."));
+            Text message = Text.builder()
+                    .append(Text.of(PRIMARY_COLOR, "Frame ",
+                            PRIMARY_COLOR, "'"))
+                    .append(Text.builder()
+                            .append(Text.of(NAME_COLOR, COMMAND_STYLE, frame.getName()))
+                            .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " frame " + frame.getName() + " info"))
+                            .onHover(TextActions.showText(TextResponses.FRAME_C2V_INFO))
+                            .build())
+                    .append(Text.of(PRIMARY_COLOR, "' ",
+                            ACTION_COLOR, "updated ",
+                            PRIMARY_COLOR, "successfully."))
+                    .build();
+            player.sendMessage(message);
             return CommandResult.success();
         } else {
             // There was a problem saving the animation
