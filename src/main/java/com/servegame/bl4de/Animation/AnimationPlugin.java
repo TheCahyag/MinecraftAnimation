@@ -67,17 +67,19 @@ public class AnimationPlugin {
             logger.info("Animation directories created.");
         }
 
-        this.debug = false;
-        Util.registerCommands(this);
-        taskManager.stopAllAnimations();
-        sqlManager = SQLManager.get(plugin);
-
         // Check the connection to the database
         if (!SQLManager.testConnection()){
             // Gaining a connection failed
             logger.error("Failed to gain a connection to the database, make sure it isn't open elsewhere.");
             disable();
+            return;
         }
+
+        this.debug = false;
+        Util.registerCommands(this);
+        taskManager.stopAllAnimations();
+        sqlManager = SQLManager.get(plugin);
+
     }
 
     @Listener
