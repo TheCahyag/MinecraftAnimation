@@ -11,9 +11,12 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: CreateAnimation.java
@@ -59,12 +62,19 @@ public class CreateAnimation implements CommandExecutor {
         Animation animation = new Animation(owner, animationName);
         if (AnimationController.createAnimation(animation)){
             // Animation was created and saved successfully
-            player.sendMessage(Text.of(Util.PRIMARY_COLOR, "Animation ",
-                    Util.PRIMARY_COLOR, "'",
-                    Util.NAME_COLOR, animationName,
-                    Util.PRIMARY_COLOR, "' ",
-                    Util.ACTION_COLOR, "created ",
-                    Util.PRIMARY_COLOR, "successfully."));
+            Text message = Text.builder()
+                    .append(Text.of(PRIMARY_COLOR, "Animation ",
+                            PRIMARY_COLOR, "'"))
+                    .append(Text.builder()
+                            .append(Text.of(NAME_COLOR, COMMAND_STYLE, animationName))
+                            .onClick(TextActions.runCommand("/animate " + animationName + " info"))
+                            .onHover(TextActions.showText(TextResponses.ANIMATION_C2V_INFO))
+                            .build())
+                    .append(Text.of(PRIMARY_COLOR, "' ",
+                            ACTION_COLOR, "created ",
+                            PRIMARY_COLOR, "successfully."))
+                    .build();
+            player.sendMessage(message);
             return CommandResult.success();
         } else {
             // There was a problem creating the animation
