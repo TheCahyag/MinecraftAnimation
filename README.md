@@ -22,9 +22,6 @@ See more [here](https://github.com/TheCahyag/MinecraftAnimation/blob/sponge-api/
 * Blocks that hold inventory don't retain their data
 * Big animations will take awhile to load which leads to the server lagging. (An Animation that has 4 frames with each holding 15000 blocks of data will take ~7 seconds to load, this will be optimized in the future)
 * Settings button does nothing (Will be updated in the UI Enhancement update)
-* If the animation database file is being used an error is thrown to console, this needs to be accounted for so that when the database file can't be used the plugin is disabled
-* Removing a frame that doesn't exist -- /animate name frame delete_frame 0 will throw an error if there are no frames for the given animation
-* Flag edge cases: Some value flags don't ensure the number specified are valid
 
 ## Contributions
 Contributions are always welcome! Please see [Contributions.md](https://github.com/TheCahyag/MinecraftAnimation/blob/sponge-api/7/CONTRIBUTIONS.md) for more information on contributing.
