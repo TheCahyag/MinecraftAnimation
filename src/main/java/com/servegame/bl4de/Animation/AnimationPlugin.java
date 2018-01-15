@@ -108,7 +108,12 @@ public class AnimationPlugin {
     @Listener
     public void onStop(GameStoppingEvent event){
         logger.info("Stopping animations...");
+
+        // Stop all animations
         AnimationController.stopAllAnimations();
+
+        // Stop any other tasks that were created by this plugin
+        game.getScheduler().getScheduledTasks(this).forEach(Task::cancel);
     }
 
     /**
