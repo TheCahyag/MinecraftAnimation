@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.controller;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.data.PreparedStatements;
 import com.servegame.bl4de.Animation.data.SQLResources;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -80,12 +81,17 @@ public class FrameController {
     }
 
     public static Optional<Frame> getFrameWithContents(Animation animation, String name){
-        return PreparedStatements.getFrame(
+        long startTime = System.currentTimeMillis();
+        Optional<Frame> frameOptional = PreparedStatements.getFrame(
                 name,
                 SQLResources.getFrameTableName(animation),
                 SQLResources.getContentTableName(animation, animation.getFrame(name).get()),
                 true
         );
+        long endTime = System.currentTimeMillis();
+        AnimationPlugin.logger.info("Get frame (" + name + "): " + (endTime - startTime));
+
+        return frameOptional;
     }
 
     public static boolean saveFrame(Animation animation, Frame frame){

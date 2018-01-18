@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -24,16 +25,22 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DuplicateFrame implements CommandExecutor {
+public class DuplicateFrame extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public DuplicateFrame(Animation animation){
+    public DuplicateFrame(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = AnimationController.getAnimation(animation.getAnimationName(), animation.getOwner()).get();
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(this.src, this.args);
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();

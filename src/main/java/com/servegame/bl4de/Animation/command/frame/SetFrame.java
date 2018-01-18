@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -23,16 +24,22 @@ import static com.servegame.bl4de.Animation.util.Util.PRIMARY_COLOR;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class SetFrame implements CommandExecutor {
+public class SetFrame extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public SetFrame(Animation animation){
+    public SetFrame(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = animation;
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(this.src, this.args);
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();

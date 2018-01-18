@@ -1,6 +1,7 @@
 package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -22,16 +23,22 @@ import static org.spongepowered.api.text.format.TextColors.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class ListFrames implements CommandExecutor {
+public class ListFrames extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public ListFrames(Animation animation){
+    public ListFrames(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = animation;
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(this.src, this.args);
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
 
         // Created header for the frame list
         Text message = Text.builder()

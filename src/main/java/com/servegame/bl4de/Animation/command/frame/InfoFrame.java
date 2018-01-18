@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -24,16 +25,22 @@ import static org.spongepowered.api.text.format.TextColors.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class InfoFrame implements CommandExecutor {
+public class InfoFrame extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public InfoFrame(Animation animation){
+    public InfoFrame(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = animation;
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(this.src, this.args);
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
