@@ -47,7 +47,7 @@ public class SQLManager {
     /**
      * Create default must-have tables (currently only the animation table)
      */
-    private void initSettings(){
+    private void initSettings() {
         // In the future this would get data from a config file
         this.database = DATABASE;
         try (Connection connection = getDataSource().getConnection()){
@@ -63,7 +63,7 @@ public class SQLManager {
                     "animation_cornerTwo CLOB) ")
                     .executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            AnimationPlugin.logger.error("Failed to init database: ", e);
         }
     }
 
@@ -94,7 +94,7 @@ public class SQLManager {
     public static boolean testConnection(){
         try (Connection conn = SQLManager.getConnection()){
             return true;
-        } catch (SQLException e){
+        } catch (Exception e){
             return false;
         }
     }
