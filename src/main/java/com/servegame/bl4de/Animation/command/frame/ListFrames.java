@@ -3,20 +3,18 @@ package com.servegame.bl4de.Animation.command.frame;
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
-import com.servegame.bl4de.Animation.controller.FrameController;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
 import java.util.List;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
-import static org.spongepowered.api.text.format.TextColors.*;
+import static org.spongepowered.api.text.format.TextColors.WHITE;
 
 /**
  * File: ListFrames.java
