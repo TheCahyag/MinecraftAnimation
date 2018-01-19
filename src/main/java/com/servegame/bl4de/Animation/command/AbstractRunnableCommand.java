@@ -11,20 +11,13 @@ import org.spongepowered.api.command.spec.CommandExecutor;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public abstract class AbstractRunnableCommand<T extends CommandSource> implements CommandExecutor, Runnable {
-
-    protected T src;
-    protected CommandContext args;
+public abstract class AbstractRunnableCommand<T extends CommandSource> extends AbstractCommand<T> implements Runnable {
 
     public AbstractRunnableCommand(T src, CommandContext args){
-        this.src = src;
-        this.args = args;
+        super(src, args);
     }
 
     @Override
     public abstract void run();
-
-    @Override
-    public abstract CommandResult execute(CommandSource src, CommandContext args) throws CommandException;
 
 }
