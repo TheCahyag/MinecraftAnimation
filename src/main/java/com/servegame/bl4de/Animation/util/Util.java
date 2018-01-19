@@ -613,7 +613,7 @@ public class Util {
         // /animate stopall -f
         CommandSpec stopAllAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Stop all animations that are currently playing"))
-                .permission(Permissions.ANIMATION_STOP_ALL)
+                .permission(Permissions.STOP_ALL_ANIMATIONS)
                 .arguments(optional(flags().flag("f").buildWith(none()))) // -f
                 .executor(new StopAllAnimations())
                 .build();
