@@ -22,15 +22,16 @@ public class Permissions {
     public static final String ANIMATION_SET_NAME           = "animate.set.name";
     public static final String ANIMATION_SET_POS            = "animate.set.pos";
     public static final String ANIMATION_STATS              = "animate.stats.base";
-    public static final String ANIMATION_STOP_ALL           = "animate.stopall.base";
 
     // Frame permissions
     public static final String FRAME_CREATE                 = "animate.frame.create.base";
     public static final String FRAME_DELETE                 = "animate.frame.delete.base";
     public static final String FRAME_DISPLAY                = "animate.frame.display.base";
     public static final String FRAME_DUPLICATE              = "animate.frame.duplicate.base";
+    public static final String FRAME_INFO                   = "animate.frame.info.base";
     public static final String FRAME_LIST                   = "animate.frame.list.base";
     public static final String FRAME_UPDATE                 = "animate.frame.update.base";
+    public static final String FRAME_SET_NAME               = "animate.frame.set.name";
 
     // Admin permissions
     public static final String STOP_ALL_ANIMATIONS          = "animate.admin.stopall";
