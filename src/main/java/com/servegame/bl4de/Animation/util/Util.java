@@ -2,6 +2,7 @@ package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.command.CommandGateKeeper;
 import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
@@ -17,10 +18,11 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.HoverAction;
@@ -522,6 +524,12 @@ public class Util {
         return true;
     }
 
+    private static CommandResult executeRunnableCommand(AbstractRunnableCommand object){
+        Task.Builder taskBuilder = Task.builder().async().execute(object);
+        taskBuilder.submit(AnimationPlugin.plugin);
+        return CommandResult.success();
+    }
+
     /**
      * Register command with the Sponge {@link CommandManager}
      * @param plugin {@link AnimationPlugin} plugin instance
@@ -577,7 +585,7 @@ public class Util {
                                         .buildWith(none())
                         )
                 )
-                .executor(new StartAnimation())
+                .executor((src, args) -> executeRunnableCommand(new StartAnimation(src, args)))
                 .build();
 
         // /animate stop <name>
@@ -585,7 +593,7 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Stop a given animation"))
                 .permission(Permissions.ANIMATION_STOP)
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")))
-                .executor(new StopAnimation())
+                .executor((src, args) -> executeRunnableCommand(new StopAnimation(src, args)))
                 .build();
 
         // /animate pause <name>
@@ -593,7 +601,7 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Pause a given animation"))
                 .permission(Permissions.ANIMATION_PAUSE)
                 .arguments(string(Text.of("animation_name")))
-                .executor(new PauseAnimation())
+                .executor((src, args) -> executeRunnableCommand(new PauseAnimation(src, args)))
                 .build();
 
         // /animate stats
@@ -615,7 +623,7 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Stop all animations that are currently playing"))
                 .permission(Permissions.STOP_ALL_ANIMATIONS)
                 .arguments(optional(flags().flag("f").buildWith(none()))) // -f
-                .executor(new StopAllAnimations())
+                .executor((src, args) -> executeRunnableCommand(new StopAllAnimations(src, args)))
                 .build();
 
         // /animate refreshAnimations
