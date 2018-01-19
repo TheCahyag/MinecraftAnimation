@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -53,6 +54,12 @@ public class SetAnimation implements CommandExecutor {
         }
 
         if (setPos1){
+            if (!player.hasPermission(Permissions.ANIMATION_SET_POS)){
+                // The player doesn't have permissions to run this command
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+                return CommandResult.empty();
+            }
+
             // Get location
             Location<World> newLocation = player.getLocation();
             Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerTwo();
@@ -74,6 +81,12 @@ public class SetAnimation implements CommandExecutor {
                 return CommandResult.empty();
             }
         } else if (setPos2){
+            if (!player.hasPermission(Permissions.ANIMATION_SET_POS)){
+                // The player doesn't have permissions to run this command
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+                return CommandResult.empty();
+            }
+
             // Get location
             Location<World> newLocation = player.getLocation();
             Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerOne();
@@ -95,6 +108,12 @@ public class SetAnimation implements CommandExecutor {
                 return CommandResult.empty();
             }
         } else if (setName){
+            if (!player.hasPermission(Permissions.ANIMATION_SET_NAME)){
+                // The player doesn't have permissions to run this command
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+                return CommandResult.empty();
+            }
+
             // Set the name of the animation
             Optional<String> newNameOptional = args.getOne("new_name");
             if (!newNameOptional.isPresent()){
