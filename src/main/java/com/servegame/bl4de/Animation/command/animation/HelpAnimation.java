@@ -33,7 +33,7 @@ public class HelpAnimation implements CommandExecutor {
             /animate list
             /animate <name> info
             /animate <name> set <pos1|pos2> -f
-            /animate <name> frame create <name> -h
+            /animate <name> frame create <name>
             /animate <name> frame delete <name|num> -f
             /animate <name> frame display <name|num>
             /animate <name> frame duplicate <name|num> [num]
