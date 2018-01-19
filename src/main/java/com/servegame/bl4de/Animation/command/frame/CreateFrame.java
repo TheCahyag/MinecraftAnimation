@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -37,11 +38,22 @@ public class CreateFrame extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
+    public boolean checkPermission() {
+        return this.src.hasPermission(Permissions.FRAME_CREATE);
+    }
+
+    @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
         }
+        if (!checkPermission()){
+            // The user doesn't have permissions to run this command
+            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+            return CommandResult.empty();
+        }
+
         Player player = ((Player) src);
         Optional<String> frameNameOptional = args.getOne("frame_name");
         Frame frame;

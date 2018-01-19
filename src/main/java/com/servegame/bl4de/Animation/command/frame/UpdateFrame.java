@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
@@ -34,6 +35,11 @@ public class UpdateFrame extends AbstractRunnableCommand<CommandSource> {
     @Override
     public void run() {
         this.execute(this.src, this.args);
+    }
+
+    @Override
+    public boolean checkPermission() {
+        return this.src.hasPermission(Permissions.FRAME_UPDATE);
     }
 
     @Override

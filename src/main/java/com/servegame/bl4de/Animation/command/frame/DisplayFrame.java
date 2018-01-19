@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
@@ -35,10 +36,20 @@ public class DisplayFrame extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
+    public boolean checkPermission() {
+        return src.hasPermission(Permissions.FRAME_DISPLAY);
+    }
+
+    @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
+        }
+        if (!checkPermission()){
+            // The user doesn't have permissions to run this command
+            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+            return CommandResult.empty();
         }
         Player player = ((Player) src);
         if (this.animation.isRunning()){
