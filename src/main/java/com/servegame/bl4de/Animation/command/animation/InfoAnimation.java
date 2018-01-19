@@ -20,7 +20,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
@@ -40,7 +39,7 @@ public class InfoAnimation implements CommandExecutor {
     }
 
     @Override
-    public CommandResult execute(CommandSource src, @Nullable CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
