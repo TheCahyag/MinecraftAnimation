@@ -44,6 +44,9 @@ public class CreateAnimation implements CommandExecutor {
         }
         String animationName = animationNameOptional.get();
 
+        // Replace underscores with hyphens, this could be important in the future if I need to parse table names
+        animationName = animationName.replace("_", "-");
+
         // The length of the string must be <= 255 inorder to comply with the table
         if (animationName.length() > 255){
             player.sendMessage(TextResponses.GENERAL_NAME_TOO_LONG);
