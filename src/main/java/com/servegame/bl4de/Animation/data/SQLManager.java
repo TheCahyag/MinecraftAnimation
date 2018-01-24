@@ -139,6 +139,19 @@ public class SQLManager {
     }
 
     /**
+     * Renames the given table to a new given name
+     * @param table - table to rename
+     * @param newName - new name of the table
+     */
+    void renameTable(String table, String newName){
+        try (Connection conn = getConnection()){
+            conn.prepareStatement("ALTER TABLE " + table + " RENAME TO " + newName).executeUpdate();
+        } catch (SQLException e){
+            throw new RuntimeException("Failed to rename " + table + " to " + table);
+        }
+    }
+
+    /**
      * Create a table that is used to store the contents of a {@link Frame}, the name of the
      * table should be obtained for {@link SQLResources#getContentTableName(Animation, Frame)}
      * @param tableName the name of the table that will be created
