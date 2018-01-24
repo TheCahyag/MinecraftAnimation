@@ -46,7 +46,7 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
         boolean cycles = (boolean) args.getOne(Text.of("setting_cycles")).orElse(false);
 
         if (delay){
-            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_D)){
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_DELAY)){
                 // User doesn't have permission to change this setting
                 player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
                 return CommandResult.empty();
@@ -85,7 +85,7 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
                     return CommandResult.empty();
                 }
         } else if (frameIndex){
-            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_F)){
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_FRAME)){
                 // User doesn't have permission to change this setting
                 player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
                 return CommandResult.empty();
@@ -136,7 +136,7 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
                 return CommandResult.empty();
             }
         } else if (cycles) {
-            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_C)){
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_CYCLES)){
                 // User doesn't have permission to change this setting
                 player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
                 return CommandResult.empty();
