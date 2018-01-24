@@ -59,11 +59,11 @@ public class CommandGateKeeper implements CommandExecutor {
                 .async();
 
         if (animationInfo){
-            return new InfoAnimation(animation).execute(src, args);
+            return new InfoAnimation(animation, src, args).execute(src, args);
         } else if (animationSet){
             return new SetAnimation(animation).execute(src, args);
         } else if (animationSetting) {
-            return new SettingsAnimation(animation).execute(src, args);
+            return new SettingsAnimation(animation, src, args).execute(src, args);
         } else if (frame){
             boolean create      = (boolean) args.getOne("create").orElse(false);
             boolean delete      = (boolean) args.getOne("delete_frame").orElse(false);
