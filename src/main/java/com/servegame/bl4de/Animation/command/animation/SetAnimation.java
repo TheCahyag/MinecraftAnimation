@@ -125,16 +125,16 @@ public class SetAnimation implements CommandExecutor {
             if (this.animation.getAnimationName().equals(newName)){
                 // The name is the same as current
                 player.sendMessage(TextResponses.GENERAL_INDIFFERENT_NAME_ERROR);
-                return CommandResult.success();
+                return CommandResult.empty();
             }
             if (AnimationController.getAnimationsByOwner(player.getUniqueId()).contains(newName)){
                 // Name already exists
                 player.sendMessage(TextResponses.ANIMATION_ALREADY_EXISTS_ERROR);
-                return CommandResult.success();
+                return CommandResult.empty();
             }
             // Make change and save animation
             this.animation.setAnimationName(newName);
-            if (AnimationController.saveAnimation(this.animation)){
+            if (AnimationController.renameAnimation(this.animation)){
                 // Animation changed and saved
                 player.sendMessage(TextResponses.ANIMATION_SUCCESSFULLY_ALTERED);
             } else {
