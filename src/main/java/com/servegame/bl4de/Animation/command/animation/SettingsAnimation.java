@@ -1,13 +1,13 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.command.AbstractCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.TextResponses;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -19,16 +19,22 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class SettingsAnimation implements CommandExecutor {
+public class SettingsAnimation extends AbstractCommand<CommandSource> {
 
     private Animation animation;
 
-    public SettingsAnimation(Animation animation) {
+    public SettingsAnimation(Animation animation, CommandSource src, CommandContext args) {
+        super(src, args);
         this.animation = animation;
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public boolean checkPermission() {
+        return true;
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
@@ -40,6 +46,12 @@ public class SettingsAnimation implements CommandExecutor {
         boolean cycles = (boolean) args.getOne(Text.of("setting_cycles")).orElse(false);
 
         if (delay){
+            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_D)){
+                // User doesn't have permission to change this setting
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
+                return CommandResult.empty();
+            }
+
             boolean increment = (boolean) args.getOne(Text.of("setting_delay_increment")).orElse(false);
                 int newDelay;
             if (increment) {
@@ -73,6 +85,12 @@ public class SettingsAnimation implements CommandExecutor {
                     return CommandResult.empty();
                 }
         } else if (frameIndex){
+            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_F)){
+                // User doesn't have permission to change this setting
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
+                return CommandResult.empty();
+            }
+
             boolean first = (boolean) args.getOne(Text.of("setting_frame_index_first")).orElse(false);
             boolean last = (boolean) args.getOne(Text.of("setting_frame_index_last")).orElse(false);
 
@@ -118,6 +136,12 @@ public class SettingsAnimation implements CommandExecutor {
                 return CommandResult.empty();
             }
         } else if (cycles) {
+            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_C)){
+                // User doesn't have permission to change this setting
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
+                return CommandResult.empty();
+            }
+
             boolean increment = (boolean) args.getOne(Text.of("setting_cycles_increment")).orElse(false);
             int newCycles;
             if (increment){
