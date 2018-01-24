@@ -131,20 +131,14 @@ public class SetAnimation implements CommandExecutor {
                 player.sendMessage(TextResponses.ANIMATION_ALREADY_EXISTS_ERROR);
                 return CommandResult.empty();
             }
-            // Make change and save animation
-            this.animation.setAnimationName(newName);
+            // Rename animation
             if (AnimationController.renameAnimation(this.animation)){
                 // Animation changed and saved
                 player.sendMessage(TextResponses.ANIMATION_SUCCESSFULLY_ALTERED);
             } else {
                 // Animation wasn't saved
-                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
+                player.sendMessage(TextResponses.ANIMATION_FAILED_TO_RENAME);
                 return CommandResult.empty();
-            }
-            if (!AnimationController.deleteAnimation(this.animation)){
-                // Couldn't delete the animation
-                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
-                new Throwable().printStackTrace();
             }
         }
         return CommandResult.success();
