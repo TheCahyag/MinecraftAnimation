@@ -77,21 +77,21 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
         Optional<Integer> cyclesOptional = args.getOne("cycles");
 
         if (frameToStartOnOptional.isPresent()) {
-            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_F)) {
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_FRAME)) {
                 // Check if the user doesn't have permissions for the -f flag
                 player.sendMessage(Text.of(TextResponses.USER_DOESNT_HAVE_PERMISSION_FLAG_F));
                 return CommandResult.empty();
             }
         }
         if (frameToStartOnOptional.isPresent()) {
-            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_D)) {
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_DELAY)) {
                 // Check if the user doesn't have permissions for the -d flag
                 player.sendMessage(Text.of(TextResponses.USER_DOESNT_HAVE_PERMISSION_FLAG_D));
                 return CommandResult.empty();
             }
         }
         if (frameToStartOnOptional.isPresent()) {
-            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_C)) {
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_CYCLES)) {
                 // Check if the user doesn't have permissions for the -c flag
                 player.sendMessage(Text.of(TextResponses.USER_DOESNT_HAVE_PERMISSION_FLAG_C));
                 return CommandResult.empty();
