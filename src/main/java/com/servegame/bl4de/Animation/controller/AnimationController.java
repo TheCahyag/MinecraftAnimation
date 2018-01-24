@@ -126,4 +126,8 @@ public class AnimationController {
     public static boolean refreshAnimation(String name, UUID owner){
         return PreparedStatements.refreshAnimation(name, owner);
     }
+
+    public static boolean renameAnimation(Animation animation){
+        return PreparedStatements.renameAnimation(animation);
+    }
 }
