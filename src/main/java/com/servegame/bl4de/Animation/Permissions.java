@@ -6,6 +6,7 @@ package com.servegame.bl4de.Animation;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class Permissions {
+
     // Animation permissions
     public static final String ANIMATION_BASE               = "animate.base";
     public static final String ANIMATION_CREATE             = "animate.create.base";
@@ -14,9 +15,9 @@ public class Permissions {
     public static final String ANIMATION_HELP               = "animate.help.base";
     public static final String ANIMATION_LIST               = "animate.list.base";
     public static final String ANIMATION_START              = "animate.start.base";
-    public static final String ANIMATION_START_FLAG_F       = "animate.start.flag.frame";
-    public static final String ANIMATION_START_FLAG_D       = "animate.start.flag.delay";
-    public static final String ANIMATION_START_FLAG_C       = "animate.start.flag.cycles";
+    public static final String ANIMATION_SETTING_FRAME      = "animate.setting.frame";
+    public static final String ANIMATION_SETTING_DELAY      = "animate.setting.delay";
+    public static final String ANIMATION_SETTING_CYCLES     = "animate.setting.cycles";
     public static final String ANIMATION_STOP               = "animate.stop.base";
     public static final String ANIMATION_PAUSE              = "animate.pause.base";
     public static final String ANIMATION_SET_NAME           = "animate.set.name";
