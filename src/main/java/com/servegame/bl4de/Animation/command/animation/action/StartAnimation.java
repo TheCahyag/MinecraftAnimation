@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation.action;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -54,26 +55,49 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
         Optional<Animation> animationOptional = AnimationController.getAnimation(animationNameOptional.get(), player.getUniqueId());
         if (!animationOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
-            return CommandResult.success();
+            return CommandResult.empty();
         }
         Animation animation = animationOptional.get();
 
         if (!animation.isInitialized()){
             // Animation is not initialized
             player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
-            return CommandResult.success();
+            return CommandResult.empty();
         }
 
         if (animation.getStatus() == Animation.Status.RUNNING){
             // Animation is already running
             player.sendMessage(TextResponses.ANIMATION_ALREADY_RUNNING);
-            return CommandResult.success();
+            return CommandResult.empty();
         }
 
         // Parse flag arguments
         Optional<Integer> frameToStartOnOptional = args.getOne("frame");
         Optional<Integer> tickDelayOptional = args.getOne("delay");
         Optional<Integer> cyclesOptional = args.getOne("cycles");
+
+        if (frameToStartOnOptional.isPresent()) {
+            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_F)) {
+                // Check if the user doesn't have permissions for the -f flag
+                player.sendMessage(Text.of(TextResponses.USER_DOESNT_HAVE_PERMISSION_FLAG_F));
+                return CommandResult.empty();
+            }
+        }
+        if (frameToStartOnOptional.isPresent()) {
+            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_D)) {
+                // Check if the user doesn't have permissions for the -d flag
+                player.sendMessage(Text.of(TextResponses.USER_DOESNT_HAVE_PERMISSION_FLAG_D));
+                return CommandResult.empty();
+            }
+        }
+        if (frameToStartOnOptional.isPresent()) {
+            if (!player.hasPermission(Permissions.ANIMATION_START_FLAG_C)) {
+                // Check if the user doesn't have permissions for the -c flag
+                player.sendMessage(Text.of(TextResponses.USER_DOESNT_HAVE_PERMISSION_FLAG_C));
+                return CommandResult.empty();
+            }
+        }
+
         tickDelayOptional.ifPresent(animation::setTickDelay);
         cyclesOptional.ifPresent(animation::setCycles);
 
@@ -94,6 +118,7 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
 
         } catch (UninitializedException ue){
             player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
+            return CommandResult.empty();
         }
         return CommandResult.success();
 
