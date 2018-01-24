@@ -78,5 +78,6 @@ public class TextResponses {
     public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_F = Text.of(ERROR_COLOR, "You do not have permission to use the -f flag");
     public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_D = Text.of(ERROR_COLOR, "You do not have permission to use the -d flag");
     public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_C = Text.of(ERROR_COLOR, "You do not have permission to use the -c flag");
+    public static final Text USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING = Text.of(ERROR_COLOR, "You do not have permission to change this setting");
 
 }
