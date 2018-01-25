@@ -20,8 +20,6 @@ See more [here](https://github.com/TheCahyag/MinecraftAnimation/blob/sponge-api/
 
 #### Known bugs / Not Implemented Yet
 * Blocks that hold inventory don't retain their data
-* Big animations will take awhile to load which leads to the server lagging. (An Animation that has 4 frames with each holding 15000 blocks of data will take ~7 seconds to load, this will be optimized in the future)
-* Settings button does nothing (Will be updated in the UI Enhancement update)
 
 ## Contributions
 Contributions are always welcome! Please see [Contributions.md](https://github.com/TheCahyag/MinecraftAnimation/blob/sponge-api/7/CONTRIBUTIONS.md) for more information on contributing.
