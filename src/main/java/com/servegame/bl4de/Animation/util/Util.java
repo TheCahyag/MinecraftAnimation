@@ -598,7 +598,7 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Stop a given animation"))
                 .permission(Permissions.ANIMATION_STOP)
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")))
-                .executor((src, args) -> executeRunnableCommand(new StopAnimation(src, args)))
+                .executor((src, args) -> new StopAnimation(src, args).runCommand())
                 .build();
 
         // /animate pause <name>
