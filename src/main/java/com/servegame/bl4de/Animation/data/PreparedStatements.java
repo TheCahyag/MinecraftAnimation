@@ -450,6 +450,54 @@ public class PreparedStatements {
         return true;
     }
 
+    /**
+     * To rename an animation there are several places in the database that need to be changed
+     * 1. Update the animation's row in the animations table
+     * 2. Update the animation's frame table's name
+     * 3. For each frame the animation has, the table representing the frame needs to be renamed
+     * @param animation - animation to rename
+     * @param newName - the new name for the animation
+     * @return true if all went well, otherwise false
+     */
+    public static boolean renameAnimation(Animation animation, String newName){
+        String originalName = animation.getAnimationName();
+        try (Connection conn = SQLManager.getConnection()){
+            // Rename the animation in the animations table
+            PreparedStatement updateRow = conn.prepareStatement(
+                    "UPDATE " + ANIMATION_TABLE +
+                            " SET " + COLUMN_ANIMATION_NAME + " = ? " +
+                            " WHERE " + COLUMN_ANIMATION_OWNER + " = ? " +
+                            "AND " + COLUMN_ANIMATION_NAME + " = ?");
+            updateRow.setString(1, newName);
+            updateRow.setObject(2, animation.getOwner());
+            updateRow.setString(3, originalName);
+            updateRow.executeUpdate();
+
+            // Rename the frame list table
+            SQLManager.get(AnimationPlugin.plugin).renameTable(
+                    getFrameTableName(animation),
+                    getFrameTableName(new Animation(animation.getOwner(), newName))
+            );
+
+            List<Frame> frames = animation.getFrames();
+
+            for (Frame frame :
+                    frames) {
+                // For each frame, rename the content table in the database
+                SQLManager.get(AnimationPlugin.plugin).renameTable(
+                        getContentTableName(animation, frame),
+                        getContentTableName(new Animation(null, newName), frame)
+                );
+            }
+
+        } catch (SQLException e){
+            AnimationPlugin.logger.error("Failed to rename animation: " + animation.getAnimationName());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /* END: Animation Operations */
 
     /* START: Frame Operations */
