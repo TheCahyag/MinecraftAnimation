@@ -15,6 +15,8 @@ public abstract class AbstractRunnableCommand<T extends CommandSource> extends A
     }
 
     @Override
-    public abstract void run();
+    public void run(){
+        runCommand();
+    }
 
 }
