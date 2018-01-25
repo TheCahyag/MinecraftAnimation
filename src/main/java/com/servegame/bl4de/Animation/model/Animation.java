@@ -6,6 +6,7 @@ import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.task.FrameDisplayTask;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
@@ -226,7 +227,16 @@ public class Animation implements DataSerializable{
         AnimationPlugin.taskManager.stopAnimation(this);
 
         // Now display the start frame
-        FrameController.displayContents(FrameController.getFrameWithContents(this, this.getStartFrameIndex()).get());
+        FrameDisplayTask displayTask = new FrameDisplayTask(
+                FrameController.getFrameWithContents(this, this.getStartFrameIndex()).get(),
+                0,
+                this.getStartFrameIndex()
+        );
+
+        // Create a task for each frame giving proper delay times
+        Task.Builder taskBuilder = Task.builder()
+                .execute(displayTask);
+        taskBuilder.submit(AnimationPlugin.plugin);
     }
 
     /**
