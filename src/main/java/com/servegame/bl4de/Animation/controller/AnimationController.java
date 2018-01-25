@@ -88,19 +88,11 @@ public class AnimationController {
     }
 
     public static Optional<Animation> getAnimation(String name, UUID owner){
-        long startTime = System.currentTimeMillis();
-        Optional<Animation> optionalAnimation = PreparedStatements.getAnimation(name, owner);
-        long endTime = System.currentTimeMillis();
-        AnimationPlugin.logger.info("Get full (" + name + "): " + (endTime - startTime));
-        return optionalAnimation;
+        return PreparedStatements.getAnimation(name, owner);
     }
 
     public static Optional<Animation> getBareAnimation(String name, UUID owner){
-        long startTime = System.currentTimeMillis();
-        Optional<Animation> optionalAnimation = PreparedStatements.getBareAnimation(name, owner);
-        long endTime = System.currentTimeMillis();
-        AnimationPlugin.logger.info("Get bare (" + name + "): " + (endTime - startTime));
-        return optionalAnimation;
+        return PreparedStatements.getBareAnimation(name, owner);
     }
 
     public static ArrayList<String> getAnimationsByOwner(UUID owner) {
@@ -127,7 +119,7 @@ public class AnimationController {
         return PreparedStatements.refreshAnimation(name, owner);
     }
 
-    public static boolean renameAnimation(Animation animation){
-        return PreparedStatements.renameAnimation(animation);
+    public static boolean renameAnimation(Animation animation, String newName){
+        return PreparedStatements.renameAnimation(animation, newName);
     }
 }
