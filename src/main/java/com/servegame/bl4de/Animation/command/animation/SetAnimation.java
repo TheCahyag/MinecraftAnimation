@@ -132,7 +132,7 @@ public class SetAnimation implements CommandExecutor {
                 return CommandResult.empty();
             }
             // Rename animation
-            if (AnimationController.renameAnimation(this.animation)){
+            if (AnimationController.renameAnimation(this.animation, newName)){
                 // Animation changed and saved
                 player.sendMessage(TextResponses.ANIMATION_SUCCESSFULLY_ALTERED);
             } else {
