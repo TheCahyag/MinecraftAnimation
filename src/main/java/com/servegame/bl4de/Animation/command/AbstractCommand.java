@@ -1,6 +1,5 @@
 package com.servegame.bl4de.Animation.command;
 
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -27,6 +26,10 @@ public abstract class AbstractCommand<T extends CommandSource> implements Comman
      */
     public abstract boolean checkPermission();
 
+    public CommandResult runCommand(){
+        return execute(this.src, this.args);
+    }
+
     @Override
-    public abstract CommandResult execute(CommandSource src, CommandContext args) throws CommandException;
+    public abstract CommandResult execute(CommandSource src, CommandContext args);
 }
