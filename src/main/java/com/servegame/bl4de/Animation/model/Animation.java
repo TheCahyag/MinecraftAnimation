@@ -247,7 +247,9 @@ public class Animation implements DataSerializable{
      */
     public void pause(){
         AnimationController.updateAnimationStatus(this, Status.PAUSED);
-        AnimationPlugin.taskManager.stopAnimation(this);
+        if (!AnimationPlugin.taskManager.stopAnimation(this)){
+            AnimationPlugin.logger.error("There was a problem pausing the animation: " + this.getAnimationName());
+        }
     }
 
     /* END ACTION METHODS */
