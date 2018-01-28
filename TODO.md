@@ -1,13 +1,11 @@
 ### TODO
 #### High Priority
+[BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 
 #### Medium Priority
-[PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
-[FEEDBACK] Send a message for when an animation starts, stops, or pauses (send these to the middle message bar)  
-[BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name    
 [BUGFIX] Some animations, when stopped, play certain frames continuously even after they are stopped (maybe because it 
-was played and then stopped immediately)   
+was played and then stopped immediately) -- haven't been able to reproduce this   
 
 #### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
@@ -102,4 +100,6 @@ the internal states and then starting the animation backup on the frame it stopp
 * [UI] ~~The message that tells the user that the frame has been created or deleted should link to that frame~~
 * [BUGFIX] ~~Deleting a frame that doesn't exist leads to a index out of bounds error~~
 * [BOTHERING] ~~Fix the method to create frame names, it doesn't reset for every animation~~
+* [PERMISSIONS] ~~Setup specific permissions for the usage of flags, and any other permissions that isn't already setup~~
+* [FEEDBACK] ~~Send a message for when an animation starts, stops, or pauses (send these to the middle message bar)~~
 
