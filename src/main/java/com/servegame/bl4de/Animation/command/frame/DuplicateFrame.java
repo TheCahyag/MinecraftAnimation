@@ -1,18 +1,19 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 
 import java.util.Optional;
 
@@ -23,19 +24,35 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DuplicateFrame implements CommandExecutor {
+public class DuplicateFrame extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public DuplicateFrame(Animation animation){
+    public DuplicateFrame(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = AnimationController.getAnimation(animation.getAnimationName(), animation.getOwner()).get();
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(this.src, this.args);
+    }
+
+    @Override
+    public boolean checkPermission() {
+        return src.hasPermission(Permissions.FRAME_DUPLICATE);
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
+        }
+        if (!checkPermission()){
+            // The user doesn't have permissions to run this command
+            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+            return CommandResult.empty();
         }
         Player player = ((Player) src);
         if (this.animation.isRunning()){
@@ -95,17 +112,25 @@ public class DuplicateFrame implements CommandExecutor {
         if (frameInserted){
             // Frame went in just fine
             if (AnimationController.saveAnimation(this.animation)){
-                Text message = Text.of(
-                        PRIMARY_COLOR, "Frame '",
-                        NAME_COLOR, theFrame.getName(),
-                        PRIMARY_COLOR, "' ",
-                        ACTION_COLOR, "duplicated",
-                        PRIMARY_COLOR, " successfully. ",
-                        ACTION_COLOR, "Inserted ",
-                        PRIMARY_COLOR, "'",
-                        NAME_COLOR, newFrame.getName(),
-                        PRIMARY_COLOR, "' at index " + insertIndex + "."
-                );
+                Text message = Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "Frame '"))
+                        .append(Text.builder()
+                                .append(Text.of(NAME_COLOR, COMMAND_STYLE, theFrame.getName()))
+                                .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " frame " + theFrame.getName() + " info"))
+                                .onHover(TextActions.showText(TextResponses.FRAME_C2V_INFO))
+                                .build())
+                        .append(Text.of(PRIMARY_COLOR, "' ",
+                                ACTION_COLOR, "duplicated",
+                                PRIMARY_COLOR, " successfully. ",
+                                ACTION_COLOR, "Inserted ",
+                                PRIMARY_COLOR, "'"))
+                        .append(Text.builder()
+                                .append(Text.of(NAME_COLOR, COMMAND_STYLE, newFrame.getName()))
+                                .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " frame " + newFrame.getName() + " info"))
+                                .onHover(TextActions.showText(TextResponses.FRAME_C2V_INFO))
+                                .build())
+                        .append(Text.of(PRIMARY_COLOR, "' at index " + insertIndex + "."))
+                        .build();
                 player.sendMessage(message);
             } else {
                 // The animation failed to save

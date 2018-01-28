@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.controller;
 
+import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.data.PreparedStatements;
 import com.servegame.bl4de.Animation.data.SQLResources;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -80,12 +81,17 @@ public class FrameController {
     }
 
     public static Optional<Frame> getFrameWithContents(Animation animation, String name){
-        return PreparedStatements.getFrame(
+        long startTime = System.currentTimeMillis();
+        Optional<Frame> frameOptional = PreparedStatements.getFrame(
                 name,
                 SQLResources.getFrameTableName(animation),
                 SQLResources.getContentTableName(animation, animation.getFrame(name).get()),
                 true
         );
+        long endTime = System.currentTimeMillis();
+        AnimationPlugin.logger.info("Get frame (" + name + "): " + (endTime - startTime));
+
+        return frameOptional;
     }
 
     public static boolean saveFrame(Animation animation, Frame frame){
@@ -97,6 +103,7 @@ public class FrameController {
     }
 
     public static boolean deleteFrame(Animation animation, Frame frame){
+        animation.deleteFrame(frame);
         return PreparedStatements.deleteFrame(animation, frame);
     }
 
@@ -146,9 +153,7 @@ public class FrameController {
             for (int j = 0; j < zLen; j++) {
                 // X
                 for (int k = 0; k < xLen; k++) {
-                    BlockSnapshot tmp = snapshots[k][i][j];
-                    String blockName = tmp.getState().getType().getName();
-                    if (!blockName.equals("minecraft:air")){
+                    if (snapshots[k][i][j] != null){
                         count++;
                     }
                 }
@@ -218,6 +223,12 @@ public class FrameController {
                                 ACTION_COLOR, COMMAND_HOVER, "UPDATE",
                                 PRIMARY_COLOR, "]    "))
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame update " + frame.getName()))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "DELETE",
+                                PRIMARY_COLOR, "]"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " frame delete " + frame.getName()))
                         .build())
                 .build();
     }

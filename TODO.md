@@ -1,6 +1,5 @@
 ### TODO
 #### High Priority
-[BUGFIX] If a frame in an animation doesn't have any content when played, an error is thrown to console
 
 #### Medium Priority
 [PERMISSIONS] Setup specific permissions for the usage of flags, and any other permissions that isn't already setup  
@@ -8,14 +7,12 @@
 [BUGFIX] Setting the cycles when starting an animation doesn't do anything  
 [REQUIREMENT] Define characters that are illegal to have in a frame/animation name    
 [BUGFIX] Some animations, when stopped, play certain frames continuously even after they are stopped (maybe because it 
-was played and then stopped immediately)  
-[BUGFIX] Deleting a frame that doesn't exist leads to a index out of bounds error  
+was played and then stopped immediately)   
 
 #### Low Priority
 [PERMISSIONS] Permissions that only allow certain values to be set with certain flags  
 [COMMAND] Add .complete() lists on all arguments for tabbing arguments  
 [BOTHERING] Fix the buttons so that clicking on the spaces don't execute the command  
-[BOTHERING] Fix the method to create frame names, it doesn't reset for every animation  
 [ENHANCEMENT] Make a config where the user can specify the default values of animation's states 
 (frame, delay, cycles) or just other config stuff  
 [ENHANCEMENT] Use pageation to display only a certain number of frames and animations when listing 
@@ -61,7 +58,7 @@ the frame so the user can place all frames down at the same time.
 [ENHANCEMENT] If the animation is already running and the user calls /animate start <name> and specifies a flag, those 
 flag values should update on the currently playing animation (this would probably require stopping the animation, changing 
 the internal states and then starting the animation backup on the frame it stopped on)  
-[UI] Add a message in the bottom middle of the users screen showing what frame the animation is on  
+[UI] Add a message in the bottom middle of the users screen showing what frame the animation is on -- this likely won't be possible since it's not very useful when there are two animations running at the same time  
 [UI] After an animation is created should it automatically call /animate <name> info or /animate list to show the newly created animation  
 
 ## Animations to show off
@@ -103,4 +100,6 @@ the internal states and then starting the animation backup on the frame it stopp
 * [BUGFIX] ~~There's a problem when displaying the volume of small subspaces, a 1x4x1 will have a volume of 0~~  
 * [ENHANCEMENT] ~~After playing the animation for awhile the frames fall out of sync~~  
 * [UI] ~~The message that tells the user that the frame has been created or deleted should link to that frame~~
+* [BUGFIX] ~~Deleting a frame that doesn't exist leads to a index out of bounds error~~
+* [BOTHERING] ~~Fix the method to create frame names, it doesn't reset for every animation~~
 

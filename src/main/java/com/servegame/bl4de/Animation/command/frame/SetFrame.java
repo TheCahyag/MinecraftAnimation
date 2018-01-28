@@ -1,15 +1,15 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
@@ -23,16 +23,31 @@ import static com.servegame.bl4de.Animation.util.Util.PRIMARY_COLOR;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class SetFrame implements CommandExecutor {
+public class SetFrame extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public SetFrame(Animation animation){
+    public SetFrame(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = animation;
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(this.src, this.args);
+    }
+
+    @Override
+    public boolean checkPermission() {
+        boolean setName = (boolean) this.args.getOne("name").orElse(false);
+        if (setName){
+            return this.src.hasPermission(Permissions.FRAME_SET_NAME);
+        }
+        return false;
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
@@ -42,6 +57,12 @@ public class SetFrame implements CommandExecutor {
         if (this.animation.isRunning()){
             player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
             return CommandResult.success();
+        }
+
+        if (!checkPermission()){
+            // The user doesn't have permissions to run this command
+            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+            return CommandResult.empty();
         }
 
         // Get the frame

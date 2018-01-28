@@ -150,6 +150,59 @@ public class PreparedStatements {
         return true;
     }
 
+    public static boolean saveBareAnimation(Animation animation){
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE " + ANIMATION_TABLE + " SET " +
+                            COLUMN_ANIMATION_STATUS + " = ?, " +
+                            COLUMN_ANIMATION_START_FRAME_INDEX + " = ?, " +
+                            COLUMN_ANIMATION_TICK_DELAY + " = ?, " +
+                            COLUMN_ANIMATION_CYCLES + " = ?, " +
+                            //COLUMN_ANIMATION_FRAME_NAMES + " = ?, " +
+                            COLUMN_ANIMATION_C1 + " = ?, " +
+                            COLUMN_ANIMATION_C2 + " = ? " +
+                            "WHERE " +
+                            COLUMN_ANIMATION_NAME + " = ? AND " +
+                            COLUMN_ANIMATION_OWNER + " = ?"
+            );
+
+            // Put all the names of the frames into a list
+            final List<Frame> frames = animation.getFrames();
+            final List<String> frameNames = new ArrayList<>();
+            frames.forEach(frame -> frameNames.add(frame.getName()));
+
+            // SET Clause
+            statement.setString(1, animation.getStatus().toString());   // Status
+            statement.setInt(2, animation.getStartFrameIndex());        // Start frame index
+            statement.setInt(3, animation.getTickDelay());              // Tick delay
+            statement.setInt(4, animation.getCycles());                 // Cycles
+//            statement.setObject(5, frameNames.toArray());
+            Optional<Location<World>> worldLocation1 = animation.getSubSpace().getCornerOne();
+            Optional<Location<World>> worldLocation2 = animation.getSubSpace().getCornerTwo();
+            if (worldLocation1.isPresent()){
+                statement.setString(5, DataFormats.HOCON.write(worldLocation1.get().createSnapshot().toContainer()));
+            } else {
+                statement.setString(5, null);
+            }
+            if (worldLocation2.isPresent()){
+                statement.setString(6, DataFormats.HOCON.write(worldLocation2.get().createSnapshot().toContainer()));
+            } else {
+                statement.setString(6, null);
+
+            }
+
+            // WHERE Clause
+            statement.setString(7, animation.getAnimationName());       // Animation name
+            statement.setObject(8, animation.getOwner());               // Owner
+            statement.executeUpdate();
+
+        } catch (SQLException|IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Searches through all files and will check if there is a valid {@link Animation} with a given owner
      * @param name name of the animation
@@ -340,6 +393,105 @@ public class PreparedStatements {
             deleteAnimationRow.setObject(2, animation.getOwner());
             deleteAnimationRow.executeUpdate();
         } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean refreshAnimation(String animationName, UUID owner){
+        try (Connection conn = SQLManager.getConnection()){
+            PreparedStatement getAnimationFrameNames = conn.prepareStatement(
+                    "SELECT " + COLUMN_ANIMATION_FRAME_NAMES +
+                            " FROM " + ANIMATION_TABLE);
+            ResultSet rs = getAnimationFrameNames.executeQuery();
+            String[] frameNames;
+            if (rs.next()){
+                Object[] array = ((Object[]) rs.getArray(COLUMN_ANIMATION_FRAME_NAMES).getArray());
+                frameNames = new String[array.length];
+                for (int i = 0; i < array.length; i++) {
+                    frameNames[i] = (String) array[i];
+                }
+            } else {
+                // Couldn't get the frames from the animation
+                return false;
+            }
+
+            for (String frameName :
+                    frameNames) {
+                // For each frame check if there exists a table for its content, if so
+                // then set subspace_contents to true in the animation frames table
+                Frame bareFrame = new Frame();
+                bareFrame.setName(frameName);
+                bareFrame.setCreator(owner);
+                String frameContentTableName = getContentTableName(new Animation(owner, animationName), bareFrame);
+                frameContentTableName = frameContentTableName.substring(1, frameContentTableName.length() - 1).toUpperCase();
+                String contentValue;
+                if (SQLManager.doesTableExist(frameContentTableName)){
+                    contentValue = "()";
+                } else {
+                    contentValue = null;
+                }
+                // The content table exists
+                String framesTable = getFrameTableName(animationName, owner);
+                PreparedStatement updateSubspaceContent = conn.prepareStatement(
+                        "UPDATE " + framesTable +
+                                " SET " + COLUMN_FRAME_SUBSPACE_CONTENTS + " = ? " +
+                                "WHERE " + COLUMN_FRAME_NAME + " = '" + frameName + "' " +
+                                " AND " + COLUMN_FRAME_CREATOR + " = ?");
+                updateSubspaceContent.setString(1, contentValue); // empty array for now should be changed to true todo
+                updateSubspaceContent.setObject(2, owner);
+                updateSubspaceContent.executeUpdate();
+            }
+        } catch (SQLException e){
+            AnimationPlugin.logger.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * To rename an animation there are several places in the database that need to be changed
+     * 1. Update the animation's row in the animations table
+     * 2. Update the animation's frame table's name
+     * 3. For each frame the animation has, the table representing the frame needs to be renamed
+     * @param animation - animation to rename
+     * @param newName - the new name for the animation
+     * @return true if all went well, otherwise false
+     */
+    public static boolean renameAnimation(Animation animation, String newName){
+        String originalName = animation.getAnimationName();
+        try (Connection conn = SQLManager.getConnection()){
+            // Rename the animation in the animations table
+            PreparedStatement updateRow = conn.prepareStatement(
+                    "UPDATE " + ANIMATION_TABLE +
+                            " SET " + COLUMN_ANIMATION_NAME + " = ? " +
+                            " WHERE " + COLUMN_ANIMATION_OWNER + " = ? " +
+                            "AND " + COLUMN_ANIMATION_NAME + " = ?");
+            updateRow.setString(1, newName);
+            updateRow.setObject(2, animation.getOwner());
+            updateRow.setString(3, originalName);
+            updateRow.executeUpdate();
+
+            // Rename the frame list table
+            SQLManager.get(AnimationPlugin.plugin).renameTable(
+                    getFrameTableName(animation),
+                    getFrameTableName(new Animation(animation.getOwner(), newName))
+            );
+
+            List<Frame> frames = animation.getFrames();
+
+            for (Frame frame :
+                    frames) {
+                // For each frame, rename the content table in the database
+                SQLManager.get(AnimationPlugin.plugin).renameTable(
+                        getContentTableName(animation, frame),
+                        getContentTableName(new Animation(null, newName), frame)
+                );
+            }
+
+        } catch (SQLException e){
+            AnimationPlugin.logger.error("Failed to rename animation: " + animation.getAnimationName());
             e.printStackTrace();
             return false;
         }
@@ -603,6 +755,9 @@ public class PreparedStatements {
             for (int i = 0; i <= xLen; i++) {
                 for (int j = 0; j <= yLen; j++) {
                     for (int k = 0; k <= zLen; k++) {
+                        if (contents[i][j][k] == null){
+                            continue;
+                        }
                         contentPositions.put(i + "|" + j + "|" + k, DataFormats.HOCON.write(contents[i][j][k].toContainer()));
                     }
                 }
@@ -647,6 +802,10 @@ public class PreparedStatements {
                 for (int j = 0; j < yLength; j++) {
                     for (int k = 0; k < zLength; k++) {
                         // Re add each block as a row
+                        if (blockSnapshots[i][j][k] == null){
+                            // If the block is air, don't put it in the database
+                            continue;
+                        }
                         PreparedStatement statement1 = connection.prepareStatement(
                                 "INSERT INTO " + CONTENT_TABLE +
                                         " SET " +

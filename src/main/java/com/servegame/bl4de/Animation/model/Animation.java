@@ -6,6 +6,7 @@ import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.task.FrameDisplayTask;
 import com.servegame.bl4de.Animation.task.TaskManager;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
@@ -146,15 +147,6 @@ public class Animation implements DataSerializable{
     }
 
     /**
-     * Removes a {@link Frame} from the given Animation
-     * @param frame {@link Frame} object to remove
-     * @return true if the frame was found and removed, false otherwise
-     */
-    public boolean removeFrame(Frame frame){
-        return this.frames.remove(frame);
-    }
-
-    /**
      * Get the index of a given {@link Frame}
      * @param frame {@link Frame} object
      * @return int - representation of where this {@link Frame} is in the Animation
@@ -218,7 +210,7 @@ public class Animation implements DataSerializable{
      * 0 (the first {@link Frame})
      */
     public void start() throws UninitializedException {
-        start(0);
+        start(this.startFrameIndex);
     }
 
     /**
@@ -234,8 +226,17 @@ public class Animation implements DataSerializable{
         AnimationController.updateAnimationStatus(this, Status.STOPPED);
         AnimationPlugin.taskManager.stopAnimation(this);
 
-        // Now display the first frame
-        FrameController.displayContents(FrameController.getFrameWithContents(this, 0).get());
+        // Now display the start frame
+        FrameDisplayTask displayTask = new FrameDisplayTask(
+                FrameController.getFrameWithContents(this, this.getStartFrameIndex()).get(),
+                0,
+                this.getStartFrameIndex()
+        );
+
+        // Create a task for each frame giving proper delay times
+        Task.Builder taskBuilder = Task.builder()
+                .execute(displayTask);
+        taskBuilder.submit(AnimationPlugin.plugin);
     }
 
     /**
@@ -246,7 +247,9 @@ public class Animation implements DataSerializable{
      */
     public void pause(){
         AnimationController.updateAnimationStatus(this, Status.PAUSED);
-        AnimationPlugin.taskManager.stopAnimation(this);
+        if (!AnimationPlugin.taskManager.stopAnimation(this)){
+            AnimationPlugin.logger.error("There was a problem pausing the animation: " + this.getAnimationName());
+        }
     }
 
     /* END ACTION METHODS */
@@ -347,7 +350,9 @@ public class Animation implements DataSerializable{
      * @return resulting {@link Frame}
      */
     public Optional<Frame> getFrame(int frameNum){
-        if (frameNum > this.frames.size()){
+        int numOfFrames = this.frames.size();
+        if (frameNum > numOfFrames || numOfFrames == 0 || frameNum < 0){
+            // Out of bounds
             return Optional.empty();
         } else {
             return Optional.of(this.frames.get(frameNum));

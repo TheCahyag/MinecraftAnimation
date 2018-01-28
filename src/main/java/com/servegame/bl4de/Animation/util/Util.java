@@ -2,6 +2,7 @@ package com.servegame.bl4de.Animation.util;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.command.CommandGateKeeper;
 import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
@@ -14,11 +15,14 @@ import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.SubSpace3D;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.HoverAction;
@@ -51,6 +55,7 @@ public class Util {
     public static final TextColor WARNING_COLOR     = TextColors.YELLOW;
     public static final TextStyle COMMAND_STYLE     = TextStyles.ITALIC;
     public static final HoverAction.ShowText COMMAND_HOVER = TextActions.showText(Text.of("Click here to suggest this command."));
+    public static final HoverAction.ShowText CORNER_HOVER = TextActions.showText(Text.of("Click here to show the corner."));
     public static final long MAX_VOLUME             = 30000L;
     public static final long WARNING_VOLUME         = 2500L;
 
@@ -81,9 +86,12 @@ public class Util {
             for (int z = 0; z <= zLen; z++) {
                 // X
                 for (int x = 0; x <= xLen; x++) {
-                    subSpace[x][y][z] = new Location<>(
-                            corner1.getExtent(), x + xLow, y + yLow, z + zLow
-                    ).createSnapshot();
+                    BlockSnapshot snapshot = new Location<>(
+                        corner1.getExtent(), x + xLow, y + yLow, z + zLow)
+                        .createSnapshot();
+                    if (!snapshot.getState().getType().getName().equalsIgnoreCase("minecraft:air")){
+                        subSpace[x][y][z] = snapshot;
+                    }
                 }
             }
         }
@@ -120,9 +128,16 @@ public class Util {
             for (int y = 0; y < yLength; y++) {
                 // X
                 for (int z = 0; z < zLength; z++) {
+                    BlockState state;
                     BlockSnapshot snapshot = subSpaceSnapShot[x][y][z];
+                    if (snapshot == null){
+                        // If it's null in the array, it represents air
+                        state = BlockState.builder().blockType(BlockTypes.AIR).build();
+                    } else {
+                        state = snapshot.getState();
+                    }
                     Location loc = new Location<>(corner1.getExtent(), x + xLow, y + yLow, z + zLow);
-                    loc.setBlock(snapshot.getState());
+                    loc.setBlock(state);
                 }
             }
         }
@@ -158,10 +173,152 @@ public class Util {
                         .append(Text.of(PRIMARY_COLOR, "[",
                                 ACTION_COLOR, COMMAND_HOVER, "SETTINGS",
                                 PRIMARY_COLOR, "]"))
-                        .onClick(TextActions.runCommand(""))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting"))
                         .build())
                 .build();
         return message;
+    }
+
+    public static Text getSettingsButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "ANIMATION",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " info"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "FRAME DELAY",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingDelayButtons(animation))))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "CYCLES",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingCyclesButtons(animation))))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "START FRAME",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingStartFrameButtons(animation))))
+                        .build())
+                .build();
+    }
+
+    public static Text settingDelayButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "FRAME DELAY",
+                        TextColors.WHITE, ":"))
+                        .onHover(COMMAND_HOVER)
+                        .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting delay "))
+                        .build())
+                .append(Text.of("    "))
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-10",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment -10"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment -1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "20",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay 20"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment 1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+10",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting delay increment 10"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
+    }
+
+    public static Text settingCyclesButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "CYCLES",
+                                TextColors.WHITE, ":"))
+                        .onHover(COMMAND_HOVER)
+                        .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting cycles "))
+                        .build())
+                .append(Text.of("           "))
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-5",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment -5"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "-1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment -1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                SECONDARY_COLOR, "\"",
+                                ACTION_COLOR, "-1",
+                                SECONDARY_COLOR, "\"",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles -1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+1",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment 1"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "+5",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting cycles increment 5"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
+    }
+
+    public static Text settingStartFrameButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "START FRAME",
+                                TextColors.WHITE, ":"))
+                        .onHover(COMMAND_HOVER)
+                        .onClick(TextActions.suggestCommand("/animate " + animation.getAnimationName() + " setting frame_index "))
+                        .build())
+                .append(Text.of("    "))
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "FIRST",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting frame_index first"))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, "LAST",
+                                PRIMARY_COLOR, "]    "))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting frame_index last"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
     }
 
     public static Text getFrameButtons(){
@@ -368,6 +525,17 @@ public class Util {
     }
 
     /**
+     * Creates a {@link Task.Builder#async()} {@link Task} that executes the action command being ran
+     * @param commandInstance instance of a {@link AbstractRunnableCommand}
+     * @return {@link CommandResult#success()}
+     */
+    private static CommandResult executeRunnableCommand(AbstractRunnableCommand commandInstance){
+        Task.Builder taskBuilder = Task.builder().async().execute(commandInstance);
+        taskBuilder.submit(AnimationPlugin.plugin);
+        return CommandResult.success();
+    }
+
+    /**
      * Register command with the Sponge {@link CommandManager}
      * @param plugin {@link AnimationPlugin} plugin instance
      */
@@ -422,7 +590,7 @@ public class Util {
                                         .buildWith(none())
                         )
                 )
-                .executor(new StartAnimation())
+                .executor((src, args) -> executeRunnableCommand(new StartAnimation(src, args)))
                 .build();
 
         // /animate stop <name>
@@ -430,7 +598,7 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Stop a given animation"))
                 .permission(Permissions.ANIMATION_STOP)
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")))
-                .executor(new StopAnimation())
+                .executor((src, args) -> new StopAnimation(src, args).runCommand())
                 .build();
 
         // /animate pause <name>
@@ -438,7 +606,7 @@ public class Util {
                 .description(Text.of(PRIMARY_COLOR, "Pause a given animation"))
                 .permission(Permissions.ANIMATION_PAUSE)
                 .arguments(string(Text.of("animation_name")))
-                .executor(new PauseAnimation())
+                .executor((src, args) -> executeRunnableCommand(new PauseAnimation(src, args)))
                 .build();
 
         // /animate stats
@@ -458,9 +626,16 @@ public class Util {
         // /animate stopall -f
         CommandSpec stopAllAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Stop all animations that are currently playing"))
-                .permission(Permissions.ANIMATION_STOP_ALL)
+                .permission(Permissions.STOP_ALL_ANIMATIONS)
                 .arguments(optional(flags().flag("f").buildWith(none()))) // -f
-                .executor(new StopAllAnimations())
+                .executor((src, args) -> executeRunnableCommand(new StopAllAnimations(src, args)))
+                .build();
+
+        // /animate refreshAnimations
+        CommandSpec refreshAnimations = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Refreshes all animations in the database (see wiki for more details)"))
+                .permission(Permissions.REFRESH_ALL_ANIMATIONS)
+                .executor(new RefreshAnimations())
                 .build();
 
         // /animate
@@ -476,6 +651,7 @@ public class Util {
                 .child(statsAnimation, "stats", "statistics")
                 .child(debugAnimation, "debug")
                 .child(stopAllAnimation, "stopall")
+                .child(refreshAnimations, "refreshAnimations")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
@@ -484,7 +660,9 @@ public class Util {
                                 // /animate <name> set...
                                 literal(Text.of("animation_set"), "set"),
                                 // /animate <name> frame...
-                                literal(Text.of("frame"), "frame")
+                                literal(Text.of("frame"), "frame"),
+                                // /animate <name> setting...
+                                literal(Text.of("animation_setting"), "setting")
                         ),
                         optional(
                                 firstParsing(
@@ -502,6 +680,51 @@ public class Util {
                                         seq(
                                                 literal(Text.of("set_name"), "name"),
                                                 string(Text.of("new_name"))
+                                        ),
+                                        // /animate <name> setting ...
+                                        seq(
+                                                optional(
+                                                        firstParsing(
+                                                                // /animate <name> setting delay...
+                                                                seq(
+                                                                        literal(Text.of("setting_delay"), "delay"),
+                                                                        firstParsing(
+                                                                                // /animate <name> setting delay #
+                                                                                integer(Text.of("setting_delay_num")),
+                                                                                // /animate <name> setting delay increment #
+                                                                                seq(
+                                                                                        literal(Text.of("setting_delay_increment"), "increment"),
+                                                                                        integer(Text.of("increment_value"))
+                                                                                )
+                                                                        )
+                                                                ),
+                                                                // /animate <name> setting frame_index...
+                                                                seq(
+                                                                        literal(Text.of("setting_frame_index"), "frame_index"),
+                                                                        firstParsing(
+                                                                                // /animate <name> setting frame_index #
+                                                                                integer(Text.of("setting_frame_index_num")),
+                                                                                // /animate <name> setting frame_index first
+                                                                                literal(Text.of("setting_frame_index_first"), "first"),
+                                                                                // /animate <name> setting frame_index last
+                                                                                literal(Text.of("setting_frame_index_last"), "last")
+                                                                        )
+                                                                ),
+                                                                // /animate <name> setting cycles...
+                                                                seq(
+                                                                        literal(Text.of("setting_cycles"), "cycles"),
+                                                                        firstParsing(
+                                                                                // /animate <name> setting cycles #
+                                                                                integer(Text.of("setting_cycles_num")),
+                                                                                // /animate <name> setting cycles increment #
+                                                                                seq(
+                                                                                        literal(Text.of("setting_cycles_increment"), "increment"),
+                                                                                        integer(Text.of("increment_value"))
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
                                         )
                                 )
                         ),
@@ -514,7 +737,7 @@ public class Util {
                                         ),
                                         // /animate <name> frame delete <name|num> -f
                                         seq(
-                                                literal(Text.of("delete_frame"), "delete_frame"),
+                                                literal(Text.of("delete_frame"), "delete"),
                                                 string(Text.of("frame_name_num")),
                                                 optional(flags().flag("f").buildWith(none()))
                                         ),

@@ -4,6 +4,8 @@ import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.model.SubSpace3D;
 
+import java.util.UUID;
+
 /**
  * File: SQLResources.java
  *
@@ -48,6 +50,10 @@ public class SQLResources {
      */
     public static String getFrameTableName(Animation animation){
         return "`" + animation.getAnimationName() + "_" + animation.getOwner().toString() + "_frames`";
+    }
+
+    public static String getFrameTableName(String name, UUID owner){
+        return getFrameTableName(new Animation(owner, name));
     }
 
     /**

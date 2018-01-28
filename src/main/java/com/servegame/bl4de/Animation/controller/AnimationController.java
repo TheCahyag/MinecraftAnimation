@@ -107,7 +107,19 @@ public class AnimationController {
         return PreparedStatements.saveAnimation(animation);
     }
 
+    public static boolean saveBareAnimation(Animation animation){
+        return PreparedStatements.saveBareAnimation(animation);
+    }
+
     public static boolean deleteAnimation(Animation animation){
         return PreparedStatements.deleteAnimation(animation);
+    }
+
+    public static boolean refreshAnimation(String name, UUID owner){
+        return PreparedStatements.refreshAnimation(name, owner);
+    }
+
+    public static boolean renameAnimation(Animation animation, String newName){
+        return PreparedStatements.renameAnimation(animation, newName);
     }
 }

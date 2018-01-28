@@ -1,10 +1,10 @@
 package com.servegame.bl4de.Animation.command.animation;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -32,7 +32,7 @@ public class SetAnimation implements CommandExecutor {
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
@@ -53,6 +53,12 @@ public class SetAnimation implements CommandExecutor {
         }
 
         if (setPos1){
+            if (!player.hasPermission(Permissions.ANIMATION_SET_POS)){
+                // The player doesn't have permissions to run this command
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+                return CommandResult.empty();
+            }
+
             // Get location
             Location<World> newLocation = player.getLocation();
             Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerTwo();
@@ -74,6 +80,12 @@ public class SetAnimation implements CommandExecutor {
                 return CommandResult.empty();
             }
         } else if (setPos2){
+            if (!player.hasPermission(Permissions.ANIMATION_SET_POS)){
+                // The player doesn't have permissions to run this command
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+                return CommandResult.empty();
+            }
+
             // Get location
             Location<World> newLocation = player.getLocation();
             Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerOne();
@@ -95,6 +107,12 @@ public class SetAnimation implements CommandExecutor {
                 return CommandResult.empty();
             }
         } else if (setName){
+            if (!player.hasPermission(Permissions.ANIMATION_SET_NAME)){
+                // The player doesn't have permissions to run this command
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+                return CommandResult.empty();
+            }
+
             // Set the name of the animation
             Optional<String> newNameOptional = args.getOne("new_name");
             if (!newNameOptional.isPresent()){
@@ -106,27 +124,21 @@ public class SetAnimation implements CommandExecutor {
             if (this.animation.getAnimationName().equals(newName)){
                 // The name is the same as current
                 player.sendMessage(TextResponses.GENERAL_INDIFFERENT_NAME_ERROR);
-                return CommandResult.success();
+                return CommandResult.empty();
             }
             if (AnimationController.getAnimationsByOwner(player.getUniqueId()).contains(newName)){
                 // Name already exists
                 player.sendMessage(TextResponses.ANIMATION_ALREADY_EXISTS_ERROR);
-                return CommandResult.success();
+                return CommandResult.empty();
             }
-            // Make change and save animation
-            this.animation.setAnimationName(newName);
-            if (AnimationController.saveAnimation(this.animation)){
+            // Rename animation
+            if (AnimationController.renameAnimation(this.animation, newName)){
                 // Animation changed and saved
                 player.sendMessage(TextResponses.ANIMATION_SUCCESSFULLY_ALTERED);
             } else {
                 // Animation wasn't saved
-                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
+                player.sendMessage(TextResponses.ANIMATION_FAILED_TO_RENAME);
                 return CommandResult.empty();
-            }
-            if (!AnimationController.deleteAnimation(this.animation)){
-                // Couldn't delete the animation
-                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
-                new Throwable().printStackTrace();
             }
         }
         return CommandResult.success();

@@ -38,8 +38,9 @@ public class ListAnimation implements CommandExecutor {
             Text message = Text.builder()
                     .append(Text.of(PRIMARY_COLOR, "Animations:\n"))
                     .build();
+            // This may be used when pagation is used for listing animations
             int animationsToList = animationsByOwner.size() > 10 ? 10 : animationsByOwner.size();
-            for (int i = 0; i < animationsToList; i++) {
+            for (int i = 0; i < animationsByOwner.size(); i++) {
                 // Add all animations that are owned into a Text object
                 Optional<Animation> optionalAnimation = AnimationController.getBareAnimation(animationsByOwner.get(i), player.getUniqueId());
                 if (!optionalAnimation.isPresent()){
@@ -54,7 +55,7 @@ public class ListAnimation implements CommandExecutor {
                 Text animationNameLink = Text.builder()
                         .append(Text.of(COMMAND_STYLE, NAME_COLOR, animationsByOwner.get(i)))
                         .onClick(TextActions.runCommand("/animate " + animationsByOwner.get(i) + " info"))
-                        .onHover(TextActions.showText(Text.of("Click here to see the animation's info.")))
+                        .onHover(TextActions.showText(TextResponses.ANIMATION_C2V_INFO))
                         .build();
                 message = message.toBuilder()
                         .append(Text.of(AnimationController.getButtonsForAnimation(animation),
@@ -63,7 +64,7 @@ public class ListAnimation implements CommandExecutor {
             }
             message = message.toBuilder()
                     .append(Text.of(PRIMARY_COLOR, "Showing ",
-                            ACTION_COLOR, animationsToList,
+                            ACTION_COLOR, animationsByOwner.size(),
                             PRIMARY_COLOR, " out of ",
                             ACTION_COLOR, animationsByOwner.size(),
                             PRIMARY_COLOR, " animations.\n"))

@@ -1,15 +1,16 @@
 package com.servegame.bl4de.Animation.command.frame;
 
+import com.servegame.bl4de.Animation.Permissions;
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import org.apache.commons.lang3.StringUtils;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -23,19 +24,35 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DeleteFrame implements CommandExecutor {
+public class DeleteFrame extends AbstractRunnableCommand<CommandSource> {
 
     private Animation animation;
 
-    public DeleteFrame(Animation animation){
+    public DeleteFrame(Animation animation, CommandSource src, CommandContext args){
+        super(src, args);
         this.animation = AnimationController.getAnimation(animation.getAnimationName(), animation.getOwner()).get();
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public void run() {
+        this.execute(src, args);
+    }
+
+    @Override
+    public boolean checkPermission() {
+        return this.src.hasPermission(Permissions.FRAME_DELETE);
+    }
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args){
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
+        }
+        if (!checkPermission()){
+            // The user doesn't have permissions to run this command
+            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+            return CommandResult.empty();
         }
         Player player = ((Player) src);
 
@@ -70,19 +87,20 @@ public class DeleteFrame implements CommandExecutor {
         // Parse flag argument
         if (!args.hasAny("f")){
             // Check for the -f
-            player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to delete the '",
+            player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to delete '",
                     NAME_COLOR, frameName,
-                    ERROR_COLOR, "' frame, run",
+                    ERROR_COLOR, "' from the animation, run",
                     PRIMARY_COLOR, " /animation " + animation.getAnimationName() + " frame delete " + frameName,
                     FLAG_COLOR, " -f").toBuilder()
                     .append(Text.of(ERROR_COLOR, COMMAND_STYLE, ", or click this message."))
-                    .onClick(TextActions.runCommand("/animation " + animation.getAnimationName() + " frame delete_frame " + frameName + " -f"))
+                    .onClick(TextActions.runCommand("/animation " + animation.getAnimationName() + " frame delete " + frameName + " -f"))
                     .onHover(COMMAND_HOVER)
                     .build());
             return CommandResult.success();
         }
 
-        this.animation.deleteFrame(frameToDelete);
+        // Delete the frame from the database and the animation
+        FrameController.deleteFrame(this.animation, frameToDelete);
         if (AnimationController.saveAnimation(this.animation)){
             // Animation changed and saved
             Text message = Text.builder()

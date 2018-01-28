@@ -25,6 +25,7 @@ public class TextResponses {
     public static final Text GENERAL_PROBLEM_RUNNING_COMMAND_ERROR = Text.of(ERROR_COLOR, "There was a problem running this command... check console for stacktrace.");
     public static final Text EXCEED_MAX_VOLUME = Text.of(ERROR_COLOR, "The maximum volume for an animation has been exceeded. (Add the -f flag at the end of the command to override)");
     public static final Text NUMBER_FORMAT_EXCEPTION = Text.of(ERROR_COLOR, "The number entered couldn't be parsed properly. (maybe it wasn't a number)");
+    public static final Text GENERAL_INDEX_INVALID_ERROR = Text.of(ERROR_COLOR, "The index entered was not a valid index for this animation.");
 
     // Debug Change Responses
     public static final Text DEBUG_SET_TRUE = Text.of(PRIMARY_COLOR, "Debug has been ", ACTION_COLOR, "set ", PRIMARY_COLOR, "to ", SECONDARY_COLOR, "true.");
@@ -45,6 +46,13 @@ public class TextResponses {
     public static final Text ANIMATION_ALREADY_STOPPED = Text.of(ERROR_COLOR, "The animation is already stopped.");
     public static final Text ANIMATION_CANT_BE_RUNNING = Text.of(ERROR_COLOR, "The action could not be performed because the specified animation is running.");
     public static final Text ANIMATION_ISNT_RUNNING = Text.of(ERROR_COLOR, "The animation isn't running.");
+    public static final Text ANIMATION_SETTING_DELAY_TOO_LOW = Text.of(ERROR_COLOR, "The resulting delay must be > 0.");
+    public static final Text ANIMATION_SETTING_CYCLES_TOO_LOW = Text.of(ERROR_COLOR, "The cycles can not be < -1.");
+    public static final Text ANIMATION_SETTING_CYCLES_NOT_ZERO = Text.of(ERROR_COLOR, "The cycles can not be 0.");
+    public static final Text ANIMATION_NO_FRAMES_PRESENT = Text.of(ERROR_COLOR, "There are no frames for this animation.");
+    public static final Text ANIMATION_CORNER_NOT_SET = Text.of(ERROR_COLOR, "That corner hasn't been set yet.");
+    public static final Text ANIMATION_FAILED_TO_RENAME = Text.of(ERROR_COLOR, "The animation couldn't be renamed -- something went wrong.");
+
 
     // Frame Responses
     public static final Text FRAME_SUCCESSFULLY_DELETED = Text.of(PRIMARY_COLOR, "The frame was successfully deleted.");
@@ -58,7 +66,19 @@ public class TextResponses {
     public static final Text FRAME_FAILED_DUPLICATION_ERROR = Text.of(ERROR_COLOR, "There was a problem duplicating the frame.");
     public static final Text FRAME_HAS_NO_CONTENT = Text.of(ERROR_COLOR, "The frame does not have any content.");
 
-
     // Other Error Responses
     public static final Text SUBSPACE_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The subspace is not fully initialized. (Set the animation corners with /animate <name> set <pos1|pos2>)");
+
+    // Hover Messages
+
+    public static final Text ANIMATION_C2V_INFO = Text.of("Click here to see the animation's info.");
+    public static final Text FRAME_C2V_INFO = Text.of("Click here to see the frame's info.");
+
+    // Permission Messages
+    public static final Text USER_DOESNT_HAVE_PERMISSION = Text.of(ERROR_COLOR, "You do not have permission to run this command");
+    public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_F = Text.of(ERROR_COLOR, "You do not have permission to use the -f flag");
+    public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_D = Text.of(ERROR_COLOR, "You do not have permission to use the -d flag");
+    public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_C = Text.of(ERROR_COLOR, "You do not have permission to use the -c flag");
+    public static final Text USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING = Text.of(ERROR_COLOR, "You do not have permission to change this setting");
+
 }

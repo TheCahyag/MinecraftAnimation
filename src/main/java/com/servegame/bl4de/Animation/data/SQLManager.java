@@ -9,6 +9,8 @@ import org.spongepowered.api.service.sql.SqlService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +47,7 @@ public class SQLManager {
     /**
      * Create default must-have tables (currently only the animation table)
      */
-    private void initSettings(){
+    private void initSettings() {
         // In the future this would get data from a config file
         this.database = DATABASE;
         try (Connection connection = getDataSource().getConnection()){
@@ -61,7 +63,7 @@ public class SQLManager {
                     "animation_cornerTwo CLOB) ")
                     .executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            AnimationPlugin.logger.error("Failed to init database: ", e);
         }
     }
 
@@ -87,6 +89,14 @@ public class SQLManager {
      */
     public static Connection getConnection() throws SQLException {
         return get(AnimationPlugin.plugin).getDataSource().getConnection();
+    }
+
+    public static boolean testConnection(){
+        try (Connection conn = SQLManager.getConnection()){
+            return true;
+        } catch (Exception e){
+            return false;
+        }
     }
 
     private DataSource getDataSource() throws SQLException {
@@ -129,6 +139,19 @@ public class SQLManager {
     }
 
     /**
+     * Renames the given table to a new given name
+     * @param table - table to rename
+     * @param newName - new name of the table
+     */
+    void renameTable(String table, String newName){
+        try (Connection conn = getConnection()){
+            conn.prepareStatement("ALTER TABLE " + table + " RENAME TO " + newName).executeUpdate();
+        } catch (SQLException e){
+            throw new RuntimeException("Failed to rename " + table + " to " + table);
+        }
+    }
+
+    /**
      * Create a table that is used to store the contents of a {@link Frame}, the name of the
      * table should be obtained for {@link SQLResources#getContentTableName(Animation, Frame)}
      * @param tableName the name of the table that will be created
@@ -142,5 +165,21 @@ public class SQLManager {
         } catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public static boolean doesTableExist(String tableName){
+        try (Connection connection = SQLManager.getConnection()){
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = ?");
+            statement.setString(1, tableName.toUpperCase());
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
