@@ -6,7 +6,7 @@
 
 **Current Active Branches are:**  
 * sponge-api/7 (this branch, for 1.12.2)
-* sponge-api/6.1 (for 1.11.2)
+* ~~sponge-api/6.1 (for 1.11.2)~~ Discontinued with v0.3.0, not much need for 1.11.2 versions. Message me if I'm wrong.
 
 Author: TheCahyag  
 Start Date: 7/20/17  
