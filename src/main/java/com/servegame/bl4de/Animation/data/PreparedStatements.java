@@ -323,7 +323,7 @@ public class PreparedStatements {
     }
 
     /**
-     * Iterates through the list of files in the animation directory and puts the data in a map
+     * Iterates through the file in the animation directory and puts the data in a map
      * @return Map containing the UUID of the owner as the key and
      * all the names of the Animations he owns
      */
