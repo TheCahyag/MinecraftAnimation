@@ -37,7 +37,8 @@ public class Permissions {
     // Admin permissions
     public static final String STOP_ALL_ANIMATIONS          = "animate.admin.stopall";
     public static final String FORCE_STOP_ANIMATION         = "animate.admin.forcestop"; // Haven't implemented this command yet
-    public static final String LIST_RUNNING_ANIMAITONS      = "animate.admin.listall"; // Haven't implemented this command yet
+    public static final String LIST_RUNNING_ANIMAITONS      = "animate.admin.listallrunning"; // Haven't implemented this command yet
+    public static final String LIST_ALL_ANIMAITONS          = "animate.admin.listall"; // Haven't implemented this command yet
     public static final String TOGGLE_DEBUG                 = "animate.admin.debug";
     public static final String REFRESH_ALL_ANIMATIONS       = "animate.admin.refreshall";
 
