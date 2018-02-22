@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.command.animation.action;
+package com.servegame.bl4de.Animation.command.animation.action.admin;
 
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;

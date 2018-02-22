@@ -1,4 +1,4 @@
-package com.servegame.bl4de.Animation.command.animation;
+package com.servegame.bl4de.Animation.command.animation.admin;
 
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
