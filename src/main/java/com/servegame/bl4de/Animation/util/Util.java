@@ -10,6 +10,7 @@ import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.admin.StopAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
+import com.servegame.bl4de.Animation.command.animation.admin.ListAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.admin.RefreshAnimations;
 import com.servegame.bl4de.Animation.command.animation.admin.StatisticAnimation;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -640,13 +641,20 @@ public class Util {
                 .executor(new RefreshAnimations())
                 .build();
 
+        // /animate listall
+        CommandSpec listAllAnimations = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Lists all animations that have been created by all users"))
+                .permission(Permissions.LIST_ALL_ANIMAITONS)
+                .executor(((src, args) -> executeRunnableCommand(new ListAllAnimations(src, args))))
+                .build();
+
         // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Base animation command"))
                 .child(createAnimation, "create")
                 .child(deleteAnimation, "delete")
                 .child(helpAnimation, "help", "?")
-                .child(listAnimation, "list")
+                .child(listAnimation, "list", "l")
                 .child(startAnimation, "start")
                 .child(stopAnimation, "stop")
                 .child(pauseAnimation, "pause")
@@ -654,6 +662,7 @@ public class Util {
                 .child(debugAnimation, "debug")
                 .child(stopAllAnimation, "stopall")
                 .child(refreshAnimations, "refreshAnimations")
+                .child(listAllAnimations, "listall", "la")
                 .arguments(
                         string(Text.of("animation_name")),
                         firstParsing(
