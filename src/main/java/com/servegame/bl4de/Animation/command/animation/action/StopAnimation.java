@@ -12,6 +12,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
 
@@ -45,11 +46,20 @@ public class StopAnimation extends AbstractRunnableCommand<CommandSource> {
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();
         }
-        Optional<Animation> animationOptional = AnimationController.getAnimation(animationNameOptional.get(), player.getUniqueId());
+
+        Optional<Animation> animationOptional;
+        if (args.getOne("admin_override").isPresent()){
+            // An admin is playing this without the owner
+            animationOptional = AnimationController.getAnimation(animationNameOptional.get(), (UUID) args.getOne("admin_override").get());
+        } else {
+            // Animation is being played regularly by the owner
+            animationOptional = AnimationController.getAnimation(animationNameOptional.get(), player.getUniqueId());
+        }
         if (!animationOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
             return CommandResult.success();
         }
+
         Animation animation = animationOptional.get();
 
         if (animation.getStatus() == Animation.Status.STOPPED){
