@@ -51,7 +51,7 @@ public class StopAnimation extends AbstractRunnableCommand<CommandSource> {
         Optional<Animation> animationOptional;
         if (args.getOne("admin_override").isPresent()){
             // An admin is playing this without the owner
-            if (!player.hasPermission(Permissions.ANIMATION_ADMIN_PAUSE)){
+            if (!player.hasPermission(Permissions.ANIMATION_ADMIN_STOP)){
                 // User doesn't have permission to play another persons animation
                 player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_INTERACT_WITH_ANIMATION);
                 return CommandResult.success();
