@@ -532,7 +532,7 @@ public class Util {
      * @param commandInstance instance of a {@link AbstractRunnableCommand}
      * @return {@link CommandResult#success()}
      */
-    private static CommandResult executeRunnableCommand(AbstractRunnableCommand commandInstance){
+    public static CommandResult executeRunnableCommand(AbstractRunnableCommand commandInstance){
         Task.Builder taskBuilder = Task.builder().async().execute(commandInstance);
         taskBuilder.submit(AnimationPlugin.plugin);
         return CommandResult.success();
