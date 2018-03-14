@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation.action;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.model.Animation;
@@ -55,6 +56,11 @@ public class PauseAnimation extends AbstractRunnableCommand<CommandSource> {
         Optional<Animation> animationOptional;
         if (args.getOne("admin_override").isPresent()){
             // An admin is playing this without the owner
+            if (!player.hasPermission(Permissions.ANIMATION_ADMIN_PAUSE)){
+                // User doesn't have permission to play another persons animation
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_INTERACT_WITH_ANIMATION);
+                return CommandResult.success();
+            }
             animationOptional = AnimationController.getAnimation(animationNameOptional.get(), (UUID) args.getOne("admin_override").get());
         } else {
             // Animation is being played regularly by the owner
