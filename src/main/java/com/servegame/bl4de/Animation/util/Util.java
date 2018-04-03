@@ -186,27 +186,33 @@ public class Util {
         return Text.builder()
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
-                                ACTION_COLOR, "ANIMATION",
-                                PRIMARY_COLOR, "]    "))
+                                ACTION_COLOR, COMMAND_HOVER, "ANIMATION",
+                                PRIMARY_COLOR, "]  "))
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " info"))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
-                                ACTION_COLOR, "FRAME DELAY",
-                                PRIMARY_COLOR, "]    "))
+                                ACTION_COLOR, COMMAND_HOVER, "FRAME DELAY",
+                                PRIMARY_COLOR, "]  "))
                         .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingDelayButtons(animation))))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
-                                ACTION_COLOR, "CYCLES",
-                                PRIMARY_COLOR, "]    "))
+                                ACTION_COLOR, COMMAND_HOVER, "CYCLES",
+                                PRIMARY_COLOR, "]  "))
                         .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingCyclesButtons(animation))))
                         .build())
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "[",
-                                ACTION_COLOR, "START FRAME",
-                                PRIMARY_COLOR, "]\n"))
+                                ACTION_COLOR, COMMAND_HOVER, "START FRAME",
+                                PRIMARY_COLOR, "]  "))
                         .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingStartFrameButtons(animation))))
+                        .build())
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "OTHER",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.executeCallback(commandSource -> commandSource.sendMessage(settingOtherButtons(animation))))
                         .build())
                 .build();
     }
@@ -319,6 +325,18 @@ public class Util {
                                 ACTION_COLOR, "LAST",
                                 PRIMARY_COLOR, "]    "))
                         .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting frame_index last"))
+                        .build())
+                .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
+                .build();
+    }
+
+    public static Text settingOtherButtons(Animation animation){
+        return Text.builder()
+                .append(Text.builder()
+                        .append(Text.of(PRIMARY_COLOR, "[",
+                                ACTION_COLOR, COMMAND_HOVER, "OVERWRITE WORLD UUID",
+                                PRIMARY_COLOR, "]\n"))
+                        .onClick(TextActions.runCommand("/animate " + animation.getAnimationName() + " setting overwriteworlduuid"))
                         .build())
                 .append(Text.of(SECONDARY_COLOR, "----------------------------------------------------"))
                 .build();
@@ -545,6 +563,12 @@ public class Util {
     public static void registerCommands(AnimationPlugin plugin){
         CommandManager commandManager = Sponge.getCommandManager();
         AnimationPlugin.logger.info("Registering commands...");
+        // /animate
+        CommandSpec baseAnimation = CommandSpec.builder()
+                .description(Text.of(PRIMARY_COLOR, "Info about the Animation Plugin"))
+                .executor(new BaseAnimation())
+                .build();
+
         // /animate create <name>
         CommandSpec createAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Create a new animation"))
@@ -651,6 +675,7 @@ public class Util {
         // /animate
         CommandSpec animate = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Base animation command"))
+                .child(baseAnimation)
                 .child(createAnimation, "create")
                 .child(deleteAnimation, "delete")
                 .child(helpAnimation, "help", "?")
@@ -733,6 +758,11 @@ public class Util {
                                                                                         integer(Text.of("increment_value"))
                                                                                 )
                                                                         )
+                                                                ),
+                                                                // /animate <name> setting overwriteworlduuid
+                                                                seq(
+                                                                        literal(Text.of("setting_overwrite_world_uuid"), "overwriteworlduuid"),
+                                                                        optional(flags().flag("f").buildWith(none()))
                                                                 )
                                                         )
                                                 )
@@ -795,13 +825,11 @@ public class Util {
                                 )
                         )
                 )
-
-
                 .permission(Permissions.ANIMATION_BASE)
                 .executor(new CommandGateKeeper())
                 .build();
 
         commandManager.register(plugin, animate, "animate", "animation");
-        AnimationPlugin.logger.info("... commands registered");
+        AnimationPlugin.logger.info("...commands registered");
     }
 }
