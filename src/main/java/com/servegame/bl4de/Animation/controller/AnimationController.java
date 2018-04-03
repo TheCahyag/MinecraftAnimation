@@ -127,4 +127,8 @@ public class AnimationController {
     public static Optional<Map<UUID, ArrayList<String>>> getAllAnimations(){
         return Optional.of(PreparedStatements.getAnimations());
     }
+
+    public static boolean overwriteWorldUUID(Animation animation, UUID newWorldUUID){
+        return PreparedStatements.overwriteWorldUUID(animation, newWorldUUID);
+    }
 }
