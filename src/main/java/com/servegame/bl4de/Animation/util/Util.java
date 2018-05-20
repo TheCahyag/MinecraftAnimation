@@ -11,7 +11,7 @@ import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.admin.StopAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
 import com.servegame.bl4de.Animation.command.animation.admin.RefreshAnimations;
-import com.servegame.bl4de.Animation.command.animation.admin.StatisticAnimation;
+import com.servegame.bl4de.Animation.command.animation.admin.StatisticAnimations;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.SubSpace3D;
@@ -615,7 +615,7 @@ public class Util {
         CommandSpec statsAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Show stats about the current animations"))
                 .permission(Permissions.ANIMATION_STATS)
-                .executor(new StatisticAnimation())
+                .executor(new StatisticAnimations())
                 .build();
 
         // /animate debug
