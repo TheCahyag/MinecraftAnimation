@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation.admin;
 
+import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -9,20 +10,23 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
 /**
- * File: StatisticAnimation.java
+ * File: StatisticAnimations.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class StatisticAnimation implements CommandExecutor {
+public class StatisticAnimations extends AbstractRunnableCommand<CommandSource> {
+
+    public StatisticAnimations(CommandSource src, CommandContext args) {
+        super(src, args);
+    }
+
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        int numOfAnimation, animationsPlaying;
+    public boolean checkPermission() {
+        return false;
+    }
 
-
-        src.sendMessage(Text.of(Util.ERROR_COLOR, "This feature is currently not implemented."));
-        Text message = Text.builder()
-                .build();
-
-        return CommandResult.success();
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) {
+        return null;
     }
 }
