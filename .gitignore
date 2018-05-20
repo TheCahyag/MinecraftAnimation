@@ -3,9 +3,11 @@
 .gradle
 /build/
 /gradle/
+version.properties
 
 # Intellij
 /.idea/
+out/
 
 
 # Ignore Gradle GUI config
@@ -24,3 +26,5 @@ gradle-app.setting
 version.properties
 META-INF/MANIFEST.MF
 
+# OS Files
+.DS_Store
