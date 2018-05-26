@@ -1,5 +1,6 @@
 package com.servegame.bl4de.animation.model.type;
 
+import com.servegame.bl4de.animation.model.Initializable;
 import com.servegame.bl4de.animation.model.MasterSubSpace3D;
 
 import java.util.UUID;
@@ -9,7 +10,7 @@ import java.util.UUID;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public abstract class Animation {
+public abstract class Animation implements Initializable {
 
     /* Final State */
 
@@ -64,11 +65,19 @@ public abstract class Animation {
 
     /**
      * TODO
+     */
+    public Animation(){}
+
+    /**
+     * TODO
      * @param owner TODO
      * @param name TODO
      */
     protected Animation(UUID owner, String name){
-        // TODO
+        this.owner = owner;
+        this.setAnimationName(name);
+        this.setStatus(DEFAULT_STATUS);
+        this.setMasterSubSpace(new MasterSubSpace3D());
     }
 
     /**
@@ -76,20 +85,10 @@ public abstract class Animation {
      * @param name TODO
      */
     protected Animation(String name){
-        // TODO
+        this.setAnimationName(name);
+        this.setStatus(DEFAULT_STATUS);
+        this.setMasterSubSpace(new MasterSubSpace3D());
     }
-
-    /**
-     * TODO
-     * @return TODO
-     */
-    public abstract boolean isInit();
-
-
-
-
-
-
 
     /* START: Getters and Setters */
 
