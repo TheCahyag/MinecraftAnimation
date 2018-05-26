@@ -1,4 +1,4 @@
-package com.servegame.bl4de.animation.model;
+package com.servegame.bl4de.animation.data;
 
 /**
  * File: DataSerializable.java

@@ -1,11 +1,13 @@
-package com.servegame.bl4de.animation.model.world;
+package com.servegame.bl4de.animation.world;
+
+import com.servegame.bl4de.animation.world.extent.Extent;
 
 /**
  * File: World.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public interface World {
+public interface World extends Extent {
 
     /**
      * TODO

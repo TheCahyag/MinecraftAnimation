@@ -1,4 +1,4 @@
-package com.servegame.bl4de.animation.model.world;
+package com.servegame.bl4de.animation.world;
 
 /**
  * File: Vector3D.java
