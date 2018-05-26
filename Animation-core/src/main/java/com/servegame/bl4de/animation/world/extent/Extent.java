@@ -1,9 +1,9 @@
 package com.servegame.bl4de.animation.model;
 
 /**
- * File: Extend.java
+ * File: Extent.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public interface Extend {
+public interface Extent {
 }
