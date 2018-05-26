@@ -1,2 +1,5 @@
 rootProject.name = 'Animation'
+include 'Animation-core'
+include 'Animation-sponge'
+include 'Animation-bukkit'
 
