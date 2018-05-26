@@ -1,6 +1,5 @@
 package com.servegame.bl4de.animation.model.type;
 
-import com.servegame.bl4de.animation.model.DataSerializable;
 import com.servegame.bl4de.animation.model.MasterSubSpace3D;
 
 import java.util.UUID;
@@ -10,7 +9,7 @@ import java.util.UUID;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public abstract class Animation implements DataSerializable {
+public abstract class Animation {
 
     /* Final State */
 
@@ -86,4 +85,78 @@ public abstract class Animation implements DataSerializable {
      */
     public abstract boolean isInit();
 
+
+
+
+
+
+
+    /* START: Getters and Setters */
+
+    public UUID getOwner() {
+        return owner;
+    }
+
+    public String getAnimationName() {
+        return animationName;
+    }
+
+    public void setAnimationName(String animationName) {
+        this.animationName = animationName;
+    }
+
+    public MasterSubSpace3D getMasterSubSpace() {
+        return masterSubSpace;
+    }
+
+    public void setMasterSubSpace(MasterSubSpace3D masterSubSpace) {
+        this.masterSubSpace = masterSubSpace;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public int getStartFrameIndex() {
+        return startFrameIndex;
+    }
+
+    public void setStartFrameIndex(int startFrameIndex) {
+        this.startFrameIndex = startFrameIndex;
+    }
+
+    public int getTickDelay() {
+        return tickDelay;
+    }
+
+    public void setTickDelay(int tickDelay) {
+        this.tickDelay = tickDelay;
+    }
+
+    public int getCycles() {
+        return cycles;
+    }
+
+    public void setCycles(int cycles) {
+        this.cycles = cycles;
+    }
+
+    /* END: Getters and Setters */
+
+    @Override
+    public String toString() {
+        return "Animation{" +
+                "owner=" + owner +
+                ", animationName='" + animationName + '\'' +
+                ", masterSubSpace=" + masterSubSpace +
+                ", status=" + status +
+                ", startFrameIndex=" + startFrameIndex +
+                ", tickDelay=" + tickDelay +
+                ", cycles=" + cycles +
+                '}';
+    }
 }
