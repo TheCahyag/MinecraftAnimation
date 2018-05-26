@@ -1,9 +1,9 @@
 package com.servegame.bl4de.animation.exception;
 
 /**
- * File: UninitializationException.java
+ * File: UninitializedException.java
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class UninitializationException extends Exception {
+public class UninitializedException extends Exception {
 }
