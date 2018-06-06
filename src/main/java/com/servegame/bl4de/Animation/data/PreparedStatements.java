@@ -329,8 +329,8 @@ public class PreparedStatements {
             e.printStackTrace();
         } catch (UninitializedException e){
             System.err.println("'" + animation.getAnimationName() + "' was uninitialized but frames were added anyway. (This is likely due to a world UUID mismatch)");
-            e.printStackTrace();
             if (AnimationPlugin.instance.isDebug()) {
+                e.printStackTrace();
                 System.out.println(animation);
             }
         }
@@ -751,13 +751,6 @@ public class PreparedStatements {
                             BlockSnapshot blockSnapshot = c1.get();
                             // Need to double check and ensure that the world UUID of the animation
                             // is of a world that exists within the currently running server
-                            UUID animationWorldUUID = blockSnapshot.getWorldUniqueId();
-                            if (!AnimationPlugin.instance.getGame().getServer().getWorld(animationWorldUUID).isPresent()){
-                                frame = null;
-                                throw new RuntimeException();
-//                                break OUTER;
-//                                throw new RuntimeException("Failed to obtain world UUID");
-                            }
                             subSpace3D.setCornerOne(blockSnapshot.getLocation().orElse(null));
                         }
 
@@ -765,12 +758,6 @@ public class PreparedStatements {
                             BlockSnapshot blockSnapshot = c2.get();
                             // Need to double check and ensure that the world UUID of the animation
                             // is of a world that exists within the currently running server
-                            UUID animationWorldUUID = blockSnapshot.getWorldUniqueId();
-                            if (!AnimationPlugin.instance.getGame().getServer().getWorld(animationWorldUUID).isPresent()){
-                                frame = null;
-                                break OUTER;
-//                                throw new RuntimeException("Failed to obtain world UUID");
-                            }
                             subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null));
                         }
 
