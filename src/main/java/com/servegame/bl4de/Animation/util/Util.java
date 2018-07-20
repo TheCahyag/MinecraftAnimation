@@ -640,7 +640,7 @@ public class Util {
         CommandSpec statsAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Show stats about the current animations"))
                 .permission(Permissions.ANIMATION_STATS)
-                .executor(new StatisticAnimations())
+                .executor((src, args) -> executeRunnableCommand(new StatisticAnimations(src, args)))
                 .build();
 
         // /animate debug
@@ -683,7 +683,7 @@ public class Util {
                 .child(startAnimation, "start")
                 .child(stopAnimation, "stop")
                 .child(pauseAnimation, "pause")
-                .child(statsAnimation, "stats", "statistics")
+                .child(statsAnimation, "stats", "statistic")
                 .child(debugAnimation, "debug")
                 .child(stopAllAnimation, "stopall")
                 .child(refreshAnimations, "refreshAnimations")
