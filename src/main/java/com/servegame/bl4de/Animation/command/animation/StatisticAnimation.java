@@ -1,10 +1,12 @@
 package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
+import com.servegame.bl4de.Animation.data.AnimationsStatistics;
 import com.servegame.bl4de.Animation.model.Animation;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.text.Text;
 
 /**
  * File: StatisticAnimation.java
@@ -27,6 +29,11 @@ public class StatisticAnimation extends AbstractRunnableCommand<CommandSource> {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
-        return null;
+
+        AnimationsStatistics stats = new AnimationsStatistics();
+
+        src.sendMessage(Text.of("Running animations: " + stats.getRunningAnimations() + "\nTotal Animations: " + stats.getTotalAnimations()));
+
+        return CommandResult.success();
     }
 }
