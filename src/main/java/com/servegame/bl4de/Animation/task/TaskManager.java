@@ -124,4 +124,8 @@ public class TaskManager {
             this.runningAnimations.remove(entry.getKey());
         }
     }
+
+    public Map<UUID, List<AnimationTasks>> getRunningAnimations() {
+        return runningAnimations;
+    }
 }
