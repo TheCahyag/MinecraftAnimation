@@ -1,8 +1,8 @@
 package com.servegame.bl4de.Animation.command.animation;
 
 import com.servegame.bl4de.Animation.Permissions;
-import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.controller.AnimationController;
+import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.util.TextResponses;
 import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandResult;
@@ -14,9 +14,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import static com.servegame.bl4de.Animation.util.Util.*;
-
 import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: SetAnimation.java
@@ -42,6 +42,7 @@ public class SetAnimation implements CommandExecutor {
         // Parse arguments
         boolean setPos1 = (boolean) args.getOne("pos1").orElse(false);
         boolean setPos2 = (boolean) args.getOne("pos2").orElse(false);
+        boolean setPos = setPos1 || setPos2;
         boolean setName = (boolean) args.getOne("set_name").orElse(false);
 
         // Potential flags
@@ -52,55 +53,45 @@ public class SetAnimation implements CommandExecutor {
             return CommandResult.success();
         }
 
-        if (setPos1){
+        if (setPos){
+            // The player is setting one of the animations corners
             if (!player.hasPermission(Permissions.ANIMATION_SET_POS)){
                 // The player doesn't have permissions to run this command
                 player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
                 return CommandResult.empty();
             }
 
-            // Get location
+            // Get location of the corner
             Location<World> newLocation = player.getLocation();
-            Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerTwo();
+
+            // Get the other corner to calculate the volume of the subspace
+            Optional<Location<World>> optionalOtherLocation;
+            if (setPos1){
+                optionalOtherLocation = this.animation.getSubSpace().getCornerTwo();
+            } else {
+                optionalOtherLocation = this.animation.getSubSpace().getCornerOne();
+            }
+
             if (!override) {
                 if (optionalOtherLocation.isPresent()) {
                     if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())) {
-                        // The max volume has been exceeded
+                        // The max volume has been exceeded, the message get's sent in checkVolume()
                         return CommandResult.success();
                     }
                 }
-            }
-            // Set the first position for the subspace
-            this.animation.getSubSpace().setCornerOne(newLocation);
-            if (AnimationController.saveAnimation(this.animation)){
-                player.sendMessage(Text.of(PRIMARY_COLOR, "Position 1 set."));
-                return CommandResult.success();
-            } else {
-                player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
-                return CommandResult.empty();
-            }
-        } else if (setPos2){
-            if (!player.hasPermission(Permissions.ANIMATION_SET_POS)){
-                // The player doesn't have permissions to run this command
-                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
-                return CommandResult.empty();
             }
 
-            // Get location
-            Location<World> newLocation = player.getLocation();
-            Optional<Location<World>> optionalOtherLocation = this.animation.getSubSpace().getCornerOne();
-            if (override) {
-                if (optionalOtherLocation.isPresent()) {
-                    if (!this.checkVolume(src, newLocation, optionalOtherLocation.get())) {
-                        // The max volume has been exceeded
-                        return CommandResult.success();
-                    }
-                }
+            if (setPos1) {
+                // Set the first position for the subspace
+                this.animation.getSubSpace().setCornerOne(newLocation);
+            } else {
+                // Set the second position for the subspace
+                this.animation.getSubSpace().setCornerTwo(newLocation);
             }
-            // Set the second position for the subspace
-            this.animation.getSubSpace().setCornerTwo(newLocation);
+
             if (AnimationController.saveAnimation(this.animation)){
-                player.sendMessage(Text.of(PRIMARY_COLOR, "Position 2 set."));
+                String oneOrTwo = setPos1 ? "1" : "2";
+                player.sendMessage(Text.of(PRIMARY_COLOR, "Position " + oneOrTwo + " set."));
                 return CommandResult.success();
             } else {
                 player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
