@@ -116,6 +116,12 @@ public class SetAnimation implements CommandExecutor {
                 this.animation.getSubSpace().setCornerTwo(newLocation);
             }
 
+            for (Frame frame :
+                    this.animation.getFrames()) {
+                frame.setCornerOne(this.animation.getSubSpace().getCornerOne().get());
+                frame.setCornerTwo(this.animation.getSubSpace().getCornerTwo().get());
+            }
+
             if (AnimationController.saveAnimation(this.animation)){
                 String oneOrTwo = setPos1 ? "1" : "2";
                 player.sendMessage(Text.of(PRIMARY_COLOR, "Position " + oneOrTwo + " set."));
