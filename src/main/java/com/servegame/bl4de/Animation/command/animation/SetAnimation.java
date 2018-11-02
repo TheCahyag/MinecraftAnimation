@@ -11,6 +11,8 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -81,12 +83,51 @@ public class SetAnimation implements CommandExecutor {
                 }
             }
 
-            if (setPos1) {
-                // Set the first position for the subspace
-                this.animation.getSubSpace().setCornerOne(newLocation);
+            if (this.animation.getSubSpace().getCornerOne().isPresent()
+                    && this.animation.getSubSpace().getCornerTwo().isPresent()){
+                // Both of the corners are set and this command is therefore overriding a
+                // corners location, which means something might need to be done to the old frames
+                if (!override || this.animation.getFrames().size() != 0){
+                    // Warn the player that this could cause data lose
+                    src.sendMessage(Text.builder()
+                            .append(Text.of(WARNING_COLOR, "This animation already has its corners set. " +
+                                    "Resetting the bounds of this animation could lead to data lose in " +
+                                    "the already created frames. If you are sure specify the ",
+                                    TextColors.RED, "-f ",
+                                    WARNING_COLOR, "flag"))
+                            .append(Text.of(WARNING_COLOR, COMMAND_STYLE, ", or click this message."))
+                            .onClick(TextActions.runCommand("/animation " + animation.getAnimationName() + " set pos" + (setPos1 ? "1" : "2") + " -f"))
+                            .onHover(COMMAND_HOVER)
+                            .build()
+                    );
+                    return CommandResult.success();
+                } else {
+                    // Modify frame data
+
+                    // Get the full animation (since this command only gets a bare animation)
+                    this.animation = AnimationController.getAnimation(this.animation.getAnimationName(), this.animation.getOwner()).get();
+
+                    // No overriding is happening and we can set the corners normally
+                    if (setPos1) {
+                        // Set the first position for the subspace
+                        this.animation.getSubSpace().setCornerOne(newLocation);
+                    } else {
+                        // Set the second position for the subspace
+                        this.animation.getSubSpace().setCornerTwo(newLocation);
+                    }
+
+                    // For each frame, override the bounds of the subspace
+                    this.animation.getFrames().forEach(frame -> frame.overrideBounds(this.animation.getSubSpace()));
+                }
             } else {
-                // Set the second position for the subspace
-                this.animation.getSubSpace().setCornerTwo(newLocation);
+                // No overriding is happening and we can set the corners normally
+                if (setPos1) {
+                    // Set the first position for the subspace
+                    this.animation.getSubSpace().setCornerOne(newLocation);
+                } else {
+                    // Set the second position for the subspace
+                    this.animation.getSubSpace().setCornerTwo(newLocation);
+                }
             }
 
             if (AnimationController.saveAnimation(this.animation)){
