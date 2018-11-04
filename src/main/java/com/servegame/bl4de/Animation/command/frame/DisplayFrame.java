@@ -1,7 +1,7 @@
 package com.servegame.bl4de.Animation.command.frame;
 
 import com.servegame.bl4de.Animation.Permissions;
-import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
+import com.servegame.bl4de.Animation.command.AbstractCommand;
 import com.servegame.bl4de.Animation.controller.FrameController;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
@@ -21,18 +21,13 @@ import static com.servegame.bl4de.Animation.util.Util.*;
  *
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
-public class DisplayFrame extends AbstractRunnableCommand<CommandSource> {
+public class DisplayFrame extends AbstractCommand<CommandSource> {
 
     private Animation animation;
 
     public DisplayFrame(Animation animation, CommandSource src, CommandContext args){
         super(src, args);
         this.animation = animation;
-    }
-
-    @Override
-    public void run() {
-        this.execute(this.src, this.args);
     }
 
     @Override

@@ -81,11 +81,7 @@ public class SubSpace3D implements DataSerializable {
      * @return {@link Location}
      */
     public Optional<Location<World>> getCornerOne() {
-        if (this.cornerOne == null){
-            return Optional.empty();
-        } else {
-            return Optional.of(this.cornerOne);
-        }
+        return Optional.ofNullable(this.cornerOne);
     }
 
     /**
@@ -94,9 +90,6 @@ public class SubSpace3D implements DataSerializable {
      */
     public void setCornerOne(Location<World> cornerOne) {
         this.cornerOne = cornerOne;
-        if (this.isInitialized()){
-            this.set3DArray();
-        }
     }
 
     /**
@@ -104,11 +97,7 @@ public class SubSpace3D implements DataSerializable {
      * @return {@link Location}
      */
     public Optional<Location<World>> getCornerTwo() {
-        if (this.cornerTwo == null){
-            return Optional.empty();
-        } else {
-            return Optional.of(this.cornerTwo);
-        }
+        return Optional.ofNullable(this.cornerTwo);
     }
 
     /**
@@ -117,9 +106,6 @@ public class SubSpace3D implements DataSerializable {
      */
     public void setCornerTwo(Location<World> cornerTwo) {
         this.cornerTwo = cornerTwo;
-        if (this.isInitialized()){
-            this.set3DArray();
-        }
     }
 
     /**
@@ -127,7 +113,7 @@ public class SubSpace3D implements DataSerializable {
      * @return contents received
      */
     public Optional<BlockSnapshot[][][]> getContents(){
-        return this.contents == null ? Optional.empty() : Optional.of(this.contents);
+        return Optional.ofNullable(this.contents);
     }
 
     /**

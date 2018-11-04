@@ -79,7 +79,8 @@ public class CommandGateKeeper implements CommandExecutor {
             else if (delete)
                 taskBuilder = taskBuilder.execute(new DeleteFrame(animation, src, args));
             else if (display)
-                taskBuilder = taskBuilder.execute(new DisplayFrame(animation, src, args));
+                // This can't be ran async like the rest of the commands because it has block changes
+                return new DisplayFrame(animation, src, args).runCommand();
             else if (duplicate)
                 taskBuilder = taskBuilder.execute(new DuplicateFrame(animation, src, args));
             else if (frameInfo)
