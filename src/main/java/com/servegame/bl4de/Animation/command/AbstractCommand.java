@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command;
 
+import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -27,6 +28,10 @@ public abstract class AbstractCommand<T extends CommandSource> implements Comman
     public abstract boolean checkPermission();
 
     public CommandResult runCommand(){
+        if (!checkPermission()){
+            this.src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
+            return CommandResult.empty();
+        }
         return execute(this.src, this.args);
     }
 
