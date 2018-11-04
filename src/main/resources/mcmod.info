@@ -1,7 +1,7 @@
 [{
     "modid": "animation",
     "name": "Animations",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "Animations - Allowing the creation of frame based animations.",
     "authorList": [
         "TheCahyag"

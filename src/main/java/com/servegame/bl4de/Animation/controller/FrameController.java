@@ -1,6 +1,5 @@
 package com.servegame.bl4de.Animation.controller;
 
-import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.data.PreparedStatements;
 import com.servegame.bl4de.Animation.data.SQLResources;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
@@ -12,7 +11,6 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -81,17 +79,12 @@ public class FrameController {
     }
 
     public static Optional<Frame> getFrameWithContents(Animation animation, String name){
-        long startTime = System.currentTimeMillis();
-        Optional<Frame> frameOptional = PreparedStatements.getFrame(
+        return PreparedStatements.getFrame(
                 name,
                 SQLResources.getFrameTableName(animation),
                 SQLResources.getContentTableName(animation, animation.getFrame(name).get()),
                 true
         );
-        long endTime = System.currentTimeMillis();
-        AnimationPlugin.logger.info("Get frame (" + name + "): " + (endTime - startTime));
-
-        return frameOptional;
     }
 
     public static boolean saveFrame(Animation animation, Frame frame){
