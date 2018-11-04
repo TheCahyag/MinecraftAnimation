@@ -23,8 +23,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
-import static com.servegame.bl4de.Animation.util.Util.PRIMARY_COLOR;
-import static com.servegame.bl4de.Animation.util.Util.SECONDARY_COLOR;
 
 /**
  * File: ListAllAnimations.java
@@ -40,15 +38,6 @@ public class ListAllAnimations extends AbstractRunnableCommand<CommandSource> {
     @Override
     public boolean checkPermission() {
         return this.src.hasPermission(Permissions.LIST_ALL_ANIMAITONS);
-    }
-
-    @Override
-    public CommandResult runCommand() {
-        if (!checkPermission()){
-            this.src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
-            return CommandResult.empty();
-        }
-        return super.runCommand();
     }
 
     @Override
