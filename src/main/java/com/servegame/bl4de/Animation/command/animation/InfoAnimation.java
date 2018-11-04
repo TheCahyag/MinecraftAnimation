@@ -40,8 +40,8 @@ public class InfoAnimation extends AbstractCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return this.src.hasPermission(Permissions.ANIMATION_INFO);
+    public String getPermission() {
+        return Permissions.ANIMATION_INFO;
     }
 
     @Override

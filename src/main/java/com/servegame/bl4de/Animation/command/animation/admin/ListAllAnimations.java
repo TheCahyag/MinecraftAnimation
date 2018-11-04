@@ -36,8 +36,8 @@ public class ListAllAnimations extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return this.src.hasPermission(Permissions.LIST_ALL_ANIMAITONS);
+    public String getPermission() {
+        return Permissions.LIST_ALL_ANIMAITONS;
     }
 
     @Override

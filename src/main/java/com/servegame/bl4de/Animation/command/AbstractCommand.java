@@ -25,10 +25,10 @@ public abstract class AbstractCommand<T extends CommandSource> implements Comman
      * Checks to see if the {@link CommandSource} has permission to run the current command
      * @return true if the src has permission false otherwise
      */
-    public abstract boolean checkPermission();
+    public abstract String getPermission();
 
     public CommandResult runCommand(){
-        if (!checkPermission()){
+        if (!this.src.hasPermission(this.getPermission())){
             this.src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
             return CommandResult.empty();
         }

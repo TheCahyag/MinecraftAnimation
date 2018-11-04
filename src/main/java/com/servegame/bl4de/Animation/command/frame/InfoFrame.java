@@ -16,7 +16,7 @@ import org.spongepowered.api.text.Text;
 import java.util.Optional;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
-import static org.spongepowered.api.text.format.TextColors.*;
+import static org.spongepowered.api.text.format.TextColors.WHITE;
 
 
 /**
@@ -39,8 +39,8 @@ public class InfoFrame extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return src.hasPermission(Permissions.FRAME_INFO);
+    public String getPermission() {
+        return Permissions.FRAME_INFO;
     }
 
     @Override
@@ -48,11 +48,6 @@ public class InfoFrame extends AbstractRunnableCommand<CommandSource> {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
-        }
-        if (!checkPermission()){
-            // The user doesn't have permissions to run this command
-            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
-            return CommandResult.empty();
         }
         Player player = ((Player) src);
         Optional<String> frameNameOptional = args.getOne("frame_name_num");

@@ -39,8 +39,8 @@ public class DeleteFrame extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return this.src.hasPermission(Permissions.FRAME_DELETE);
+    public String getPermission() {
+        return Permissions.FRAME_DELETE;
     }
 
     @Override
@@ -48,11 +48,6 @@ public class DeleteFrame extends AbstractRunnableCommand<CommandSource> {
         if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
-        }
-        if (!checkPermission()){
-            // The user doesn't have permissions to run this command
-            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
-            return CommandResult.empty();
         }
         Player player = ((Player) src);
 

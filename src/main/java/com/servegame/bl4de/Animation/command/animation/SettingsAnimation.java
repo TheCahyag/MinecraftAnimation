@@ -30,8 +30,22 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return true;
+    public String getPermission() {
+        boolean delay = (boolean) args.getOne(Text.of("setting_delay")).orElse(false);
+        boolean frameIndex = (boolean) args.getOne(Text.of("setting_frame_index")).orElse(false);
+        boolean cycles = (boolean) args.getOne(Text.of("setting_cycles")).orElse(false);
+        boolean overwriteWorldUUID = (boolean) args.getOne(Text.of("setting_overwrite_world_uuid")).orElse(false);
+        if (delay) {
+            return Permissions.ANIMATION_SETTING_DELAY;
+        } else if (frameIndex) {
+            return Permissions.ANIMATION_SETTING_FRAME;
+        } else if (cycles) {
+            return Permissions.ANIMATION_SETTING_CYCLES;
+        } else if (overwriteWorldUUID) {
+            return Permissions.ANIMATION_SETTING_OVERWRITE_WORLD_UUID;
+        } else {
+            return null; // This *should* never happen
+        }
     }
 
     @Override
@@ -48,12 +62,6 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
         boolean overwriteWorldUUID = (boolean) args.getOne(Text.of("setting_overwrite_world_uuid")).orElse(false);
 
         if (delay){
-            if (!player.hasPermission(Permissions.ANIMATION_SETTING_DELAY)){
-                // User doesn't have permission to change this setting
-                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
-                return CommandResult.empty();
-            }
-
             boolean increment = (boolean) args.getOne(Text.of("setting_delay_increment")).orElse(false);
                 int newDelay;
             if (increment) {
@@ -87,12 +95,6 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
                     return CommandResult.empty();
                 }
         } else if (frameIndex){
-            if (!player.hasPermission(Permissions.ANIMATION_SETTING_FRAME)){
-                // User doesn't have permission to change this setting
-                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
-                return CommandResult.empty();
-            }
-
             boolean first = (boolean) args.getOne(Text.of("setting_frame_index_first")).orElse(false);
             boolean last = (boolean) args.getOne(Text.of("setting_frame_index_last")).orElse(false);
 
@@ -138,12 +140,6 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
                 return CommandResult.empty();
             }
         } else if (cycles) {
-            if (!player.hasPermission(Permissions.ANIMATION_SETTING_CYCLES)){
-                // User doesn't have permission to change this setting
-                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
-                return CommandResult.empty();
-            }
-
             boolean increment = (boolean) args.getOne(Text.of("setting_cycles_increment")).orElse(false);
             int newCycles;
             if (increment){
@@ -179,11 +175,6 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
             }
         } else if (overwriteWorldUUID) {
             // Overwrite the world UUID of the two corners of the animation
-            if (!player.hasPermission(Permissions.ANIMATION_SETTING_OVERWRITE_WORLD_UUID)){
-                // User doesn't have permission to change this setting
-                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
-                return CommandResult.empty();
-            }
 
             boolean fFlag = args.hasAny(Text.of("f"));
             if (!fFlag){

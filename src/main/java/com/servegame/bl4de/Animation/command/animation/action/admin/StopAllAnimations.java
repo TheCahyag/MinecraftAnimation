@@ -1,5 +1,6 @@
 package com.servegame.bl4de.Animation.command.animation.action.admin;
 
+import com.servegame.bl4de.Animation.Permissions;
 import com.servegame.bl4de.Animation.command.AbstractRunnableCommand;
 import com.servegame.bl4de.Animation.controller.AnimationController;
 import com.servegame.bl4de.Animation.util.TextResponses;
@@ -28,8 +29,8 @@ public class StopAllAnimations extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return false; // Not used
+    public String getPermission() {
+        return Permissions.STOP_ALL_ANIMATIONS;
     }
 
     @Override

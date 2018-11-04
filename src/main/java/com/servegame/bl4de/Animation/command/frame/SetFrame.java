@@ -38,12 +38,10 @@ public class SetFrame extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        boolean setName = (boolean) this.args.getOne("name").orElse(false);
-        if (setName){
-            return this.src.hasPermission(Permissions.FRAME_SET_NAME);
-        }
-        return false;
+    public String getPermission() {
+        // Currently the set frame command only has the sub command of name (setting the name of a frame)
+        return Permissions.FRAME_SET_NAME;
+
     }
 
     @Override
@@ -57,12 +55,6 @@ public class SetFrame extends AbstractRunnableCommand<CommandSource> {
         if (this.animation.isRunning()){
             player.sendMessage(TextResponses.ANIMATION_CANT_BE_RUNNING);
             return CommandResult.success();
-        }
-
-        if (!checkPermission()){
-            // The user doesn't have permissions to run this command
-            src.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION);
-            return CommandResult.empty();
         }
 
         // Get the frame

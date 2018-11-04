@@ -35,8 +35,8 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return false; // Not used
+    public String getPermission() {
+        return Permissions.ANIMATION_START;
     }
 
     @Override

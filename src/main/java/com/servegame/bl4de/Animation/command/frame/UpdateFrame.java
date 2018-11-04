@@ -38,8 +38,8 @@ public class UpdateFrame extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return this.src.hasPermission(Permissions.FRAME_UPDATE);
+    public String getPermission() {
+        return Permissions.FRAME_UPDATE;
     }
 
     @Override

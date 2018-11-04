@@ -34,8 +34,8 @@ public class PauseAnimation extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public boolean checkPermission() {
-        return false; // Not used
+    public String getPermission() {
+        return Permissions.ANIMATION_ADMIN_PAUSE;
     }
 
     @Override
