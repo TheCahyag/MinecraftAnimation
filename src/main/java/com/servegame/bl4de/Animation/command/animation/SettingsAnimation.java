@@ -201,10 +201,16 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
             }
             if (AnimationController.overwriteWorldUUID(this.animation, player.getWorld().getUniqueId())){
                 // The world uuid was overwritten
-                // TODO
+                player.sendMessage(Text.of(SECONDARY_COLOR, "'",
+                                NAME_COLOR, this.animation.getAnimationName(),
+                                SECONDARY_COLOR, "'",
+                                PRIMARY_COLOR, " has had its UUID overwritten to match the current world's UUID."));
             } else {
                 // The world uuid has failed to be overwritten
-                // TODO
+                player.sendMessage(Text.of(SECONDARY_COLOR, "'",
+                        NAME_COLOR, this.animation.getAnimationName(),
+                        SECONDARY_COLOR, "'",
+                        ERROR_COLOR, " has failed to have its UUID overwritten."));
             }
         } else {
             // Show settings buttons
