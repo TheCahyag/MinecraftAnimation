@@ -44,6 +44,8 @@ animation that for every row represents one frame. When loading in the animation
 one thread for every row in the table that will load in one frame and add it to the animation.
 When all the threads are done executing that will tell us the animation is fully created.  
 
+[ENHANCEMENT] Only allow users to be running X animations at one time  
+
 #### Maybe
 [ENHANCEMENT] Make a animation's subspace the place where the animation is played, but allow a different subspace for 
 the frame so the user can place all frames down at the same time.  

@@ -99,14 +99,14 @@ public class InfoAnimation extends AbstractCommand<CommandSource> {
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "Corner 1"))
                         .onHover(CORNER_HOVER)
-                        .onClick(TextActions.executeCallback(commandSource -> showVirtualCorner(commandSource, this.animation.getSubSpace().getCornerTwo().orElse(null))))
+                        .onClick(TextActions.executeCallback(commandSource -> showVirtualCorner(commandSource, this.animation.getSubSpace().getCornerOne().orElse(null))))
                         .build())
                 .append(Text.of(WHITE, ": ",
                         SECONDARY_COLOR, cornerOne + "\n"))
                 .append(Text.builder()
                         .append(Text.of(PRIMARY_COLOR, "Corner 2"))
                         .onHover(CORNER_HOVER)
-                        .onClick(TextActions.executeCallback(commandSource -> showVirtualCorner(commandSource, this.animation.getSubSpace().getCornerOne().orElse(null))))
+                        .onClick(TextActions.executeCallback(commandSource -> showVirtualCorner(commandSource, this.animation.getSubSpace().getCornerTwo().orElse(null))))
                         .build())
                 .append(Text.of(WHITE, ": ",
                         SECONDARY_COLOR, cornerTwo + "\n",
