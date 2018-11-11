@@ -8,4 +8,5 @@ package com.servegame.bl4de.Animation.data;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class AnimationStatistics {
+    private int volume;
 }
