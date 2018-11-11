@@ -19,13 +19,13 @@ import java.util.List;
 public class AnimationTasks {
 
     private Animation animation;
-    private List<Task> tasks;
+    private List<FrameDisplayTask> tasks;
 
     /**
      * Constructor for AnimationTasks
      * @param animation - the {@link Animation}
      */
-    public AnimationTasks(Animation animation){
+    AnimationTasks(Animation animation){
         this.animation = animation;
         this.tasks = new ArrayList<>();
     }
@@ -34,7 +34,7 @@ public class AnimationTasks {
      * PopulateTaskList will start a new task for each {@link Frame} of the {@link Animation}and give
      * it to {@link Sponge} to execute
      */
-    public void populateTaskList(){
+    void populateTaskList(){
         List<Frame> frames = this.animation.getFrames();
 
         // Prune out frames that don't have content
@@ -46,14 +46,17 @@ public class AnimationTasks {
             // Create a FrameDisplayTask that will be used for the Task
             Frame frame = frames.get(i);
             FrameDisplayTask frameDisplayTask =
-                    new FrameDisplayTask(frame, this.animation.getTickDelay(), i);
+                    new FrameDisplayTask(frame, this.animation.getTickDelay(), i, this.animation.getCycles());
 
             // Create a task for each frame giving proper delay times
             Task.Builder taskBuilder = Task.builder()
                     .delayTicks(initDelay)
                     .intervalTicks(periodBetweenRepeat)
                     .execute(frameDisplayTask);
-            this.tasks.add(taskBuilder.submit(AnimationPlugin.plugin));
+            Task task = taskBuilder.submit(AnimationPlugin.plugin);
+            frameDisplayTask.setTask(task);
+            frameDisplayTask.setParent(this);
+            this.tasks.add(frameDisplayTask);
         }
     }
 
@@ -61,14 +64,38 @@ public class AnimationTasks {
      * StopAll will cancel all {@link Task}s
      * that were created for this {@link Animation}
      */
-    public void stopAll(){
-        for (Task task :
+    void stopAll(){
+        this.setAnimationStatusToStopped();
+        for (FrameDisplayTask task :
                 this.tasks) {
             if (AnimationPlugin.instance.isDebug()){
-                System.out.println("Stopping: " + task.getName());
+                System.out.println("Stopping: " + task.getTask());
             }
-            AnimationController.updateAnimationStatus(this.animation, Animation.Status.STOPPED);
-            task.cancel();
+            if (task.getStatus().equals(FrameTask.STATUS.RUNNING)){
+                // Only cancel the task if it's running
+                task.cancel();
+            }
+        }
+    }
+
+    private void setAnimationStatusToStopped(){
+        AnimationController.updateAnimationStatus(this.animation, Animation.Status.STOPPED);
+    }
+
+    /**
+     * If a {@link FrameDisplayTask} cancels itself, it will call this method
+     */
+    void reportCancel(){
+        int runningTask = 0;
+        for (FrameDisplayTask task :
+                this.tasks) {
+            if (task.getStatus().equals(FrameTask.STATUS.RUNNING)){
+                runningTask++;
+            }
+        }
+        if (runningTask == 0){
+            // If there are no tasks running, tell the task manager
+            AnimationPlugin.taskManager.stopAnimation(this.animation);
         }
     }
 
