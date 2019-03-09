@@ -7,6 +7,7 @@ import com.servegame.bl4de.Animation.util.TextResponses;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -33,7 +34,9 @@ public class PauseAnimation extends AbstractRunnableCommand<CommandSource> {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
-        if (!(src instanceof Player)){
+        if (src instanceof ConsoleSource){
+            return this.executeAsConsole(src, args);
+        } else if (!(src instanceof Player)){
             src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
             return CommandResult.success();
         }
@@ -71,6 +74,11 @@ public class PauseAnimation extends AbstractRunnableCommand<CommandSource> {
                 PRIMARY_COLOR, ".");
         player.sendMessage(ChatTypes.ACTION_BAR, pauseMessage);
 
+        return CommandResult.success();
+    }
+
+    private CommandResult executeAsConsole(CommandSource src, CommandContext args){
+        src.sendMessage(Text.of("This is ran as the console :)"));
         return CommandResult.success();
     }
 }

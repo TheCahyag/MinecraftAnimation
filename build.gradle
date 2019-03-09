@@ -12,7 +12,7 @@ sourceCompatibility = 1.8
 
 
 
-project.ext.versionno = '0.3.1'
+project.ext.versionno = '0.3.2'
 project.ext.versionending = '-SNAPSHOT'
 project.ext.buildno = '0'
 
@@ -70,6 +70,7 @@ jar {
 
 blossom {
     def location = 'src/main/java/com/servegame/bl4de/Animation/util/Resource.java'
+    println "JAR_NAME: " + project.name + '-' + project.version + ".jar"
 
     replaceToken '@name@', project.name, location
     replaceToken '@version@', project.version, location
