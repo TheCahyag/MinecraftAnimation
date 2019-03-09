@@ -29,11 +29,6 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
     }
 
     @Override
-    public void run() {
-        this.execute(this.src, this.args);
-    }
-
-    @Override
     public boolean checkPermission() {
         return false; // Not used
     }
