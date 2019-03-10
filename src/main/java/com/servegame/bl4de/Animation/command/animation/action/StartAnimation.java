@@ -32,7 +32,11 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
 
     @Override
     public boolean checkPermission() {
-        return false; // Not used
+        boolean hasPermission = src.hasPermission(Permissions.ANIMATION_START);
+        if (this.args.hasAny("admin_override")) {
+            hasPermission = hasPermission && this.src.hasPermission(Permissions.ANIMATION_ADMIN_START);
+        }
+        return hasPermission;
     }
 
     @Override
