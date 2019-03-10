@@ -12,7 +12,6 @@ import com.servegame.bl4de.Animation.util.Util;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -42,22 +41,14 @@ public class ListAllAnimations extends AbstractRunnableCommand<CommandSource> {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
-        // Check if the CommandSource is a player
-        if (!(src instanceof Player)){
-            src.sendMessage(TextResponses.PLAYER_ONLY_COMMAND_WARNING);
-            return CommandResult.success();
-        }
-        // Get player UUID
-        Player player = (Player) src;
-
         Optional<Map<UUID, ArrayList<String>>> animationMappingOptional = AnimationController.getAllAnimations();
         if (!animationMappingOptional.isPresent()){
-            player.sendMessage(TextResponses.ANIMATIONS_FAILED_TO_LOAD);
+            src.sendMessage(TextResponses.ANIMATIONS_FAILED_TO_LOAD);
             return CommandResult.empty();
         }
         Map<UUID, ArrayList<String>> animationMapping = animationMappingOptional.get();
 
-        // This will have to be done later, but I need to iterate threw the entry set and print out the
+        // This will have to be done later, but I need to iterate through the entry set and print out the
         // animation listing as normal and additionally will need to tack on the players name at the end
         // So "animation name" (TheCahyag). I should probably remove the buttons with the listing right?
         // Still don't know if admins will have the right to play/edit/view info on other peoples animations
@@ -127,15 +118,15 @@ public class ListAllAnimations extends AbstractRunnableCommand<CommandSource> {
                             .build();
                 }
             }
-            player.sendMessage(message);
+            src.sendMessage(message);
         } else {
             // There are no animations to display
-            player.sendMessage(Text.of(PRIMARY_COLOR, "There are no animations to display."));
+            src.sendMessage(Text.of(PRIMARY_COLOR, "There are no animations to display."));
             return CommandResult.success();
         }
         if (!displayedAnimation){
             // There were animations to display but weren't
-            player.sendMessage(Text.of(PRIMARY_COLOR, "No animations were displayed."));
+            src.sendMessage(Text.of(PRIMARY_COLOR, "No animations were displayed."));
         }
         return CommandResult.success();
     }
