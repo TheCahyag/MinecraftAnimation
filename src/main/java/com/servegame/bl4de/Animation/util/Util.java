@@ -8,8 +8,8 @@ import com.servegame.bl4de.Animation.command.DebugToggle;
 import com.servegame.bl4de.Animation.command.animation.*;
 import com.servegame.bl4de.Animation.command.animation.action.PauseAnimation;
 import com.servegame.bl4de.Animation.command.animation.action.StartAnimation;
-import com.servegame.bl4de.Animation.command.animation.action.admin.StopAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.action.StopAnimation;
+import com.servegame.bl4de.Animation.command.animation.action.admin.StopAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.admin.ListAllAnimations;
 import com.servegame.bl4de.Animation.command.animation.admin.RefreshAnimations;
 import com.servegame.bl4de.Animation.command.animation.admin.StatisticAnimation;
@@ -603,7 +603,6 @@ public class Util {
         // /animate start <name> [-f<num>] [-d<num>] [-c<num>]
         CommandSpec startAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Start a given animation"))
-                .permission(Permissions.ANIMATION_START)
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")),
                         firstParsing(
                                 flags()
@@ -623,7 +622,6 @@ public class Util {
         // /animate stop <name>
         CommandSpec stopAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Stop a given animation"))
-                .permission(Permissions.ANIMATION_STOP)
                 .arguments(string(Text.of(NAME_COLOR, "animation_name")))
                 .executor((src, args) -> new StopAnimation(src, args).runCommand())
                 .build();
@@ -631,7 +629,6 @@ public class Util {
         // /animate pause <name>
         CommandSpec pauseAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Pause a given animation"))
-                .permission(Permissions.ANIMATION_PAUSE)
                 .arguments(string(Text.of("animation_name")))
                 .executor((src, args) -> executeRunnableCommand(new PauseAnimation(src, args)))
                 .build();
