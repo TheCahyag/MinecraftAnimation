@@ -36,7 +36,7 @@ public class AnimationPlugin {
     @Inject
     private Game game;
 
-    public final String CONFIG_DIR = "./config/animation";
+    private final String CONFIG_DIR = "./config/animation";
     public final String ANIMATION_DATA_DIR = CONFIG_DIR + "/animation";
 
     private boolean debug;
@@ -96,10 +96,10 @@ public class AnimationPlugin {
         if (DatabaseSchemaUpdates.checkForVersionOne()) {
             logger.info("...Old database structure version one found, converting animations to version two.");
             DatabaseSchemaUpdates.convertVersionOneToVersionTwo();
-            //DatabaseSchemaUpdates.convertVersionTwoToVersionThree();
+//            DatabaseSchemaUpdates.convertVersionTwoToVersionThree();
         } else if (DatabaseSchemaUpdates.checkForVersionTwo()) {
             logger.info("...Old database structure version two found, converting animations to version three.");
-            //DatabaseSchemaUpdates.convertVersionTwoToVersionThree();
+            DatabaseSchemaUpdates.convertVersionTwoToVersionThree();
         } else {
             logger.info("...database is up to date, no action needed.");
         }
@@ -140,5 +140,9 @@ public class AnimationPlugin {
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

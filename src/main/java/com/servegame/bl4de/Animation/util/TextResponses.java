@@ -52,7 +52,7 @@ public class TextResponses {
     public static final Text ANIMATION_NO_FRAMES_PRESENT = Text.of(ERROR_COLOR, "There are no frames for this animation.");
     public static final Text ANIMATION_CORNER_NOT_SET = Text.of(ERROR_COLOR, "That corner hasn't been set yet.");
     public static final Text ANIMATION_FAILED_TO_RENAME = Text.of(ERROR_COLOR, "The animation couldn't be renamed -- something went wrong.");
-
+    public static final Text ANIMATIONS_FAILED_TO_LOAD = Text.of(ERROR_COLOR, "The animations failed to load.");
 
     // Frame Responses
     public static final Text FRAME_SUCCESSFULLY_DELETED = Text.of(PRIMARY_COLOR, "The frame was successfully deleted.");
@@ -80,5 +80,6 @@ public class TextResponses {
     public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_D = Text.of(ERROR_COLOR, "You do not have permission to use the -d flag");
     public static final Text USER_DOESNT_HAVE_PERMISSION_FLAG_C = Text.of(ERROR_COLOR, "You do not have permission to use the -c flag");
     public static final Text USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING = Text.of(ERROR_COLOR, "You do not have permission to change this setting");
+    public static final Text USER_DOESNT_HAVE_PERMISSION_TO_INTERACT_WITH_ANIMATION = Text.of(ERROR_COLOR, "You do not have permission to interact with this animation.");
 
 }

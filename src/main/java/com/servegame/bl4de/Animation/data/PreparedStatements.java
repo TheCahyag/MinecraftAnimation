@@ -2,14 +2,18 @@ package com.servegame.bl4de.Animation.data;
 
 import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
+import com.servegame.bl4de.Animation.exception.WorldNotPresentException;
 import com.servegame.bl4de.Animation.model.Animation;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.model.SubSpace3D;
 import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.data.value.ValueContainer;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
@@ -31,7 +35,7 @@ public class PreparedStatements {
      * @param animation given {@link Animation}
      * @return Success status: true=success, false=failed
      */
-    public static boolean createAnimation(Animation animation){
+    public static boolean createAnimation(Animation animation) {
         try (Connection connection = SQLManager.getConnection()){
             // Insert new animation into the table
             PreparedStatement statement = connection.prepareStatement(
@@ -93,7 +97,7 @@ public class PreparedStatements {
      * @param animation given {@link Animation}
      * @return Success status: true=success, false=failed
      */
-    public static boolean saveAnimation(Animation animation){
+    public static boolean saveAnimation(Animation animation) {
         try (Connection connection = SQLManager.getConnection()){
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE " + ANIMATION_TABLE + " SET " +
@@ -150,7 +154,7 @@ public class PreparedStatements {
         return true;
     }
 
-    public static boolean saveBareAnimation(Animation animation){
+    public static boolean saveBareAnimation(Animation animation) {
         try (Connection connection = SQLManager.getConnection()){
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE " + ANIMATION_TABLE + " SET " +
@@ -209,7 +213,7 @@ public class PreparedStatements {
      * @param owner UUID of the owner
      * @return Optional of the {@link Animation}
      */
-    public static Optional<Animation> getAnimation(String name, UUID owner){
+    public static Optional<Animation> getAnimation(String name, UUID owner) {
         Optional<Animation> bareAnimationOptional = getBareAnimation(name, owner);
         Animation animation = null;
         if (!bareAnimationOptional.isPresent()){
@@ -263,7 +267,7 @@ public class PreparedStatements {
      * @param owner {@link UUID} of the owner of the animation
      * @return - Optional of the animation
      */
-    public static Optional<Animation> getBareAnimation(String name, UUID owner){
+    public static Optional<Animation> getBareAnimation(String name, UUID owner) {
         Animation animation = null;
         try (Connection connection = SQLManager.getConnection()){
             PreparedStatement getAnimation = connection.prepareStatement(
@@ -312,18 +316,23 @@ public class PreparedStatements {
 
             for (String frameName :
                     frameNames) {
-                animation.addFrame(getFrame(frameName, SQLResources.getFrameTableName(animation), null, false).get());
+                Frame tmp = getFrame(frameName, SQLResources.getFrameTableName(animation), null, false).get();
+                animation.addFrame(tmp);
             }
-        } catch (SQLException|IOException e){
+        } catch (SQLException|IOException e) {
             e.printStackTrace();
         } catch (UninitializedException e){
-            System.err.println("An animation was uninitialized but frames were added anyway. (This is likely a bug)");
+            System.err.println("'" + animation.getAnimationName() + "' was uninitialized but frames were added anyway. (This is likely due to a world UUID mismatch)");
+            e.printStackTrace();
+            if (AnimationPlugin.instance.isDebug()) {
+                System.out.println(animation);
+            }
         }
         return Optional.ofNullable(animation);
     }
 
     /**
-     * Iterates through the list of files in the animation directory and puts the data in a map
+     * Iterates through the file in the animation directory and puts the data in a map
      * @return Map containing the UUID of the owner as the key and
      * all the names of the Animations he owns
      */
@@ -498,6 +507,61 @@ public class PreparedStatements {
         return true;
     }
 
+    /**
+     *
+     * @param animation
+     * @param newWorldUUID
+     * @return
+     */
+    public static boolean overwriteWorldUUID(Animation animation, UUID newWorldUUID){
+
+        MergeFunction mergeFunction = new MergeFunction() {
+            @Override
+            public <C extends ValueContainer<?>> C merge(@Nullable C original, @Nullable C replacement) {
+                System.out.println("Original: " + original);
+                System.out.println("Replacement: " + replacement);
+                return original;
+            }
+        };
+
+
+        // Remember to use a transaction here
+        try (Connection conn = SQLManager.getConnection()){
+
+            conn.setAutoCommit(false);
+            // TRANSACTION: START
+
+            Location<World> loc;
+
+            // Get the new world to obtain BlockSnapshots that will be merged with the old ones
+            Optional<World> optionalWorld = AnimationPlugin.instance.getGame().getServer().getWorld(newWorldUUID);
+            if (!optionalWorld.isPresent()){
+                AnimationPlugin.logger.error("Failed to obtain world '" + newWorldUUID + "' from the server.");
+                return false;
+            }
+            Collection<World> worlds = AnimationPlugin.instance.getGame().getServer().getWorlds();
+            for (World world :
+                    worlds) {
+                System.out.println(world.getName());
+            }
+            World world = optionalWorld.get();
+            BlockSnapshot newCorner = world.createSnapshot(87, 50, -147);
+            BlockSnapshot snap = newCorner;
+            BlockSnapshot blockSnapshot = snap.merge(newCorner, mergeFunction);
+
+
+
+
+
+            // TRANSACTION: END
+            conn.setAutoCommit(true);
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     /* END: Animation Operations */
 
     /* START: Frame Operations */
@@ -657,7 +721,7 @@ public class PreparedStatements {
         return true;
     }
 
-    public static Optional<Frame> getFrame(String frameName, final String FRAME_TABLE, final String CONTENTS_TABLE, boolean loadContents){
+    public static Optional<Frame> getFrame(String frameName, final String FRAME_TABLE, final String CONTENTS_TABLE, boolean loadContents) {
         Frame frame = null;
         try (Connection connection = SQLManager.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -671,8 +735,28 @@ public class PreparedStatements {
                 SubSpace3D subSpace3D = new SubSpace3D();
                 Optional<BlockSnapshot> c1 = BlockSnapshot.builder().build(DataFormats.HOCON.read(rs.getString(COLUMN_FRAME_SUBSPACE_C1)));
                 Optional<BlockSnapshot> c2 = BlockSnapshot.builder().build(DataFormats.HOCON.read(rs.getString(COLUMN_FRAME_SUBSPACE_C2)));
-                c1.ifPresent(blockSnapshot -> subSpace3D.setCornerOne(blockSnapshot.getLocation().orElse(null)));
-                c2.ifPresent(blockSnapshot -> subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null)));
+
+                if (c1.isPresent()){
+                    BlockSnapshot blockSnapshot = c1.get();
+                    // Need to double check and ensure that the world UUID of the animation
+                    // is of a world that exists within the currently running server
+                    UUID animationWorldUUID = blockSnapshot.getWorldUniqueId();
+                    if (!AnimationPlugin.instance.getGame().getServer().getWorld(animationWorldUUID).isPresent()){
+                        throw new RuntimeException("Failed to obtain world UUID");
+                    }
+                    subSpace3D.setCornerOne(blockSnapshot.getLocation().orElse(null));
+                }
+
+                if (c2.isPresent()){
+                    BlockSnapshot blockSnapshot = c2.get();
+                    // Need to double check and ensure that the world UUID of the animation
+                    // is of a world that exists within the currently running server
+                    UUID animationWorldUUID = blockSnapshot.getWorldUniqueId();
+                    if (!AnimationPlugin.instance.getGame().getServer().getWorld(animationWorldUUID).isPresent()){
+                        throw new RuntimeException("Failed to obtain world UUID");
+                    }
+                    subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null));
+                }
 
                 if (rs.getObject(COLUMN_FRAME_SUBSPACE_CONTENTS) != null && loadContents){
                     // Create and set contents of the SubSpace if loadContents is true

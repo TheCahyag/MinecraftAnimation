@@ -15,6 +15,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
 
@@ -50,7 +51,21 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
             player.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();
         }
-        Optional<Animation> animationOptional = AnimationController.getAnimation(animationNameOptional.get(), player.getUniqueId());
+
+        Optional<Animation> animationOptional;
+        if (args.getOne("admin_override").isPresent()){
+            // An admin is playing this without the owner
+            if (!player.hasPermission(Permissions.ANIMATION_ADMIN_START)){
+                // User doesn't have permission to play another persons animation
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_INTERACT_WITH_ANIMATION);
+                return CommandResult.success();
+            }
+            animationOptional = AnimationController.getAnimation(animationNameOptional.get(), (UUID) args.getOne("admin_override").get());
+        } else {
+            // Animation is being played regularly by the owner
+            animationOptional = AnimationController.getAnimation(animationNameOptional.get(), player.getUniqueId());
+        }
+
         if (!animationOptional.isPresent()){
             player.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
             return CommandResult.empty();

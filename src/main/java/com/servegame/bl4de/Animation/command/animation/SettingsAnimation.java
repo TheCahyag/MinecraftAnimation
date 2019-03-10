@@ -10,6 +10,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import static com.servegame.bl4de.Animation.util.Util.*;
@@ -44,6 +45,7 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
         boolean delay = (boolean) args.getOne(Text.of("setting_delay")).orElse(false);
         boolean frameIndex = (boolean) args.getOne(Text.of("setting_frame_index")).orElse(false);
         boolean cycles = (boolean) args.getOne(Text.of("setting_cycles")).orElse(false);
+        boolean overwriteWorldUUID = (boolean) args.getOne(Text.of("setting_overwrite_world_uuid")).orElse(false);
 
         if (delay){
             if (!player.hasPermission(Permissions.ANIMATION_SETTING_DELAY)){
@@ -174,6 +176,35 @@ public class SettingsAnimation extends AbstractCommand<CommandSource> {
                 // There was a problem saving the animation
                 player.sendMessage(TextResponses.ANIMATION_SAVE_ERROR);
                 return CommandResult.empty();
+            }
+        } else if (overwriteWorldUUID) {
+            // Overwrite the world UUID of the two corners of the animation
+            if (!player.hasPermission(Permissions.ANIMATION_SETTING_OVERWRITE_WORLD_UUID)){
+                // User doesn't have permission to change this setting
+                player.sendMessage(TextResponses.USER_DOESNT_HAVE_PERMISSION_TO_CHANGE_SETTING);
+                return CommandResult.empty();
+            }
+
+            boolean fFlag = args.hasAny(Text.of("f"));
+            if (!fFlag){
+                // User didn't specify overwrite flag
+                player.sendMessage(Text.of(ERROR_COLOR, "If you sure you want to overwrite the world UUID of the '",
+                        NAME_COLOR, this.animation.getAnimationName(),
+                        ERROR_COLOR, "' animation, run",
+                        PRIMARY_COLOR, " /animation " + this.animation.getAnimationName() + " setting overwriteworlduuid",
+                        FLAG_COLOR, " -f").toBuilder()
+                        .append(Text.of(ERROR_COLOR, COMMAND_STYLE, ", or click this message."))
+                        .onClick(TextActions.runCommand("/animate " + this.animation.getAnimationName() + " setting overwriteworlduuid -f"))
+                        .onHover(COMMAND_HOVER)
+                        .build());
+                return CommandResult.success();
+            }
+            if (AnimationController.overwriteWorldUUID(this.animation, player.getWorld().getUniqueId())){
+                // The world uuid was overwritten
+                // TODO
+            } else {
+                // The world uuid has failed to be overwritten
+                // TODO
             }
         } else {
             // Show settings buttons
