@@ -15,7 +15,7 @@ Description: The plugin has been developed using the SpongeAPI and currently onl
 purpose is to easily create frame-based animations in Minecraft within a static 3D sub
 space (possibly a dynamic subspace in the far future), allowing users to easily edit individual frames leading to an animation.  
 Like this:  
-<a href="https://media.giphy.com/media/l49JSpUHK8QwE86Yw/giphy.gif"><img src="https://media.giphy.com/media/l49JSpUHK8QwE86Yw/giphy.gif" title="Deer" /></a>  
+<a href="https://forums-cdn.spongepowered.org/uploads/default/original/3X/9/2/928521d89a3f90fad4bd05096aba60f0a4708d00.gif"><img src="https://forums-cdn.spongepowered.org/uploads/default/original/3X/9/2/928521d89a3f90fad4bd05096aba60f0a4708d00.gif" title="Deer" /></a>  
 See more [here](https://github.com/TheCahyag/MinecraftAnimation/blob/sponge-api/7/EXAMPLES.md)!
 
 #### Known bugs / Not Implemented Yet
