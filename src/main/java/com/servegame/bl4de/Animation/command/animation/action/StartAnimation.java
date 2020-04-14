@@ -14,6 +14,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -147,7 +149,15 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
      * @return
      */
     private CommandResult executeAsConsole(CommandSource src, CommandContext args){
-        src.sendMessage(Text.of("This is ran as the console :)"));
+        // Get animation
+        Optional<String> animationNameOptional = args.getOne("animation_name");
+        if (!animationNameOptional.isPresent()){
+            src.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
+            return CommandResult.empty();
+        }
+
+        Map<UUID, ArrayList<String>> animations = AnimationController.getAllAnimations().get();
+
         return CommandResult.success();
     }
 
