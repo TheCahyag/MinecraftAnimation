@@ -1,7 +1,8 @@
 package com.servegame.bl4de.Animation.util;
 
-import static com.servegame.bl4de.Animation.util.Util.*;
 import org.spongepowered.api.text.Text;
+
+import static com.servegame.bl4de.Animation.util.Util.*;
 
 /**
  * File: TextResponses.java
@@ -35,6 +36,7 @@ public class TextResponses {
     public static final Text ANIMATION_SUCCESSFULLY_ALTERED = Text.of(PRIMARY_COLOR, "Animation successfully altered.");
     // Animation Warning Responses
     // Animation Error Responses
+    public static final Text GENERIC_ERROR(String message) { return Text.of(ERROR_COLOR, " " + message); }
     public static final Text ANIMATION_SAVE_ERROR = Text.of(ERROR_COLOR, "There was a problem saving the animation.");
     public static final Text ANIMATION_DELETE_ERROR = Text.of(ERROR_COLOR, "There was a problem deleting the animation.");
     public static final Text ANIMATION_ALREADY_EXISTS_ERROR = Text.of(ERROR_COLOR, "The specified animation name already exists.");
