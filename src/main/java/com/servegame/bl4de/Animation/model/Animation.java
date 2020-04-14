@@ -210,7 +210,11 @@ public class Animation implements DataSerializable{
      * 0 (the first {@link Frame})
      */
     public void start() throws UninitializedException {
-        start(this.startFrameIndex);
+        if (this.framesHaveContent() > 0){
+            start(this.startFrameIndex);
+        } else {
+            throw new UninitializedException("There are no frames with content in this animation.");
+        }
     }
 
     /**
@@ -430,6 +434,21 @@ public class Animation implements DataSerializable{
      */
     public void setCycles(int cycles) {
         this.cycles = cycles;
+    }
+
+    /**
+     * Simple check to en
+     * @return
+     */
+    private Integer framesHaveContent(){
+        List<Frame> frames = this.frames;
+        int framesWithContent = 0;
+        for (int i = 0; i < frames.size(); i++) {
+            if (frames.get(i).getSubspace().getContents().isPresent()){
+                framesWithContent++;
+            }
+        }
+        return framesWithContent;
     }
 
     /* END GETTERS AND SETTERS */
