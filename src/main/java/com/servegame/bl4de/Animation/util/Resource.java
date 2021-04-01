@@ -8,7 +8,7 @@ package com.servegame.bl4de.Animation.util;
 public class Resource {
 
     public final static String NAME = "@name@";
-    public final static String ID = "animation";
+    public final static String ID = "animations";
     public final static String VERSION = "@version@";
     public final static String AUTHORS = "TheCahyag";
     public final static String URL = "@url@";
