@@ -614,7 +614,8 @@ public class Util {
                                 flags()
                                         .valueFlag(integer(Text.of(FLAG_COLOR, "cycles")), "c") // -c <num>
                                         .buildWith(none())
-                        )
+                        ),
+                        optional(string(Text.of(NAME_COLOR, "animation_owner")))
                 )
                 .executor((src, args) -> executeRunnableCommand(new StartAnimation(src, args)))
                 .build();
@@ -622,7 +623,7 @@ public class Util {
         // /animate stop <name>
         CommandSpec stopAnimation = CommandSpec.builder()
                 .description(Text.of(PRIMARY_COLOR, "Stop a given animation"))
-                .arguments(string(Text.of(NAME_COLOR, "animation_name")))
+                .arguments(string(Text.of(NAME_COLOR, "animation_name")), optional(string(Text.of(NAME_COLOR, "animation_owner"))))
                 .executor((src, args) -> new StopAnimation(src, args).runCommand())
                 .build();
 

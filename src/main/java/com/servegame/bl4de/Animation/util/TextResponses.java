@@ -47,6 +47,7 @@ public class TextResponses {
     public static final Text ANIMATION_ALREADY_EXISTS_ERROR = Text.of(ERROR_COLOR, "The specified animation name already exists.");
     public static final Text ANIMATION_NOT_FOUND_ERROR = Text.of(ERROR_COLOR, "Animation was not found.");
     public static final Text ANIMATION_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Animation name was not parsed correctly/wasn't specified.");
+    public static final Text ANIMATION_OWNER_NOT_SPECIFIED_ERROR = Text.of(ERROR_COLOR, "Animation owner (UUID) was not parsed correctly/wasn't specified.");
     public static final Text ANIMATION_NOT_INITIALIZED_ERROR = Text.of(ERROR_COLOR, "The animation is currently not fully initialized.");
     public static final Text ANIMATION_ALREADY_RUNNING = Text.of(ERROR_COLOR, "The animation is already running.");
     public static final Text ANIMATION_ALREADY_PAUSED = Text.of(ERROR_COLOR, "The animation is already paused.");

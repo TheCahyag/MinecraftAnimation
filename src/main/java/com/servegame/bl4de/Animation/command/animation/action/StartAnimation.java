@@ -14,8 +14,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -142,21 +140,44 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
         return CommandResult.success();
     }
 
-    /**
-     * Method to
-     * @param src
-     * @param args
-     * @return
-     */
     private CommandResult executeAsConsole(CommandSource src, CommandContext args){
         // Get animation
         Optional<String> animationNameOptional = args.getOne("animation_name");
+        Optional<String> animationOwnerOptional = args.getOne("animation_owner");
         if (!animationNameOptional.isPresent()){
             src.sendMessage(TextResponses.ANIMATION_NOT_SPECIFIED_ERROR);
             return CommandResult.empty();
         }
 
-        Map<UUID, ArrayList<String>> animations = AnimationController.getAllAnimations().get();
+        if (!animationOwnerOptional.isPresent()){
+            src.sendMessage(TextResponses.ANIMATION_OWNER_NOT_SPECIFIED_ERROR);
+            return CommandResult.empty();
+        }
+
+        Optional<Animation> animationOptional = AnimationController.getAnimation(animationNameOptional.get(), UUID.fromString(animationOwnerOptional.get()));
+
+        if (!animationOptional.isPresent()){
+            src.sendMessage(TextResponses.ANIMATION_NOT_FOUND_ERROR);
+            return CommandResult.empty();
+        }
+        final Animation animation = animationOptional.get();
+        try {
+            animation.start();
+
+            // Send a start message to the users action bar
+            Text startMessage = Text.of(
+                    NAME_COLOR, animation.getAnimationName(),
+                    PRIMARY_COLOR, " by ",
+                    NAME_COLOR, animation.getOwner(),
+                    PRIMARY_COLOR, " was ",
+                    ACTION_COLOR, "started",
+                    PRIMARY_COLOR, ".");
+            src.sendMessage(startMessage);
+
+        } catch (UninitializedException ue){
+            src.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR.concat(TextResponses.GENERIC_ERROR(ue.getMessage())));
+            return CommandResult.empty();
+        }
 
         return CommandResult.success();
     }
