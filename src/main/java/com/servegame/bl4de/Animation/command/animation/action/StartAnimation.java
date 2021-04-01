@@ -117,7 +117,7 @@ public class StartAnimation extends AbstractRunnableCommand<CommandSource> {
             player.sendMessage(ChatTypes.ACTION_BAR, startMessage);
 
         } catch (UninitializedException ue){
-            player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR);
+            player.sendMessage(TextResponses.ANIMATION_NOT_INITIALIZED_ERROR.concat(TextResponses.GENERIC_ERROR(ue.getMessage())));
             return CommandResult.empty();
         }
         return CommandResult.success();
