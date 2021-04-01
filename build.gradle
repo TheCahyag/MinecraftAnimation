@@ -11,6 +11,8 @@ group 'com.servegame.bl4de.animation'
 
 sourceCompatibility = 1.8
 
+
+
 project.ext.versionno = '0.4.0'
 project.ext.versionending = '-SNAPSHOT'
 project.ext.buildno = '0'

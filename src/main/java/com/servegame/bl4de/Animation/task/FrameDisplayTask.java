@@ -4,6 +4,12 @@ import com.servegame.bl4de.Animation.AnimationPlugin;
 import com.servegame.bl4de.Animation.exception.UninitializedException;
 import com.servegame.bl4de.Animation.model.Frame;
 import com.servegame.bl4de.Animation.util.Util;
+import org.spongepowered.api.scheduler.Task;
+
+import java.util.Optional;
+
+import static com.servegame.bl4de.Animation.task.FrameTask.STATUS.CANCELLED;
+import static com.servegame.bl4de.Animation.task.FrameTask.STATUS.RUNNING;
 
 /**
  * File: FrameDisplayTask.java
@@ -11,13 +17,38 @@ import com.servegame.bl4de.Animation.util.Util;
  * @author Brandon Bires-Navel (brandonnavel@outlook.com)
  */
 public class FrameDisplayTask implements FrameTask {
-    private Frame frame;
-    private int tickDelay, index;
 
-    public FrameDisplayTask(Frame frame, int tickDelay, int index){
+    /** The Frame we will be displaying */
+    private Frame frame;
+
+    /** Delay between the frames (in ticks) */
+    private int tickDelay;
+
+    /** The index of the Frame in the order in which they are displayed */
+    private int index;
+
+    /** Number of times to display this frame, effectively the number of times the animation will cycle */
+    private int cyclesToRun;
+
+    /** Number of times the frame has been displayed */
+    private int cyclesRan;
+
+    /** Reference to the {@link Task} from the Sponge Scheduler */
+    private Task me;
+
+    /** Status of this FrameDisplayTask */
+    private STATUS status;
+
+    /** Reference to the object that contains the collection of FrameDisplayTasks */
+    private AnimationTasks parent;
+
+    public FrameDisplayTask(Frame frame, int tickDelay, int index, int cyclesToRun){
         this.frame = frame;
         this.tickDelay = tickDelay;
         this.index = index;
+        this.cyclesToRun = cyclesToRun;
+        this.cyclesRan = 0;
+        this.status = RUNNING;
     }
 
     @Override
@@ -27,6 +58,12 @@ public class FrameDisplayTask implements FrameTask {
             this.debugInfo();
         }
         this.modifyWorld();
+        this.cyclesRan++;
+
+        // -1 means the animation should run for ever
+        if (cyclesToRun != -1 && cyclesToRun <= cyclesRan){
+            this.cancel();
+        }
     }
 
     @Override
@@ -53,5 +90,30 @@ public class FrameDisplayTask implements FrameTask {
                 "Tick Delay: " + this.tickDelay + "\n" +
                 "Animation Index: " + this.index + "\n" +
                 "Current System Time: " + System.currentTimeMillis() + "\n";
+    }
+
+    /**
+     * Cancel the task this FrameDisplayTask is associated with
+     */
+    void cancel() {
+        this.getTask().ifPresent(Task::cancel);
+        this.status = CANCELLED;
+        this.parent.reportCancel();
+    }
+
+    public void setTask(Task me) {
+        this.me = me;
+    }
+
+    void setParent(AnimationTasks parent) {
+        this.parent = parent;
+    }
+
+    public Optional<Task> getTask() {
+        return Optional.ofNullable(this.me);
+    }
+
+    public STATUS getStatus() {
+        return status;
     }
 }

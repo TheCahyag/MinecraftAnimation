@@ -234,8 +234,8 @@ public class Animation implements DataSerializable{
         FrameDisplayTask displayTask = new FrameDisplayTask(
                 FrameController.getFrameWithContents(this, this.getStartFrameIndex()).get(),
                 0,
-                this.getStartFrameIndex()
-        );
+                this.getStartFrameIndex(),
+                this.getCycles());
 
         // Create a task for each frame giving proper delay times
         Task.Builder taskBuilder = Task.builder()

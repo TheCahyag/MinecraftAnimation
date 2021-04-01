@@ -269,6 +269,7 @@ public class PreparedStatements {
      */
     public static Optional<Animation> getBareAnimation(String name, UUID owner) {
         Animation animation = null;
+        OUTER:
         try (Connection connection = SQLManager.getConnection()){
             PreparedStatement getAnimation = connection.prepareStatement(
                     "SELECT * FROM " + ANIMATION_TABLE +
@@ -316,15 +317,20 @@ public class PreparedStatements {
 
             for (String frameName :
                     frameNames) {
-                Frame tmp = getFrame(frameName, SQLResources.getFrameTableName(animation), null, false).get();
+                Optional<Frame> optionalFrame = getFrame(frameName, SQLResources.getFrameTableName(animation), null, false);
+                if (!optionalFrame.isPresent()){
+                    animation = null;
+                    break OUTER;
+                }
+                Frame tmp = optionalFrame.get();
                 animation.addFrame(tmp);
             }
         } catch (SQLException|IOException e) {
             e.printStackTrace();
         } catch (UninitializedException e){
             System.err.println("'" + animation.getAnimationName() + "' was uninitialized but frames were added anyway. (This is likely due to a world UUID mismatch)");
-            e.printStackTrace();
             if (AnimationPlugin.instance.isDebug()) {
+                e.printStackTrace();
                 System.out.println(animation);
             }
         }
@@ -516,8 +522,12 @@ public class PreparedStatements {
     public static boolean overwriteWorldUUID(Animation animation, UUID newWorldUUID){
 
         MergeFunction mergeFunction = new MergeFunction() {
+
+            private World world;
+
             @Override
             public <C extends ValueContainer<?>> C merge(@Nullable C original, @Nullable C replacement) {
+                BlockSnapshot snap = world.createSnapshot(1, 2, 3);
                 System.out.println("Original: " + original);
                 System.out.println("Replacement: " + replacement);
                 return original;
@@ -723,61 +733,54 @@ public class PreparedStatements {
 
     public static Optional<Frame> getFrame(String frameName, final String FRAME_TABLE, final String CONTENTS_TABLE, boolean loadContents) {
         Frame frame = null;
-        try (Connection connection = SQLManager.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + FRAME_TABLE +
-                            " WHERE " + COLUMN_FRAME_NAME + " = ?");
-            statement.setString(1, frameName);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()){
+        OUTER:
+            try (Connection connection = SQLManager.getConnection()) {
+                    PreparedStatement statement = connection.prepareStatement(
+                            "SELECT * FROM " + FRAME_TABLE +
+                                    " WHERE " + COLUMN_FRAME_NAME + " = ?");
+                    statement.setString(1, frameName);
+                    ResultSet rs = statement.executeQuery();
+                    if (rs.next()){
 
-                // Create SubSpace3D
-                SubSpace3D subSpace3D = new SubSpace3D();
-                Optional<BlockSnapshot> c1 = BlockSnapshot.builder().build(DataFormats.HOCON.read(rs.getString(COLUMN_FRAME_SUBSPACE_C1)));
-                Optional<BlockSnapshot> c2 = BlockSnapshot.builder().build(DataFormats.HOCON.read(rs.getString(COLUMN_FRAME_SUBSPACE_C2)));
+                        // Create SubSpace3D
+                        SubSpace3D subSpace3D = new SubSpace3D();
+                        Optional<BlockSnapshot> c1 = BlockSnapshot.builder().build(DataFormats.HOCON.read(rs.getString(COLUMN_FRAME_SUBSPACE_C1)));
+                        Optional<BlockSnapshot> c2 = BlockSnapshot.builder().build(DataFormats.HOCON.read(rs.getString(COLUMN_FRAME_SUBSPACE_C2)));
 
-                if (c1.isPresent()){
-                    BlockSnapshot blockSnapshot = c1.get();
-                    // Need to double check and ensure that the world UUID of the animation
-                    // is of a world that exists within the currently running server
-                    UUID animationWorldUUID = blockSnapshot.getWorldUniqueId();
-                    if (!AnimationPlugin.instance.getGame().getServer().getWorld(animationWorldUUID).isPresent()){
-                        throw new RuntimeException("Failed to obtain world UUID");
+                        if (c1.isPresent()){
+                            BlockSnapshot blockSnapshot = c1.get();
+                            // Need to double check and ensure that the world UUID of the animation
+                            // is of a world that exists within the currently running server
+                            subSpace3D.setCornerOne(blockSnapshot.getLocation().orElse(null));
+                        }
+
+                        if (c2.isPresent()){
+                            BlockSnapshot blockSnapshot = c2.get();
+                            // Need to double check and ensure that the world UUID of the animation
+                            // is of a world that exists within the currently running server
+                            subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null));
+                        }
+
+                        if (rs.getObject(COLUMN_FRAME_SUBSPACE_CONTENTS) != null && loadContents){
+                            // Create and set contents of the SubSpace if loadContents is true
+                            Location<World> corner1 = c1.get().getLocation().get();
+                            Location<World> corner2 = c2.get().getLocation().get();
+
+                            int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX())) + 1;
+                            int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY())) + 1;
+                            int zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ())) + 1;
+
+                            BlockSnapshot[][][] blockSnapshots = new BlockSnapshot[xLen][yLen][zLen];
+                            getContents(CONTENTS_TABLE, blockSnapshots);
+                            subSpace3D.setContents(blockSnapshots);
+                        }
+
+                        // Create Frame
+                        String name = rs.getString(COLUMN_FRAME_NAME);
+                        UUID creator = (UUID) rs.getObject(COLUMN_FRAME_CREATOR);
+
+                        frame = new Frame(creator, name, subSpace3D);
                     }
-                    subSpace3D.setCornerOne(blockSnapshot.getLocation().orElse(null));
-                }
-
-                if (c2.isPresent()){
-                    BlockSnapshot blockSnapshot = c2.get();
-                    // Need to double check and ensure that the world UUID of the animation
-                    // is of a world that exists within the currently running server
-                    UUID animationWorldUUID = blockSnapshot.getWorldUniqueId();
-                    if (!AnimationPlugin.instance.getGame().getServer().getWorld(animationWorldUUID).isPresent()){
-                        throw new RuntimeException("Failed to obtain world UUID");
-                    }
-                    subSpace3D.setCornerTwo(blockSnapshot.getLocation().orElse(null));
-                }
-
-                if (rs.getObject(COLUMN_FRAME_SUBSPACE_CONTENTS) != null && loadContents){
-                    // Create and set contents of the SubSpace if loadContents is true
-                    Location<World> corner1 = c1.get().getLocation().get();
-                    Location<World> corner2 = c2.get().getLocation().get();
-
-                    int xLen = Math.abs(Math.abs(corner1.getBlockX()) - Math.abs(corner2.getBlockX())) + 1;
-                    int yLen = Math.abs(Math.abs(corner1.getBlockY()) - Math.abs(corner2.getBlockY())) + 1;
-                    int zLen = Math.abs(Math.abs(corner1.getBlockZ()) - Math.abs(corner2.getBlockZ())) + 1;
-
-                    BlockSnapshot[][][] blockSnapshots = new BlockSnapshot[xLen][yLen][zLen];
-                    getContents(CONTENTS_TABLE, blockSnapshots);
-                    subSpace3D.setContents(blockSnapshots);
-                }
-
-                // Create Frame
-                String name = rs.getString(COLUMN_FRAME_NAME);
-                UUID creator = (UUID) rs.getObject(COLUMN_FRAME_CREATOR);
-
-                frame = new Frame(creator, name, subSpace3D);
-            }
 
 
         } catch (IOException|SQLException e){

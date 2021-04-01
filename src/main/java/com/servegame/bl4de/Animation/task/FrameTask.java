@@ -15,6 +15,22 @@ import org.spongepowered.api.world.Location;
 public interface FrameTask extends Runnable {
 
     /**
+     * The status of the Frame Task
+     */
+    enum STATUS {
+
+        /**
+         * The task is still in the sponge scheduler
+         */
+        RUNNING,
+
+        /**
+         * The task has been cancelled
+         */
+        CANCELLED
+    }
+
+    /**
      * modifyWorld uses a {@link SubSpace3D} to obtain two
      * {@link Location}s that serve as the two opposite
      * corners where blocks will be changed. Additionally,
