@@ -11,9 +11,7 @@ group 'com.servegame.bl4de.animation'
 
 sourceCompatibility = 1.8
 
-
-
-project.ext.versionno = '0.3.2'
+project.ext.versionno = '0.4.0'
 project.ext.versionending = '-SNAPSHOT'
 project.ext.buildno = '0'
 
@@ -29,7 +27,7 @@ task setBuildNum {
 setBuildNum
 
 project.ext.minecraftversion = '1.12.2'
-project.ext.spongeapiversion = '7.0.0'
+project.ext.spongeapiversion = '7.3.0'
 description = 'Animations - Allowing the creation of frame based animations.'
 ext.url = 'https://github.com/TheCahyag/MinecraftAnimation'
 
